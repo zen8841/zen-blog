@@ -5,11 +5,11 @@
 # Site
 title: Zen's Blog
 subtitle: '蚊站'
-description: ''
+description: '簡單記錄一下折騰的內容，可能還會發發感想？'
 keywords: linux network computer
 author: Zen Wen
-language: zh
-timezone: ' Asia/Taipei'
+language: zh-TW
+timezone: 'Asia/Taipei'
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
@@ -64,9 +64,11 @@ index_generator:
   path: ''
   per_page: 10
   order_by: -date
+  pagination_dir: page
 
 # Category & Tag
-default_category: uncategorized
+# https://hexo.io/docs/configuration.html#Category-Tag
+default_category: others
 category_map:
 tag_map:
 
@@ -104,6 +106,6 @@ theme: fluid
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: git
-  repo: https://github.com/zen8841/zen-blog
+  repo: git@github.com:zen8841/zen-blog
   # example, https://github.com/hexojs/hexojs.github.io
   branch: gh-pages

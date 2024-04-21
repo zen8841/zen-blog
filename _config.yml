@@ -4,7 +4,7 @@
 
 # Site
 title: Zen's Blog
-subtitle: '蚊站'
+subtitle: '生命不息，折騰不止'
 description: '簡單記錄一下折騰的內容，可能還會發發感想？'
 keywords: linux network computer
 author: Zen Wen
@@ -95,6 +95,20 @@ pagination_dir: page
 include:
 exclude:
 ignore:
+
+# hexo-math
+math:
+  katex:
+    css: 'https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css'
+    options:
+      throwOnError: false
+  mathjax:
+    css: 'https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css'
+    options:
+      conversion:
+        display: false
+      tex:
+      svg:
 
 # Extensions
 ## Plugins: https://hexo.io/plugins/

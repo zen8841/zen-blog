@@ -365,6 +365,14 @@ navbar:
     - { key: "tag", link: "/tags/", icon: "iconfont icon-tags-fill" }
     - { key: "about", link: "/about/", icon: "iconfont icon-user-fill" }
     - { key: "links", link: "/links/", icon: "iconfont icon-link-fill" }
+    - {
+        key: 'RSS',
+        icon: 'iconfont icon-rss',
+        submenu: [
+          { key: 'Atom', link: '/atom.xml' },
+          { key: 'RSS2', link: '/rss2.xml' }
+        ]
+    }
 
 # 搜索功能，基于 hexo-generator-search 插件，若已安装其他搜索插件请关闭此功能，以避免生成多余的索引文件
 # Search feature, based on hexo-generator-search. If you have installed other search plugins, please disable this feature to avoid generating redundant index files
@@ -705,6 +713,7 @@ post:
     enable: true
     # 脚注的节标题，也可以在 front-matter 中通过 `footnote: <h2>Reference</h2>` 这种形式修改单独页面的 header
     # The section title of the footnote, you can also modify the header of a single page in the form of `footnote: <h2>Reference</h2>` in front-matter
+#    header: '<h2>參考</h2>'
     header: ''
 
   # 数学公式，开启之前需要更换 Markdown 渲染器，否则复杂公式会有兼容问题，具体请见：https://hexo.fluid-dev.com/docs/guide/##latex-数学公式
@@ -969,7 +978,7 @@ about:
   banner_img: /assets/banner.png
   banner_img_height: 60
   banner_mask_alpha: 0.3
-  avatar: /assets/about.png
+  avatar: /assets/about.jpg
   name: "Zen"
   intro: "一個興趣使然的網路技術愛好者？"
   # 更多图标可从 https://hexo.fluid-dev.com/docs/icon/ 查找，`class` 代表图标的 css class，添加 `qrcode` 后，图标不再是链接而是悬浮二维码

@@ -35,7 +35,7 @@ OS是4.5小時的賽程，會有兩台主機、幾張網卡和網路分享器，
 
 這算是我第一次參加這種類型的比賽，感覺還是挺有趣的，只是自己太混，基本沒有準備，只拿到第四。
 
-Networking的那部份，我直到比賽的那週一才註冊netadad的帳號下載cisco packet tracer，比賽前一天還撞到工程數學的期中，所以基本上只練到兩個晚上左右，不過以前有接觸過cisco的switch，上手還算快，遇到不會配的，[這個網站[^2]](https://www.jannet.hk/home-zh-hant/)也基本上可以教你，不過比賽時還是沒有配完全部的要求，一方面是不太熟悉，常常要翻指令，另一方面是有些要求沒配過，也找不到要再哪裡配，就只能放掉。
+Networking的那部份，我直到比賽的那週一才註冊netadad的帳號下載cisco packet tracer，比賽前一天還撞到工程數學的期中，所以基本上只練到兩個晚上左右，不過以前有接觸過cisco的switch，上手還算快，練習時遇到不會配的，[這個網站[^2]](https://www.jannet.hk/home-zh-hant/)也基本上可以教你，不過比賽時還是沒有配完所有的要求，一方面是不太熟悉，常常要翻指令，另一方面是有些要求沒配過，也找不到要再哪裡配，就只能放掉。
 
 OS的部分差不多準備了三、四個晚上，基本都是準備windows server的部分，算是從0開始學習，真的要感謝chummy教我windows server的配置，比賽前一天他還幫我複習這部份。題目倒是不算太難，不過linux server很多地方沒有拿到分，第一眼看題目感覺我應該都會，結果因為沒有複習，全是靠以前配的記憶，忘記了幾個關鍵的配置，就變成：欸怎麼服務都起不來？反而初次接觸的windows server配置幾乎全配完了，有點尷尬
 
@@ -43,6 +43,6 @@ OS的部分差不多準備了三、四個晚上，基本都是準備windows serv
 
 ## 參考
 
-[^1]: https://blog.chummydns.com/
+[^1]: [Chummy的Blog](https://blog.chummydns.com/)
 
-[^2]: https://www.jannet.hk/home-zh-hant/
+[^2]: [Jan Ho 的網絡世界](https://www.jannet.hk/home-zh-hant/)

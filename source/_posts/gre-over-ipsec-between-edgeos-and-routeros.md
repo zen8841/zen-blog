@@ -147,7 +147,7 @@ Profile 是IKE phase1協商的參數
 
 ##### 創建loopback interface
 
-```
+```shell
 set interfaces loopback lo address 10.1.1.2/32
 ```
 
@@ -181,7 +181,7 @@ VPN頁面 -> IPsec Site-to-Site
 
 ![](routeros/gre_new_routes.png)
 
-#### EdgeOS
+#### EdgeOS[^7]
 
 ```shell
 configure
@@ -204,3 +204,8 @@ commit ; save
 [^4]: [EdgeRouter to MikroTik IPSec VPN](https://docs.google.com/document/d/13WTT3wZgejNWP0EPNeKQ24XXCVFM3g521doVrzeHqtg/edit)
 [^5]: [Dummy or Loopback interface](https://forum.mikrotik.com/viewtopic.php?t=108227)
 [^6]: [loopback interface in mikrotik](https://forum.mikrotik.com/viewtopic.php?t=187390)
+[^7]: [EdgeRouter - GRE Tunnel ](https://help.ui.com/hc/en-us/articles/205231690-EdgeRouter-GRE-Tunnel)
+[^8]: [Manual:IP/IPsec - MikroTik Wiki](https://wiki.mikrotik.com/wiki/Manual:IP/IPsec)
+[^9]: [EdgeRouter - EoGRE Layer 2 Tunnel](https://help.ui.com/hc/en-us/articles/204961754-EdgeRouter-EoGRE-Layer-2-Tunnel)
+[^10]: [GRE over IPSec tunnel](https://community.ui.com/questions/GRE-over-IPSec-tunnel/7f1bc5c4-ba65-4c6f-a8f5-7c2fd3135693)
+[^11]: [EdgeRouter - Modifying the Default IPsec Site-to-Site VPN](https://help.ui.com/hc/en-us/articles/216771078-EdgeRouter-Modifying-the-Default-IPsec-Site-to-Site-VPN#3)

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Zen&#39;s Blog</title>
+  <icon>https://www.zenwen.eu.org/icon.png</icon>
+  <subtitle>生命不息，折騰不止</subtitle>
+  <link href="https://www.zenwen.eu.org/atom.xml" rel="self"/>
+  
+  <link href="https://www.zenwen.eu.org/"/>
+  <updated>2024-04-29T07:41:44.000Z</updated>
+  <id>https://www.zenwen.eu.org/</id>
+  
+  <author>
+    <name>Zen Wen</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>有關xz漏洞產生的時間線和原理</title>
+    <link href="https://www.zenwen.eu.org/xz-CVE-2024-3094/"/>
+    <id>https://www.zenwen.eu.org/xz-CVE-2024-3094/</id>
+    <published>2024-04-29T07:41:44.000Z</published>
+    <updated>2024-04-29T07:41:44.000Z</updated>
+    
+    
+    <summary type="html">xz漏洞的一些介紹</summary>
+    
+    
+    
+    <category term="資安" scheme="https://www.zenwen.eu.org/categories/%E8%B3%87%E5%AE%89/"/>
+    
+    
+    <category term="xz" scheme="https://www.zenwen.eu.org/tags/xz/"/>
+    
+    <category term="CVE-2024-3094" scheme="https://www.zenwen.eu.org/tags/CVE-2024-3094/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>在EdgeOS和RouterOS之間建立GRE over IPsec tunnel</title>
+    <link href="https://www.zenwen.eu.org/gre-over-ipsec-between-edgeos-and-routeros/"/>
+    <id>https://www.zenwen.eu.org/gre-over-ipsec-between-edgeos-and-routeros/</id>
+    <published>2024-04-24T16:04:43.000Z</published>
+    <updated>2024-04-24T16:04:43.000Z</updated>
+    
+    
+    <summary type="html">介紹如何在兩個系統間建立安全的GRE tunnel</summary>
+    
+    
+    
+    <category term="教程" scheme="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/"/>
+    
+    
+    <category term="network" scheme="https://www.zenwen.eu.org/tags/network/"/>
+    
+    <category term="UBNT" scheme="https://www.zenwen.eu.org/tags/UBNT/"/>
+    
+    <category term="Ubiquiti" scheme="https://www.zenwen.eu.org/tags/Ubiquiti/"/>
+    
+    <category term="EdgeOS" scheme="https://www.zenwen.eu.org/tags/EdgeOS/"/>
+    
+    <category term="Mikrotik" scheme="https://www.zenwen.eu.org/tags/Mikrotik/"/>
+    
+    <category term="RouterOS" scheme="https://www.zenwen.eu.org/tags/RouterOS/"/>
+    
+    <category term="GRE over IPsec" scheme="https://www.zenwen.eu.org/tags/GRE-over-IPsec/"/>
+    
+    <category term="IPsec" scheme="https://www.zenwen.eu.org/tags/IPsec/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>54屆技能競賽南區區賽 - 39 資訊與網路技術</title>
+    <link href="https://www.zenwen.eu.org/54th-skills39-south-area/"/>
+    <id>https://www.zenwen.eu.org/54th-skills39-south-area/</id>
+    <published>2024-04-23T18:45:59.000Z</published>
+    <updated>2024-04-23T18:45:59.000Z</updated>
+    
+    
+    <summary type="html">簡單分享一下打技能競賽的感想</summary>
+    
+    
+    
+    <category term="比賽" scheme="https://www.zenwen.eu.org/categories/%E6%AF%94%E8%B3%BD/"/>
+    
+    
+    <category term="network" scheme="https://www.zenwen.eu.org/tags/network/"/>
+    
+    <category term="server" scheme="https://www.zenwen.eu.org/tags/server/"/>
+    
+  </entry>
+  
+</feed>

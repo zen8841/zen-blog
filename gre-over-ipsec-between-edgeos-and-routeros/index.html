@@ -1,0 +1,947 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-TW" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/icon.png">
+  <link rel="icon" href="/assets/icon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Zen Wen">
+  <meta name="keywords" content="linux network computer">
+  
+    <meta name="description" content="介紹如何在兩個系統間建立安全的GRE tunnel">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在EdgeOS和RouterOS之間建立GRE over IPsec tunnel">
+<meta property="og:url" content="https://www.zenwen.eu.org/gre-over-ipsec-between-edgeos-and-routeros/index.html">
+<meta property="og:site_name" content="Zen&#39;s Blog">
+<meta property="og:description" content="介紹如何在兩個系統間建立安全的GRE tunnel">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://www.zenwen.eu.org/gre-over-ipsec-between-edgeos-and-routeros/ipsec_enc.jpg">
+<meta property="og:image" content="https://www.zenwen.eu.org/gre-over-ipsec-between-edgeos-and-routeros/network_topology.png">
+<meta property="og:image" content="https://www.zenwen.eu.org/gre-over-ipsec-between-edgeos-and-routeros/routeros/ipsec_new_profile.png">
+<meta property="og:image" content="https://www.zenwen.eu.org/gre-over-ipsec-between-edgeos-and-routeros/routeros/ipsec_profile_encryption_change.png">
+<meta property="og:image" content="https://www.zenwen.eu.org/gre-over-ipsec-between-edgeos-and-routeros/routeros/ipsec_new_peer.png">
+<meta property="og:image" content="https://www.zenwen.eu.org/gre-over-ipsec-between-edgeos-and-routeros/routeros/ipsec_new_indentities.png">
+<meta property="og:image" content="https://www.zenwen.eu.org/gre-over-ipsec-between-edgeos-and-routeros/routeros/ipsec_new_proposal.png">
+<meta property="og:image" content="https://www.zenwen.eu.org/gre-over-ipsec-between-edgeos-and-routeros/routeros/ipsec_proposal_dhgroup_change.png">
+<meta property="og:image" content="https://www.zenwen.eu.org/gre-over-ipsec-between-edgeos-and-routeros/routeros/new_bridge_general.png">
+<meta property="og:image" content="https://www.zenwen.eu.org/gre-over-ipsec-between-edgeos-and-routeros/routeros/new_bridge_stp.png">
+<meta property="og:image" content="https://www.zenwen.eu.org/gre-over-ipsec-between-edgeos-and-routeros/routeros/loopback_interface_ip.png">
+<meta property="og:image" content="https://www.zenwen.eu.org/gre-over-ipsec-between-edgeos-and-routeros/routeros/ipsec_new_polices_general.png">
+<meta property="og:image" content="https://www.zenwen.eu.org/gre-over-ipsec-between-edgeos-and-routeros/routeros/ipsec_new_polices_action.png">
+<meta property="og:image" content="https://www.zenwen.eu.org/gre-over-ipsec-between-edgeos-and-routeros/routeros/firewall_nat_rule_general.png">
+<meta property="og:image" content="https://www.zenwen.eu.org/gre-over-ipsec-between-edgeos-and-routeros/routeros/firewall_nat_rule_action.png">
+<meta property="og:image" content="https://www.zenwen.eu.org/gre-over-ipsec-between-edgeos-and-routeros/edgeos_ipsec_vpn.png">
+<meta property="og:image" content="https://www.zenwen.eu.org/gre-over-ipsec-between-edgeos-and-routeros/routeros/gre_new_interface.png">
+<meta property="og:image" content="https://www.zenwen.eu.org/gre-over-ipsec-between-edgeos-and-routeros/routeros/gre_interface_status.png">
+<meta property="og:image" content="https://www.zenwen.eu.org/gre-over-ipsec-between-edgeos-and-routeros/routeros/gre_interface_ip.png">
+<meta property="og:image" content="https://www.zenwen.eu.org/gre-over-ipsec-between-edgeos-and-routeros/routeros/gre_new_routes.png">
+<meta property="article:published_time" content="2024-04-24T16:04:43.000Z">
+<meta property="article:modified_time" content="2024-04-24T16:04:43.000Z">
+<meta property="article:author" content="Zen Wen">
+<meta property="article:tag" content="network">
+<meta property="article:tag" content="UBNT">
+<meta property="article:tag" content="Ubiquiti">
+<meta property="article:tag" content="EdgeOS">
+<meta property="article:tag" content="Mikrotik">
+<meta property="article:tag" content="RouterOS">
+<meta property="article:tag" content="GRE over IPsec">
+<meta property="article:tag" content="IPsec">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.zenwen.eu.org/gre-over-ipsec-between-edgeos-and-routeros/ipsec_enc.jpg">
+  
+  
+  
+  <title>在EdgeOS和RouterOS之間建立GRE over IPsec tunnel - Zen&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.zenwen.eu.org","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"|","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.2.0"><link rel="alternate" href="/atom.xml" title="Zen's Blog" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="Zen's Blog" type="application/rss+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Zen&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首頁</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>歸檔</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分類</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>標籤</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>關於</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>連結</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-rss"></i>
+                <span>RSS</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/atom.xml" target="_self">
+                    
+                    <span>Atom</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/rss2.xml" target="_self">
+                    
+                    <span>RSS2</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/assets/banner.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="在EdgeOS和RouterOS之間建立GRE over IPsec tunnel"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-04-25 00:04" pubdate>
+          2024年4月25日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          801 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          7 分鐘
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-right: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="教程"
+        id="heading-b7824d5cd41d06de995a661879fefd3d" role="tab" data-toggle="collapse" href="#collapse-b7824d5cd41d06de995a661879fefd3d"
+        aria-expanded="true"
+      >
+        教程
+        <span class="list-group-count">(1)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-b7824d5cd41d06de995a661879fefd3d"
+           role="tabpanel" aria-labelledby="heading-b7824d5cd41d06de995a661879fefd3d">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/gre-over-ipsec-between-edgeos-and-routeros/" title="在EdgeOS和RouterOS之間建立GRE over IPsec tunnel"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">在EdgeOS和RouterOS之間建立GRE over IPsec tunnel</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">在EdgeOS和RouterOS之間建立GRE over IPsec tunnel</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="介紹">介紹</h1>
+<p>一般來說建立GRE over IPsec tunnel有三種方法<sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span class="hint--top hint--rounded" aria-label="[ GRE Over IPsec for Secure Tunneling : VyOS Support Portal ](https://support.vyos.io/support/solutions/articles/103000096326-gre-over-ipsec-for-secure-tunneling)">[1]</span></a></sup></p>
+<ul>
+<li>GRE over IPsec transport mode</li>
+<li>GRE over IPsec tunnel mode</li>
+<li>Virtual Tunnel Interface (VTI)</li>
+</ul>
+<p>不過RouterOS好像到現在都還不支持VTI，因此本文中不會討論</p>
+<p><img src="ipsec_enc.jpg" srcset="/img/loading.gif" lazyload alt=""></p>
+<h2 id="GRE-over-IPsec-transport-mode">GRE over IPsec transport mode</h2>
+<p>GRE over IPsec transport mode簡單來說就是建立一個GRE tunnel，並設定IPsec transport mode保護在兩個peer中傳輸的封包內容，ESP只會保護Data段的內容，因此IP Header之類的資訊還是可以被得知</p>
+<p>這種方式缺點是萬一兩邊的IPsec並沒有成功建立、或是連線中斷，由於GRE tunnel是直接使用對方的public IP連線，有可能GRE tunnel會直接在public internet中裸奔，且兩邊都必須有public IP，不能位於NAT後方。</p>
+<h2 id="GRE-over-IPsec-tunnel-mode">GRE over IPsec tunnel mode</h2>
+<p>GRE over IPsec tunnel mode則是先在兩個peer間建立IPsec tunnel，接著使用IPsec tunnel中的IP去建立GRE tunnel，此時GRE tunnel的整個封包都會被ESP給包住，因此達到加密的效果。</p>
+<p>在IPsec連線未成功建立或中斷時，GRE tunnel將無法通訊，這既是缺點也是優點，可以防止通訊裸露在public internet中，但是由於過了兩個tunnel，因此mtu會較低，可能會對速度造成影響</p>
+<h1 id="操作">操作</h1>
+<p>網路拓樸如下，請自行替換對應的IP</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center"><strong>public IP(WAN IP)</strong></th>
+<th style="text-align:center"><strong>tunnel interface IP</strong></th>
+<th style="text-align:center"><strong>內部網路</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><strong>RouterOS</strong></td>
+<td style="text-align:center">203.0.113.1</td>
+<td style="text-align:center">10.2.1.1/30</td>
+<td style="text-align:center">192.168.1.254/24</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>EdgeOS</strong></td>
+<td style="text-align:center">203.0.113.2</td>
+<td style="text-align:center">10.2.1.2/30</td>
+<td style="text-align:center">192.168.2.254/24</td>
+</tr>
+</tbody>
+</table>
+<p><img src="network_topology.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<h2 id="GRE-over-IPsec-transport-mode-2">GRE over IPsec transport mode</h2>
+<p>待更新</p>
+<p>也許可以先參考DN42發布的這篇文章<sup id="fnref:2" class="footnote-ref"><a href="#fn:2" rel="footnote"><span class="hint--top hint--rounded" aria-label="[howto/EdgeOS GRE IPsec Example](https://dn42.eu/howto/EdgeOS-GRE-IPsec-Example)">[2]</span></a></sup>研究看看，Ubiquiti Help Center中並沒有IPsec transport mode的相關文件</p>
+<h2 id="GRE-over-IPsec-tunnel-mode-2">GRE over IPsec tunnel mode</h2>
+<p>在這部份中，將會在兩個peer上建立loopback interface，IPsec tunnel將設定成只會轉發對方loopback interface 的IP</p>
+<p>下表是示範時使用的IP，如果要使用其他IP，請替換對應的位置</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center"><strong>loopback interface IP</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><strong>RouterOS</strong></td>
+<td style="text-align:center">10.1.1.1/32</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>EdgeOS</strong></td>
+<td style="text-align:center">10.1.1.2/32</td>
+</tr>
+</tbody>
+</table>
+<h3 id="IPsec-tunnel">IPsec tunnel</h3>
+<p>此部份大部分參考這些文件<sup id="fnref:3" class="footnote-ref"><a href="#fn:3" rel="footnote"><span class="hint--top hint--rounded" aria-label="[How to create an IPsec VPN between Unifi USG and Mikrotik firewalls](https://github.com/iisti/how-to-usg-mikrotik-ipsec-vpn)">[3]</span></a></sup><sup id="fnref:4" class="footnote-ref"><a href="#fn:4" rel="footnote"><span class="hint--top hint--rounded" aria-label="[EdgeRouter to MikroTik IPSec VPN](https://docs.google.com/document/d/13WTT3wZgejNWP0EPNeKQ24XXCVFM3g521doVrzeHqtg/edit)">[4]</span></a></sup>，但在此之上做了一些小修改</p>
+<h4 id="RouterOS">RouterOS</h4>
+<h5 id="IP-IPsec-Profiles-new">IP -&gt; IPsec -&gt; Profiles -&gt; new</h5>
+<p>Profile 是IKE phase1協商的參數</p>
+<p><img src="routeros/ipsec_new_profile.png" srcset="/img/loading.gif" lazyload alt=""></p>
+
+    <div class="fold">
+      <div class="fold-title fold-info collapsed" data-toggle="collapse" href="#collapse-832d777c" role="button" aria-expanded="false" aria-controls="collapse-832d777c">
+        <div class="fold-arrow">▶</div>更改EdgeOS端Encryption的參數
+      </div>
+      <div class="fold-collapse collapse" id="collapse-832d777c">
+        <div class="fold-content">
+          <p>如果想更改EdgeOS端Encryption的參數，要在這裡修改對應的參數</p><p><img src="routeros/ipsec_profile_encryption_change.png" srcset="/img/loading.gif" lazyload alt=""></p>
+        </div>
+      </div>
+    </div>
+<h5 id="IP-IPsec-Peers-new">IP -&gt; IPsec -&gt; Peers -&gt; new</h5>
+<p><img src="routeros/ipsec_new_peer.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<h5 id="IP-IPsec-Identities-new">IP -&gt; IPsec -&gt; Identities -&gt; new</h5>
+<p><img src="routeros/ipsec_new_indentities.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<p>先不用在意底下的警告，等最後再回來確認就好</p>
+<h5 id="IP-IPsec-Proposals-new">IP -&gt; IPsec -&gt; Proposals -&gt; new</h5>
+<p><img src="routeros/ipsec_new_proposal.png" srcset="/img/loading.gif" lazyload alt=""></p>
+
+    <div class="fold">
+      <div class="fold-title fold-info collapsed" data-toggle="collapse" href="#collapse-ba6eecfc" role="button" aria-expanded="false" aria-controls="collapse-ba6eecfc">
+        <div class="fold-arrow">▶</div>更改EdgeOS端DH Group的參數
+      </div>
+      <div class="fold-collapse collapse" id="collapse-ba6eecfc">
+        <div class="fold-content">
+          <p>如果想更改EdgeOS端DH Group的參數，要在這裡修改對應的參數</p><p><img src="routeros/ipsec_proposal_dhgroup_change.png" srcset="/img/loading.gif" lazyload alt=""></p>
+        </div>
+      </div>
+    </div>
+<h5 id="建立loopback-interface">建立loopback interface</h5>
+<p>由於RouterOS沒有loopback interface一類的設備<sup id="fnref:5" class="footnote-ref"><a href="#fn:5" rel="footnote"><span class="hint--top hint--rounded" aria-label="[Dummy or Loopback interface](https://forum.mikrotik.com/viewtopic.php?t=108227)">[5]</span></a></sup><sup id="fnref:6" class="footnote-ref"><a href="#fn:6" rel="footnote"><span class="hint--top hint--rounded" aria-label="[loopback interface in mikrotik](https://forum.mikrotik.com/viewtopic.php?t=187390)">[6]</span></a></sup>，因此創建loopback interface的方法會是建立一個空的bridge，然後給予這個bridge一個IP</p>
+<h6 id="Bridge-Bridge-new">Bridge -&gt; Bridge -&gt; new</h6>
+<p><img src="routeros/new_bridge_general.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<p><img src="routeros/new_bridge_stp.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<p>其他設定保持默認就好</p>
+<h6 id="IP-Addresses-new">IP -&gt; Addresses -&gt; new</h6>
+<p><img src="routeros/loopback_interface_ip.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<h5 id="IP-IPsec-Policies-new">IP -&gt; IPsec -&gt; Policies -&gt; new</h5>
+<p><img src="routeros/ipsec_new_polices_general.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<p><img src="routeros/ipsec_new_polices_action.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<p>如果要轉發多個子網的話Action部分的Level要設定為unique，不過此次設定只需要轉發兩端router的IP就好</p>
+<h5 id="IP-Firewall-NAT-new">IP -&gt; Firewall -&gt; NAT -&gt; new</h5>
+<p><img src="routeros/firewall_nat_rule_general.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<p><img src="routeros/firewall_nat_rule_action.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<p>要將此條規則移至最上方</p>
+<h4 id="EdgeOS">EdgeOS</h4>
+<h5 id="創建loopback-interface">創建loopback interface</h5>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">set interfaces loopback lo address 10.1.1.2/32<br></code></pre></td></tr></table></figure>
+<h5 id="設定IPsec-Site-to-Site-VPN">設定IPsec Site to Site VPN</h5>
+<p>VPN頁面 -&gt; IPsec Site-to-Site</p>
+<p><img src="edgeos_ipsec_vpn.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<p>完成這些設定後，兩端的IPsec tunnel應該就架好了，可以嘗試互相ping看看對方的loopback inerface IP，使用RouterOS ping時記得要指定來源IP為loopback inerface IP</p>
+<p>在IPsec 的Active Peers和Installed SAs應該就能看到東西出現了</p>
+<h3 id="GRE-tunnel">GRE tunnel</h3>
+<h4 id="RouterOS-2">RouterOS</h4>
+<h5 id="Interfaces-GRE-Tunnel-new">Interfaces -&gt; GRE Tunnel -&gt; new</h5>
+<p><img src="routeros/gre_new_interface.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<p>設定成功後應該會顯示mtu的資訊</p>
+<p><img src="routeros/gre_interface_status.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<h5 id="IP-Addresses-new-2">IP -&gt; Addresses -&gt; new</h5>
+<p><img src="routeros/gre_interface_ip.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<h5 id="IP-Routes-new">IP -&gt; Routes -&gt; new</h5>
+<p><img src="routeros/gre_new_routes.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<h4 id="EdgeOS-sup-id-fnref-7-class-footnote-ref-a-href-fn-7-rel-footnote-span-class-hint-top-hint-rounded-aria-label-EdgeRouter-GRE-Tunnel-https-help-ui-com-hc-en-us-articles-205231690-EdgeRouter-GRE-Tunnel-7-span-a-sup">EdgeOS<sup id="fnref:7" class="footnote-ref"><a href="#fn:7" rel="footnote"><span class="hint--top hint--rounded" aria-label="[EdgeRouter - GRE Tunnel ](https://help.ui.com/hc/en-us/articles/205231690-EdgeRouter-GRE-Tunnel)">[7]</span></a></sup></h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell">configure<br>set interfaces tunnel tun0 local-ip 10.1.1.2<br>set interfaces tunnel tun0 remote-ip 10.1.1.1<br>set interfaces tunnel tun0 encapsulation<br>set interfaces tunnel tun0 encapsulation gre<br>set interfaces tunnel tun0 address 10.2.1.2/30<br>set protocols static interface-route 192.168.1.0/24 next-hop-interface tun0<br>commit ; save<br></code></pre></td></tr></table></figure>
+<p>完成這些設定後，在兩個peer間就建立了GRE over IPsec tunnel</p>
+<h2 id="參考">參考</h2>
+<section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://support.vyos.io/support/solutions/articles/103000096326-gre-over-ipsec-for-secure-tunneling"> GRE Over IPsec for Secure Tunneling : VyOS Support Portal </a>
+<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://dn42.eu/howto/EdgeOS-GRE-IPsec-Example">howto/EdgeOS GRE IPsec Example</a>
+<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:3" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://github.com/iisti/how-to-usg-mikrotik-ipsec-vpn">How to create an IPsec VPN between Unifi USG and Mikrotik firewalls</a>
+<a href="#fnref:3" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:4" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://docs.google.com/document/d/13WTT3wZgejNWP0EPNeKQ24XXCVFM3g521doVrzeHqtg/edit">EdgeRouter to MikroTik IPSec VPN</a>
+<a href="#fnref:4" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:5" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://forum.mikrotik.com/viewtopic.php?t=108227">Dummy or Loopback interface</a>
+<a href="#fnref:5" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:6" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://forum.mikrotik.com/viewtopic.php?t=187390">loopback interface in mikrotik</a>
+<a href="#fnref:6" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:7" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://help.ui.com/hc/en-us/articles/205231690-EdgeRouter-GRE-Tunnel">EdgeRouter - GRE Tunnel </a>
+<a href="#fnref:7" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:8" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://wiki.mikrotik.com/wiki/Manual:IP/IPsec">Manual:IP/IPsec - MikroTik Wiki</a>
+<a href="#fnref:8" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:9" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://help.ui.com/hc/en-us/articles/204961754-EdgeRouter-EoGRE-Layer-2-Tunnel">EdgeRouter - EoGRE Layer 2 Tunnel</a>
+<a href="#fnref:9" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:10" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://community.ui.com/questions/GRE-over-IPSec-tunnel/7f1bc5c4-ba65-4c6f-a8f5-7c2fd3135693">GRE over IPSec tunnel</a>
+<a href="#fnref:10" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:11" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://help.ui.com/hc/en-us/articles/216771078-EdgeRouter-Modifying-the-Default-IPsec-Site-to-Site-VPN#3">EdgeRouter - Modifying the Default IPsec Site-to-Site VPN</a>
+<a href="#fnref:11" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%95%99%E7%A8%8B/" class="category-chain-item">教程</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/network/" class="print-no-link">#network</a>
+      
+        <a href="/tags/UBNT/" class="print-no-link">#UBNT</a>
+      
+        <a href="/tags/Ubiquiti/" class="print-no-link">#Ubiquiti</a>
+      
+        <a href="/tags/EdgeOS/" class="print-no-link">#EdgeOS</a>
+      
+        <a href="/tags/Mikrotik/" class="print-no-link">#Mikrotik</a>
+      
+        <a href="/tags/RouterOS/" class="print-no-link">#RouterOS</a>
+      
+        <a href="/tags/GRE-over-IPsec/" class="print-no-link">#GRE over IPsec</a>
+      
+        <a href="/tags/IPsec/" class="print-no-link">#IPsec</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>在EdgeOS和RouterOS之間建立GRE over IPsec tunnel</div>
+      <div>https://www.zenwen.eu.org/gre-over-ipsec-between-edgeos-and-routeros/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Zen Wen</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>發布於</div>
+          <div>2024年4月25日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>許可協議</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/xz-CVE-2024-3094/" title="有關xz漏洞產生的時間線和原理">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">有關xz漏洞產生的時間線和原理</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/54th-skills39-south-area/" title="54屆技能競賽南區區賽 - 39 資訊與網路技術">
+                        <span class="hidden-mobile">54屆技能競賽南區區賽 - 39 資訊與網路技術</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目錄</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜尋</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">關鍵字</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+      <div class="col-lg-7 mx-auto nopadding-x-md">
+        <div class="container custom mx-auto">
+          <script>    var titleTime;    var OriginTitile = document.title;    document.addEventListener('visibilitychange', function() {        if (document.hidden) {            document.title = '|ω·) 喵~快回來呀！';            clearTimeout(titleTime);        } else {            document.title = '(/≧▽≦)/ Meow！';            titleTime = setTimeout(function() {            document.title = OriginTitile;            }, 800);        }    });</script>
+        </div>
+      </div>
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Power By Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Theme：Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允許 JavaScript 運行的環境下瀏覽效果更佳</div>
+  </noscript>
+</body>
+</html>

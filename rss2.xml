@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0"
+  xmlns:atom="http://www.w3.org/2005/Atom"
+  xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Zen&#39;s Blog</title>
+    <link>https://www.zenwen.eu.org/</link>
+    
+    <image>
+      <url>https://www.zenwen.eu.org/icon.png</url>
+      <title>Zen&#39;s Blog</title>
+      <link>https://www.zenwen.eu.org/</link>
+    </image>
+    
+    <atom:link href="https://www.zenwen.eu.org/rss2.xml" rel="self" type="application/rss+xml"/>
+    
+    <description>簡單記錄一下折騰的內容，可能還會發發感想？</description>
+    <pubDate>Mon, 29 Apr 2024 07:41:44 GMT</pubDate>
+    <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>有關xz漏洞產生的時間線和原理</title>
+      <link>https://www.zenwen.eu.org/xz-CVE-2024-3094/</link>
+      <guid>https://www.zenwen.eu.org/xz-CVE-2024-3094/</guid>
+      <pubDate>Mon, 29 Apr 2024 07:41:44 GMT</pubDate>
+      
+      <description>xz漏洞的一些介紹</description>
+      
+      
+      
+      
+      <category domain="https://www.zenwen.eu.org/categories/%E8%B3%87%E5%AE%89/">資安</category>
+      
+      
+      <category domain="https://www.zenwen.eu.org/tags/xz/">xz</category>
+      
+      <category domain="https://www.zenwen.eu.org/tags/CVE-2024-3094/">CVE-2024-3094</category>
+      
+      
+      <comments>https://www.zenwen.eu.org/xz-CVE-2024-3094/#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>在EdgeOS和RouterOS之間建立GRE over IPsec tunnel</title>
+      <link>https://www.zenwen.eu.org/gre-over-ipsec-between-edgeos-and-routeros/</link>
+      <guid>https://www.zenwen.eu.org/gre-over-ipsec-between-edgeos-and-routeros/</guid>
+      <pubDate>Wed, 24 Apr 2024 16:04:43 GMT</pubDate>
+      
+      <description>介紹如何在兩個系統間建立安全的GRE tunnel</description>
+      
+      
+      
+      
+      <category domain="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/">教程</category>
+      
+      
+      <category domain="https://www.zenwen.eu.org/tags/network/">network</category>
+      
+      <category domain="https://www.zenwen.eu.org/tags/UBNT/">UBNT</category>
+      
+      <category domain="https://www.zenwen.eu.org/tags/Ubiquiti/">Ubiquiti</category>
+      
+      <category domain="https://www.zenwen.eu.org/tags/EdgeOS/">EdgeOS</category>
+      
+      <category domain="https://www.zenwen.eu.org/tags/Mikrotik/">Mikrotik</category>
+      
+      <category domain="https://www.zenwen.eu.org/tags/RouterOS/">RouterOS</category>
+      
+      <category domain="https://www.zenwen.eu.org/tags/GRE-over-IPsec/">GRE over IPsec</category>
+      
+      <category domain="https://www.zenwen.eu.org/tags/IPsec/">IPsec</category>
+      
+      
+      <comments>https://www.zenwen.eu.org/gre-over-ipsec-between-edgeos-and-routeros/#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>54屆技能競賽南區區賽 - 39 資訊與網路技術</title>
+      <link>https://www.zenwen.eu.org/54th-skills39-south-area/</link>
+      <guid>https://www.zenwen.eu.org/54th-skills39-south-area/</guid>
+      <pubDate>Tue, 23 Apr 2024 18:45:59 GMT</pubDate>
+      
+      <description>簡單分享一下打技能競賽的感想</description>
+      
+      
+      
+      
+      <category domain="https://www.zenwen.eu.org/categories/%E6%AF%94%E8%B3%BD/">比賽</category>
+      
+      
+      <category domain="https://www.zenwen.eu.org/tags/network/">network</category>
+      
+      <category domain="https://www.zenwen.eu.org/tags/server/">server</category>
+      
+      
+      <comments>https://www.zenwen.eu.org/54th-skills39-south-area/#disqus_thread</comments>
+      
+    </item>
+    
+  </channel>
+</rss>

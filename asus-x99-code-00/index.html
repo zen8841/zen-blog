@@ -1,0 +1,894 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-TW" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/icon.png">
+  <link rel="icon" href="/assets/icon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Zen Wen">
+  <meta name="keywords" content="linux network computer">
+  
+    <meta name="description" content="分享一下該如何檢測主板的狀態，以及如何修復">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Asus X99 通病">
+<meta property="og:url" content="https://www.zenwen.eu.org/asus-x99-code-00/index.html">
+<meta property="og:site_name" content="Zen&#39;s Blog">
+<meta property="og:description" content="分享一下該如何檢測主板的狀態，以及如何修復">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://www.zenwen.eu.org/asus-x99-code-00/cpu_power_pin.png">
+<meta property="og:image" content="https://www.zenwen.eu.org/asus-x99-code-00/mb_cpu_12V_test1.jpg">
+<meta property="og:image" content="https://www.zenwen.eu.org/asus-x99-code-00/mb_cpu_12V_test2.jpg">
+<meta property="og:image" content="https://www.zenwen.eu.org/asus-x99-code-00/mb_power_pin.jpg">
+<meta property="og:image" content="https://www.zenwen.eu.org/asus-x99-code-00/mb_mos.jpg">
+<meta property="og:image" content="https://www.zenwen.eu.org/asus-x99-code-00/mos.jpg">
+<meta property="og:image" content="https://www.zenwen.eu.org/asus-x99-code-00/mos_datasheet.png">
+<meta property="og:image" content="https://www.zenwen.eu.org/asus-x99-code-00/mos_test_bad.jpg">
+<meta property="og:image" content="https://www.zenwen.eu.org/asus-x99-code-00/mos_test_good.jpg">
+<meta property="og:image" content="https://www.zenwen.eu.org/asus-x99-code-00/2011-3_layout.png">
+<meta property="article:published_time" content="2024-05-06T07:45:42.000Z">
+<meta property="article:modified_time" content="2024-05-06T07:45:42.000Z">
+<meta property="article:author" content="Zen Wen">
+<meta property="article:tag" content="3C硬體">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.zenwen.eu.org/asus-x99-code-00/cpu_power_pin.png">
+  
+  
+  
+  <title>Asus X99 通病 - Zen&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.zenwen.eu.org","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"|","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.2.0"><link rel="alternate" href="/atom.xml" title="Zen's Blog" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="Zen's Blog" type="application/rss+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Zen&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首頁</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>歸檔</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分類</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>標籤</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>關於</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>連結</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-rss"></i>
+                <span>RSS</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/atom.xml" target="_self">
+                    
+                    <span>Atom</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/rss2.xml" target="_self">
+                    
+                    <span>RSS2</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/assets/banner.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Asus X99 通病"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-05-06 15:45" pubdate>
+          2024年5月6日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          883 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          8 分鐘
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-right: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="教程"
+        id="heading-b7824d5cd41d06de995a661879fefd3d" role="tab" data-toggle="collapse" href="#collapse-b7824d5cd41d06de995a661879fefd3d"
+        aria-expanded="true"
+      >
+        教程
+        <span class="list-group-count">(2)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-b7824d5cd41d06de995a661879fefd3d"
+           role="tabpanel" aria-labelledby="heading-b7824d5cd41d06de995a661879fefd3d">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/gre-over-ipsec-between-edgeos-and-routeros/" title="在EdgeOS和RouterOS之間建立GRE over IPsec tunnel"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">在EdgeOS和RouterOS之間建立GRE over IPsec tunnel</span>
+        </a>
+      
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="疑難雜症"
+        id="heading-e2411166d77f023169f0978db441925c" role="tab" data-toggle="collapse" href="#collapse-e2411166d77f023169f0978db441925c"
+        aria-expanded="true"
+      >
+        疑難雜症
+        <span class="list-group-count">(1)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-e2411166d77f023169f0978db441925c"
+           role="tabpanel" aria-labelledby="heading-e2411166d77f023169f0978db441925c">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/asus-x99-code-00/" title="Asus X99 通病"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">Asus X99 通病</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Asus X99 通病</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="前情提要">前情提要</h1>
+<p>簡單來說，當時我正在讓服務器跑從遠端備份回來文件的哈希來驗證完整性，結果回頭一看服務器，發現就關機了。</p>
+<h2 id="症狀">症狀</h2>
+<p>此時CPU右上角的紅色LED亮起，按開機鍵都無反應，斷電重新上電紅色LED仍然點亮，這個時候我的第一猜測是可能是CPU過熱，也許讓他散熱一下就能好了。</p>
+<p>在過一陣子重新上電後，紅色LED不亮了，現在按開機鍵則變成整台機器的LED瞬間閃爍一次，主板偵錯碼(Q-code)也是和LED一樣瞬間閃00後，之後按開機鍵也無任何反應，不過將電源供應器重新上電後又會有同樣的行為。</p>
+<h1 id="偵錯">偵錯</h1>
+<p>在經過Google搜尋X99的這些症狀後，我最後定位到了一個可能的問題——華碩X99通病(MOS擊穿燒CPU)</p>
+
+    <div class="fold">
+      <div class="fold-title fold-default collapsed" data-toggle="collapse" href="#collapse-d9a9cf04" role="button" aria-expanded="false" aria-controls="collapse-d9a9cf04">
+        <div class="fold-arrow">▶</div>網路上其他人遇到的狀況
+      </div>
+      <div class="fold-collapse collapse" id="collapse-d9a9cf04">
+        <div class="fold-content">
+          <p><a target="_blank" rel="noopener" href="https://www.techpowerup.com/forums/threads/asus-x99-deluxe-a-ii-failed.262537/">ASUS X99-DELUXE A-II Failed | TechPowerUp Forums</a><sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span class="hint--top hint--rounded" aria-label="[ASUS X99-DELUXE A-II Failed | TechPowerUp Forums](https://www.techpowerup.com/forums/threads/asus-x99-deluxe-a-ii-failed.262537/)">[1]</span></a></sup></p><p><a target="_blank" rel="noopener" href="https://www.overclock.net/threads/asus-x99-a-ii-code-00-not-listed-red-cpu-light-on.1615149/">ASUS X99 A-II Code 00 (Not Listed) Red CPU Light On | Overclock.net</a><sup id="fnref:2" class="footnote-ref"><a href="#fn:2" rel="footnote"><span class="hint--top hint--rounded" aria-label="[ASUS X99 A-II Code 00 (Not Listed) Red CPU Light On | Overclock.net](https://www.overclock.net/threads/asus-x99-a-ii-code-00-not-listed-red-cpu-light-on.1615149/)">[2]</span></a></sup></p><p><a target="_blank" rel="noopener" href="https://www.reddit.com/r/buildapc/comments/5sywuu/x99_a_ii_will_not_post/">X99 A II will not POST!! : r/buildapc</a><sup id="fnref:3" class="footnote-ref"><a href="#fn:3" rel="footnote"><span class="hint--top hint--rounded" aria-label="[X99 A II will not POST!! : r/buildapc](https://www.reddit.com/r/buildapc/comments/5sywuu/x99_a_ii_will_not_post/)">[3]</span></a></sup></p><p><a target="_blank" rel="noopener" href="https://forums.tomshardware.com/threads/asus-x99-a-ii-suddenly-shutdown-and-now-giving-q-code-00.2915943/">Asus X99-A II suddenly shutdown and now giving Q code 00 | Tom’s Hardware Forum</a><sup id="fnref:4" class="footnote-ref"><a href="#fn:4" rel="footnote"><span class="hint--top hint--rounded" aria-label="[Asus X99-A II suddenly shutdown and now giving Q code 00 | Tom's Hardware Forum](https://forums.tomshardware.com/threads/asus-x99-a-ii-suddenly-shutdown-and-now-giving-q-code-00.2915943/)">[4]</span></a></sup></p>
+        </div>
+      </div>
+    </div>
+<h1 id="檢測">檢測</h1>
+<p>那麼，對電腦的錯誤有了猜測，接下來就是檢測了</p>
+<h2 id="主機板">主機板</h2>
+
+    <div class="fold">
+      <div class="fold-title fold-default collapsed" data-toggle="collapse" href="#collapse-55b26b0e" role="button" aria-expanded="false" aria-controls="collapse-55b26b0e">
+        <div class="fold-arrow">▶</div>CPU供電針腳定義
+      </div>
+      <div class="fold-collapse collapse" id="collapse-55b26b0e">
+        <div class="fold-content">
+          <p><img src="cpu_power_pin.png" srcset="/img/loading.gif" lazyload alt=""></p>
+        </div>
+      </div>
+    </div>
+<p>首先將三用電表打到測通檔(二極體檔)，量測CPU供電12V和電感下端</p>
+<p>12V對電感下端短路，這邊就基本可以宣告CPU死定了，12V直衝CPU</p>
+<div class="group-image-container"><div class="group-image-row"><div class="group-image-wrap"><img src="mb_cpu_12V_test1.jpg" srcset="/img/loading.gif" lazyload alt=""></div><div class="group-image-wrap"><img src="mb_cpu_12V_test2.jpg" srcset="/img/loading.gif" lazyload alt=""></div></div></div>
+<p>同時12V也對地短路了</p>
+<p>這也可以解釋為什麼之前開機一瞬間燈會閃一下，但之後按開機卻再也沒有反應，直到斷電重來。</p>
+<p>主板在開機按下時短接PS_ON和GND，拉低PS_ON，電源啟動，輸出12V，但是CPU供電短路，電源供應器自動保護斷電，之後也不開啓，直到斷電重置。</p>
+
+    <div class="fold">
+      <div class="fold-title fold-default collapsed" data-toggle="collapse" href="#collapse-2f23950e" role="button" aria-expanded="false" aria-controls="collapse-2f23950e">
+        <div class="fold-arrow">▶</div>主機板供電針腳定義
+      </div>
+      <div class="fold-collapse collapse" id="collapse-2f23950e">
+        <div class="fold-content">
+          <p><img src="mb_power_pin.jpg" srcset="/img/loading.gif" lazyload alt=""></p>
+        </div>
+      </div>
+    </div>
+<p>現在知道主機板有短路後，就繼續排查哪裡出了問題，首先拆下供電散熱檢查底下的MOS</p>
+<div class="group-image-container"><div class="group-image-row"><div class="group-image-wrap"><img src="mb_mos.jpg" srcset="/img/loading.gif" lazyload alt=""></div><div class="group-image-wrap"><img src="mos.jpg" srcset="/img/loading.gif" lazyload alt=""></div><div class="group-image-wrap"><img src="mos_datasheet.png" srcset="/img/loading.gif" lazyload alt=""></div></div></div>
+<p>MOS的型號是0812ND，查看datasheet可以知道這是一顆集成上下管的IC。</p>
+<p>需要量測的就是這顆IC裡的上下管正不正常。</p>
+<p>首先量測上管，也就是1腳和2/3/4任一腳(Gate和Drain，圓點位置代表第一腳)，發現右數第三顆的阻值不對(左圖)，右圖則是正常的MOS應該有的讀值。</p>
+<div class="group-image-container"><div class="group-image-row"><div class="group-image-wrap"><img src="mos_test_bad.jpg" srcset="/img/loading.gif" lazyload alt=""></div><div class="group-image-wrap"><img src="mos_test_good.jpg" srcset="/img/loading.gif" lazyload alt=""></div></div></div>
+<p>這代表第三顆MOS的上管擊穿了直接短路，Vphase(Source)在底下連到電感，12V直接導到CPU。</p>
+<p>順便量測了所有的下管，結果都是正常。</p>
+<p>理論上只要更換壞掉的MOS應該就能修好這塊主板，等之後有時間再來修。</p>
+<h2 id="CPU">CPU</h2>
+<p>雖然前面已經猜測這顆CPU死定了，不過不看到確切的結果還是不會認命</p>
+<p>首先要找到2011-3腳位的定義，不過幸好已經有人幫我們畫出來了</p>
+<p><a target="_blank" rel="noopener" href="https://imgur.com/gallery/intel-socket-2011v3-land-grid-layout-thanks-sdgus68-12PjUu8">Intel Socket 2011v3 Land Grid Layout. (Thanks sdgus68!) - computer hardware post - Imgur</a><sup id="fnref:5" class="footnote-ref"><a href="#fn:5" rel="footnote"><span class="hint--top hint--rounded" aria-label="[Intel Socket 2011v3 Land Grid Layout. (Thanks sdgus68!) - computer hardware post - Imgur](https://imgur.com/gallery/intel-socket-2011v3-land-grid-layout-thanks-sdgus68-12PjUu8)">[5]</span></a></sup></p>
+<p><a target="_blank" rel="noopener" href="https://www.reddit.com/r/intel/comments/lpp83e/lga20113_landlayout/">LGA2011-3 Land-Layout : r/intel</a><sup id="fnref:6" class="footnote-ref"><a href="#fn:6" rel="footnote"><span class="hint--top hint--rounded" aria-label="[LGA2011-3 Land-Layout : r/intel](https://www.reddit.com/r/intel/comments/lpp83e/lga20113_landlayout/)">[6]</span></a></sup></p>
+<p>我是使用第一份，我覺得那比較直觀</p>
+
+    <div class="fold">
+      <div class="fold-title fold-default collapsed" data-toggle="collapse" href="#collapse-10ab6213" role="button" aria-expanded="false" aria-controls="collapse-10ab6213">
+        <div class="fold-arrow">▶</div>第一份使用的參考文件
+      </div>
+      <div class="fold-collapse collapse" id="collapse-10ab6213">
+        <div class="fold-content">
+          <p>Imgur原文有提供下載連結，但是有一個已經失效了，可以從<a target="_blank" rel="noopener" href="http://szarka.ssgg.sk/Vyuka/2014/HighEnd-LGA2011/core-i7-lga2011-3-tmsdg.pdf">這裡</a>觀看，或是在底下下載</p><p><a href="core-i7-lga2011-3-tmsdg.pdf">core-i7-lga2011-3-tmsdg.pdf</a>的52頁有針腳編號的定義</p><p><a href="core-i7-lga2011-3-datasheet-vol-1">core-i7-lga2011-3-datasheet-vol-1</a>的64頁開始有編號對應的用途</p>
+        </div>
+      </div>
+    </div>
+<p><img src="2011-3_layout.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<p>量測V<sub>CC</sub>和V<sub>SS</sub>的阻值，可以理解為供電和GND，發現短路，徹底給CPU判死刑</p>
+<video controls width="500">
+  <source src="cpu_test.mp4" type="video/mp4" />
+</video>
+<h2 id="參考">參考</h2>
+<section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://www.techpowerup.com/forums/threads/asus-x99-deluxe-a-ii-failed.262537/">ASUS X99-DELUXE A-II Failed | TechPowerUp Forums</a>
+<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://www.overclock.net/threads/asus-x99-a-ii-code-00-not-listed-red-cpu-light-on.1615149/">ASUS X99 A-II Code 00 (Not Listed) Red CPU Light On | Overclock.net</a>
+<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:3" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://www.reddit.com/r/buildapc/comments/5sywuu/x99_a_ii_will_not_post/">X99 A II will not POST!! : r/buildapc</a>
+<a href="#fnref:3" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:4" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://forums.tomshardware.com/threads/asus-x99-a-ii-suddenly-shutdown-and-now-giving-q-code-00.2915943/">Asus X99-A II suddenly shutdown and now giving Q code 00 | Tom’s Hardware Forum</a>
+<a href="#fnref:4" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:5" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://imgur.com/gallery/intel-socket-2011v3-land-grid-layout-thanks-sdgus68-12PjUu8">Intel Socket 2011v3 Land Grid Layout. (Thanks sdgus68!) - computer hardware post - Imgur</a>
+<a href="#fnref:5" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:6" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://www.reddit.com/r/intel/comments/lpp83e/lga20113_landlayout/">LGA2011-3 Land-Layout : r/intel</a>
+<a href="#fnref:6" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%95%99%E7%A8%8B/" class="category-chain-item">教程</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E6%95%99%E7%A8%8B/%E7%96%91%E9%9B%A3%E9%9B%9C%E7%97%87/" class="category-chain-item">疑難雜症</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/3C%E7%A1%AC%E9%AB%94/" class="print-no-link">#3C硬體</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Asus X99 通病</div>
+      <div>https://www.zenwen.eu.org/asus-x99-code-00/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Zen Wen</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>發布於</div>
+          <div>2024年5月6日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>許可協議</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/xz-CVE-2024-3094/" title="有關xz漏洞產生的時間線和原理">
+                        <span class="hidden-mobile">有關xz漏洞產生的時間線和原理</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目錄</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜尋</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">關鍵字</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+      <div class="col-lg-7 mx-auto nopadding-x-md">
+        <div class="container custom mx-auto">
+          <script>    var titleTime;    var OriginTitile = document.title;    document.addEventListener('visibilitychange', function() {        if (document.hidden) {            document.title = '|ω·) 喵~快回來呀！';            clearTimeout(titleTime);        } else {            document.title = '(/≧▽≦)/ Meow！';            titleTime = setTimeout(function() {            document.title = OriginTitile;            }, 800);        }    });</script>
+        </div>
+      </div>
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Power By Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Theme：Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允許 JavaScript 運行的環境下瀏覽效果更佳</div>
+  </noscript>
+</body>
+</html>

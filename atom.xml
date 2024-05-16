@@ -6,7 +6,7 @@
   <link href="https://www.zenwen.eu.org/atom.xml" rel="self"/>
   
   <link href="https://www.zenwen.eu.org/"/>
-  <updated>2024-04-29T07:41:44.000Z</updated>
+  <updated>2024-05-06T07:45:42.000Z</updated>
   <id>https://www.zenwen.eu.org/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Asus X99 通病</title>
+    <link href="https://www.zenwen.eu.org/asus-x99-code-00/"/>
+    <id>https://www.zenwen.eu.org/asus-x99-code-00/</id>
+    <published>2024-05-06T07:45:42.000Z</published>
+    <updated>2024-05-06T07:45:42.000Z</updated>
+    
+    
+    <summary type="html">分享一下該如何檢測主板的狀態，以及如何修復</summary>
+    
+    
+    
+    <category term="教程" scheme="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/"/>
+    
+    <category term="疑難雜症" scheme="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/%E7%96%91%E9%9B%A3%E9%9B%9C%E7%97%87/"/>
+    
+    
+    <category term="3C硬體" scheme="https://www.zenwen.eu.org/tags/3C%E7%A1%AC%E9%AB%94/"/>
+    
+  </entry>
   
   <entry>
     <title>有關xz漏洞產生的時間線和原理</title>

@@ -15,8 +15,31 @@
     <atom:link href="https://www.zenwen.eu.org/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>簡單記錄一下折騰的內容，可能還會發發感想？</description>
-    <pubDate>Mon, 29 Apr 2024 07:41:44 GMT</pubDate>
+    <pubDate>Mon, 06 May 2024 07:45:42 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>Asus X99 通病</title>
+      <link>https://www.zenwen.eu.org/asus-x99-code-00/</link>
+      <guid>https://www.zenwen.eu.org/asus-x99-code-00/</guid>
+      <pubDate>Mon, 06 May 2024 07:45:42 GMT</pubDate>
+      
+      <description>分享一下該如何檢測主板的狀態，以及如何修復</description>
+      
+      
+      
+      
+      <category domain="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/">教程</category>
+      
+      <category domain="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/%E7%96%91%E9%9B%A3%E9%9B%9C%E7%97%87/">疑難雜症</category>
+      
+      
+      <category domain="https://www.zenwen.eu.org/tags/3C%E7%A1%AC%E9%AB%94/">3C硬體</category>
+      
+      
+      <comments>https://www.zenwen.eu.org/asus-x99-code-00/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>有關xz漏洞產生的時間線和原理</title>

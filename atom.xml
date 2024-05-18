@@ -6,7 +6,7 @@
   <link href="https://www.zenwen.eu.org/atom.xml" rel="self"/>
   
   <link href="https://www.zenwen.eu.org/"/>
-  <updated>2024-05-06T07:45:42.000Z</updated>
+  <updated>2024-05-17T03:47:27.000Z</updated>
   <id>https://www.zenwen.eu.org/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>DoH、DoT、Networkmanager與systemd-resolved的設定</title>
+    <link href="https://www.zenwen.eu.org/doh-dot-networkmanager-and-systemd-resolved/"/>
+    <id>https://www.zenwen.eu.org/doh-dot-networkmanager-and-systemd-resolved/</id>
+    <published>2024-05-17T03:47:27.000Z</published>
+    <updated>2024-05-17T03:47:27.000Z</updated>
+    
+    
+    <summary type="html">分享有關最近調整DNS設定的一些經驗</summary>
+    
+    
+    
+    <category term="教程" scheme="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/"/>
+    
+    
+    <category term="network" scheme="https://www.zenwen.eu.org/tags/network/"/>
+    
+    <category term="linux" scheme="https://www.zenwen.eu.org/tags/linux/"/>
+    
+    <category term="dns" scheme="https://www.zenwen.eu.org/tags/dns/"/>
+    
+  </entry>
   
   <entry>
     <title>Asus X99 通病</title>

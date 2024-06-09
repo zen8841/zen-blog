@@ -27,7 +27,7 @@
 <meta property="og:locale" content="zh_TW">
 <meta property="og:image" content="https://www.zenwen.eu.org/doh-dot-networkmanager-and-systemd-resolved/networkmanager_ipv4_setting.png">
 <meta property="article:published_time" content="2024-05-17T03:47:27.000Z">
-<meta property="article:modified_time" content="2024-05-17T03:47:27.000Z">
+<meta property="article:modified_time" content="2024-06-09T14:24:00.000Z">
 <meta property="article:author" content="Zen Wen">
 <meta property="article:tag" content="network">
 <meta property="article:tag" content="linux">
@@ -276,7 +276,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.5k 字
+          1.8k 字
         
       </span>
     
@@ -287,7 +287,7 @@
         
         
         
-          13 分鐘
+          16 分鐘
         
       </span>
     
@@ -337,7 +337,7 @@
         aria-expanded="true"
       >
         教程
-        <span class="list-group-count">(3)</span>
+        <span class="list-group-count">(5)</span>
         <i class="iconfont icon-arrowright"></i>
       </a>
       
@@ -368,6 +368,15 @@
         </a>
       
     
+      
+      
+        <a href="/docker-compose-file-limit-resource/" title="如何在docker compose file中限制系統資源的使用"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">如何在docker compose file中限制系統資源的使用</span>
+        </a>
+      
+    
   </div>
 
           
@@ -382,7 +391,7 @@
         aria-expanded="false"
       >
         疑難雜症
-        <span class="list-group-count">(1)</span>
+        <span class="list-group-count">(2)</span>
         <i class="iconfont icon-arrowright"></i>
       </a>
       
@@ -400,6 +409,15 @@
            class="list-group-item list-group-item-action
            ">
           <span class="category-post">Asus X99 通病</span>
+        </a>
+      
+    
+      
+      
+        <a href="/cloudflare-infinite-301-redirection/" title="Cloudflare Proxy 無限301轉址"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Cloudflare Proxy 無限301轉址</span>
         </a>
       
     
@@ -427,10 +445,21 @@
           <article class="post-content mx-auto">
             <h1 id="seo-header">DoH、DoT、Networkmanager與systemd-resolved的設定</h1>
             
+              <p id="updated-time" class="note note-info" style="">
+                
+                  
+                    本文最後更新於：2024年6月9日 晚上
+                  
+                
+              </p>
+            
             
               <div class="markdown-body">
                 
-                <h1 id="前言">前言</h1>
+                <div class="note note-info">
+            <p>2024/6/9更新： 有關Networkmanager的自動化腳本</p>
+          </div>
+<h1 id="前言">前言</h1>
 <p>一開始只是想給在用的筆電加上DNS over HTTPS或是DNS over Tls而已，後來又逐漸冒出很多奇怪(?)的需求，因此稍微研究了一下linux 上的DNS管理機制。</p>
 <h1 id="需求">需求</h1>
 <p>首先是DNS使用DNS over HTTPS/DNS over Tls，但是在特定的網路連接下會自動切換成對應的DNS，忽略不信任網路下DHCP提供的DNS。</p>
@@ -488,17 +517,25 @@
 <p>只需要修改<code>/etc/systemd/resolved.conf</code>即可完成</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs conf">[Resolve]<br># 使用Cloudflare的DNS<br>DNS=1.1.1.1<br># 如果DNSOverTLS設定為on的話，如果你想使用的其他DNS不支援DoT，那麼systemd-resolved將不會發出詢問<br># 使用opportunistic則是會在上游支援時使用，如果不支援則使用原本模式<br>DNSOverTLS=opportunistic<br></code></pre></td></tr></table></figure>
 <p>那麼系統訪問DNS的實際流程就會變為 <code>/etc/resolv.conf</code> -&gt; <code>127.0.0.53:53</code> -&gt; <code>1.1.1.1:853</code>，減少了一個流程，結構變得簡單不少</p>
+<h2 id="Networkmanager-的自動化腳本">Networkmanager 的自動化腳本</h2>
+<p>前面有提到設定DNS domain為<code>~.</code>可以讓網路介面的DNS server成為全域DNS，但是在接上VPN時，不知道為什麼systemd-resolve會不吃DNS domain設定為<code>~.</code>的網路介面的資訊，<code>resolvectl</code>直接顯示這個介面沒有DNS資訊。</p>
+<p>於是我就換了一種方法來實現，介面的DNS domain可以設定為其他值，或不設定，而是在啟動任何介面時檢查我想要更改DNS domain的介面是否開啟，如果開啟就直接調用<code>resolvectl</code>來更改設定。</p>
+<p>設定只需要編輯一個檔案<code>/etc/NetworkManager/dispatcher.d/set_&lt;interface&gt;_dns_domain.sh</code>，並給他加上執行權限<code>chmod +x /etc/NetworkManager/dispatcher.d/set_&lt;interface&gt;_dns_domain.sh</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/sh</span><br><br><span class="hljs-keyword">if</span> nmcli connection show <span class="hljs-string">&quot;&lt;connection name&gt;&quot;</span> | grep <span class="hljs-string">&#x27;GENERAL.STATE&#x27;</span>; <span class="hljs-keyword">then</span><br>    <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;change &lt;interface name&gt; dns domain&quot;</span><br>    resolvectl domain &lt;interface name&gt; <span class="hljs-string">&#x27;~.&#x27;</span><br><span class="hljs-keyword">fi</span><br></code></pre></td></tr></table></figure>
+<p><code>&lt;connection name&gt;</code>為Networkmanager中連線的名字，<code>&lt;interface name&gt;</code>則是網路介面的名字。</p>
+<p>Networkmanager的自動化腳本也可以做更多其他的事，像是偵測到物理連接斷開後自動開啟無線網路<sup id="fnref:3" class="footnote-ref"><a href="#fn:3" rel="footnote"><span class="hint--top hint--rounded" aria-label="[用 NM-dispatcher 实现 WiFi 开关的自动控制 - sbw Blog](https://blog.sbw.so/u/nm-dispatcher-auto-switch-between-wifi-ethernet.html)">[3]</span></a></sup>。</p>
 <h2 id="總結">總結</h2>
 <p>其實這樣做還是會有一個漏洞，如果你不信任的DHCP server有設定DNS domain，那麼systemd-resolved一樣會吃到這個設定，解決的方法就是把Network Manager的那個網路連接設定為使用DHCP(Address only)，但是這樣就要手動設定，有點不爽。</p>
 <p>最後總結：如果你真的在一個不信任的網路環境中，那麼我還是推薦你使用VPN吧，這篇的DNS設定其實幫不了你多少忙。</p>
 <h2 id="同場加映-–-nsswitch">同場加映 – nsswitch</h2>
 <p>全名是name service switch configuration，簡單來說就是配置系統在查詢各項東西的時候要去哪裡查，像是passwd就是用戶驗證，設定為使用檔案(也就是/etc/passwd)，或者是使用systemd驗證，如果想要串LDAP之類的身分驗證，那麼就要在後面加上對應的Plugin</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs conf">passwd: files systemd<br>group: files [SUCCESS=merge] systemd<br>shadow: files systemd<br>gshadow: files systemd<br><br>publickey: files<br><br>hosts: mymachines resolve [!UNAVAIL=return] files myhostname dns<br>networks: files<br><br>protocols: files<br>services: files<br>ethers: files<br>rpc: files<br><br>netgroup: files<br></code></pre></td></tr></table></figure>
-<p>其中的hosts選項就是要怎麼解析domain的設定，mymachines是檢查內部容器或虛擬機有沒有對應的域名，resolve是systemd-resolved，除非systemd-resolved無法使用才會進入下一個選項( [!UNAVAIL=return] ，有四種狀態，有興趣可以去看nsswitch.conf(5) )，files是<code>/etc/hosts</code>，myhostname是本機的hostname，最後dns就是按照<code>/etc/resolv.conf</code>的設定去查詢。</p>
+<p>其中的<code>hosts</code>選項就是要怎麼解析domain的設定，<code>mymachines</code>是檢查內部容器或虛擬機有沒有對應的域名，resolve是systemd-resolved，除非systemd-resolved無法使用才會進入下一個選項(<code>[!UNAVAIL=return]</code>，有四種狀態，有興趣可以去看<code>nsswitch.conf(5)</code>)，files是<code>/etc/hosts</code>，myhostname是本機的hostname，最後dns就是按照<code>/etc/resolv.conf</code>的設定去查詢。</p>
 <h2 id="參考">參考</h2>
 <section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/DNS-over-HTTPS">DNS-over-HTTPS - ArchWiki</a>
 <a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/Systemd-resolved#DNS_over_TLS">systemd-resolved - ArchWiki</a>
-<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
+<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:3" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://blog.sbw.so/u/nm-dispatcher-auto-switch-between-wifi-ethernet.html">用 NM-dispatcher 实现 WiFi 开关的自动控制 - sbw Blog</a>
+<a href="#fnref:3" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
                 
               </div>
             
@@ -564,6 +601,11 @@
         </div>
       
       
+        <div class="license-meta-item license-meta-date">
+          <div>更新於</div>
+          <div>2024年6月9日</div>
+        </div>
+      
       
         <div class="license-meta-item">
           <div>許可協議</div>
@@ -591,6 +633,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/cloudflare-infinite-301-redirection/" title="Cloudflare Proxy 無限301轉址">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Cloudflare Proxy 無限301轉址</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">

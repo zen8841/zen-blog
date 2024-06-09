@@ -15,8 +15,62 @@
     <atom:link href="https://www.zenwen.eu.org/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>簡單記錄一下折騰的內容，可能還會發發感想？</description>
-    <pubDate>Fri, 17 May 2024 03:47:27 GMT</pubDate>
+    <pubDate>Thu, 06 Jun 2024 19:34:01 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>如何在docker compose file中限制系統資源的使用</title>
+      <link>https://www.zenwen.eu.org/docker-compose-file-limit-resource/</link>
+      <guid>https://www.zenwen.eu.org/docker-compose-file-limit-resource/</guid>
+      <pubDate>Thu, 06 Jun 2024 19:34:01 GMT</pubDate>
+      
+      <description>使用compose.yml來限制資源使用</description>
+      
+      
+      
+      
+      <category domain="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/">教程</category>
+      
+      
+      <category domain="https://www.zenwen.eu.org/tags/server/">server</category>
+      
+      <category domain="https://www.zenwen.eu.org/tags/docker/">docker</category>
+      
+      
+      <comments>https://www.zenwen.eu.org/docker-compose-file-limit-resource/#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>Cloudflare Proxy 無限301轉址</title>
+      <link>https://www.zenwen.eu.org/cloudflare-infinite-301-redirection/</link>
+      <guid>https://www.zenwen.eu.org/cloudflare-infinite-301-redirection/</guid>
+      <pubDate>Wed, 05 Jun 2024 06:17:08 GMT</pubDate>
+      
+      <description>曾經架TSCCTF網站時遇到的怪事</description>
+      
+      
+      
+      
+      <category domain="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/">教程</category>
+      
+      <category domain="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/%E7%96%91%E9%9B%A3%E9%9B%9C%E7%97%87/">疑難雜症</category>
+      
+      
+      <category domain="https://www.zenwen.eu.org/tags/network/">network</category>
+      
+      <category domain="https://www.zenwen.eu.org/tags/server/">server</category>
+      
+      <category domain="https://www.zenwen.eu.org/tags/cloudflare/">cloudflare</category>
+      
+      <category domain="https://www.zenwen.eu.org/tags/https/">https</category>
+      
+      <category domain="https://www.zenwen.eu.org/tags/301-redirection/">301-redirection</category>
+      
+      
+      <comments>https://www.zenwen.eu.org/cloudflare-infinite-301-redirection/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>DoH、DoT、Networkmanager與systemd-resolved的設定</title>

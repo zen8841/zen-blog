@@ -5,7 +5,7 @@ mathjax: false
 mermaid: false
 excerpt: 分享有關最近調整DNS設定的一些經驗
 date: 2024-05-17 11:47:27
-updated: 2024-05-17 11:47:27
+updated: 2024-06-09 22:24:00
 index_img:
 categories:
 - 教程
@@ -14,6 +14,12 @@ tags:
 - network
 - dns
 ---
+
+{% note info %}
+
+2024/6/9更新： 有關Networkmanager的自動化腳本
+
+{% endnote %}
 
 # 前言
 
@@ -140,6 +146,27 @@ DNSOverTLS=opportunistic
 
 那麼系統訪問DNS的實際流程就會變為 `/etc/resolv.conf` -> `127.0.0.53:53` -> `1.1.1.1:853`，減少了一個流程，結構變得簡單不少
 
+## Networkmanager 的自動化腳本
+
+前面有提到設定DNS domain為`~.`可以讓網路介面的DNS server成為全域DNS，但是在接上VPN時，不知道為什麼systemd-resolve會不吃DNS domain設定為`~.`的網路介面的資訊，`resolvectl`直接顯示這個介面沒有DNS資訊。
+
+於是我就換了一種方法來實現，介面的DNS domain可以設定為其他值，或不設定，而是在啟動任何介面時檢查我想要更改DNS domain的介面是否開啟，如果開啟就直接調用`resolvectl`來更改設定。
+
+設定只需要編輯一個檔案`/etc/NetworkManager/dispatcher.d/set_<interface>_dns_domain.sh`，並給他加上執行權限`chmod +x /etc/NetworkManager/dispatcher.d/set_<interface>_dns_domain.sh`
+
+```bash
+#!/bin/sh
+
+if nmcli connection show "<connection name>" | grep 'GENERAL.STATE'; then
+    echo "change <interface name> dns domain"
+    resolvectl domain <interface name> '~.'
+fi
+```
+
+`<connection name>`為Networkmanager中連線的名字，`<interface name>`則是網路介面的名字。
+
+Networkmanager的自動化腳本也可以做更多其他的事，像是偵測到物理連接斷開後自動開啟無線網路[^3]。
+
 ## 總結
 
 其實這樣做還是會有一個漏洞，如果你不信任的DHCP server有設定DNS domain，那麼systemd-resolved一樣會吃到這個設定，解決的方法就是把Network Manager的那個網路連接設定為使用DHCP(Address only)，但是這樣就要手動設定，有點不爽。
@@ -169,9 +196,10 @@ rpc: files
 netgroup: files
 ```
 
-其中的hosts選項就是要怎麼解析domain的設定，mymachines是檢查內部容器或虛擬機有沒有對應的域名，resolve是systemd-resolved，除非systemd-resolved無法使用才會進入下一個選項( [!UNAVAIL=return] ，有四種狀態，有興趣可以去看nsswitch.conf(5) )，files是`/etc/hosts`，myhostname是本機的hostname，最後dns就是按照`/etc/resolv.conf`的設定去查詢。
+其中的`hosts`選項就是要怎麼解析domain的設定，`mymachines`是檢查內部容器或虛擬機有沒有對應的域名，resolve是systemd-resolved，除非systemd-resolved無法使用才會進入下一個選項(`[!UNAVAIL=return]`，有四種狀態，有興趣可以去看`nsswitch.conf(5)`)，files是`/etc/hosts`，myhostname是本機的hostname，最後dns就是按照`/etc/resolv.conf`的設定去查詢。
 
 ## 參考
 
 [^1]: [DNS-over-HTTPS - ArchWiki](https://wiki.archlinux.org/title/DNS-over-HTTPS)
 [^2]: [systemd-resolved - ArchWiki](https://wiki.archlinux.org/title/Systemd-resolved#DNS_over_TLS)
+[^3]: [用 NM-dispatcher 实现 WiFi 开关的自动控制 - sbw Blog](https://blog.sbw.so/u/nm-dispatcher-auto-switch-between-wifi-ethernet.html)

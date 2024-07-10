@@ -45,7 +45,7 @@ VyOS的shell是bash，不過載入了特製的設定檔，可以直接輸入linu
 
 ## 系統設定
 
-```shell
+```bash
 # 設定hostname
 set system host-name <hostname>
 # 設定系統時區
@@ -63,7 +63,7 @@ set system login user <user> authentication public-keys <user@host> key <text>
 
 ### wan
 
-```shell
+```bash
 # 設定外部網路連線
 set interface ethernet <wan port> address <dhcp/static ip>
 set interface ethernet <wan port> description WAN
@@ -76,7 +76,7 @@ set protocols static route 0.0.0.0/0 next-hop <gateway ip>
 
 ### lan
 
-```shell
+```bash
 # 設定內網IP
 set interface ethernet <lan port> address <10.x.x.x/24>
 set interface ethernet <lan port> description LAN
@@ -86,7 +86,7 @@ set interface ethernet <lan port> description LAN
 
 ### ssh
 
-```shell
+```bash
 # 設定ssh使用的port
 set service ssh port 22
 # 設定只允許金鑰登入
@@ -95,7 +95,7 @@ set service ssh disable-password-authentication
 
 ### dhcp
 
-```shell
+```bash
 # 進入dhcp設定層級
 edit service dhcp-server shared-network-name <text> subnet <10.x.x.x/24>
 # 設定gateway
@@ -119,7 +119,7 @@ top
 
 ## nat
 
-```shell
+```bash
 # 進入nat設定層級
 edit nat source rule 100
 # 設定出口設備
@@ -133,7 +133,7 @@ top
 
 ## firewall
 
-```shell
+```bash
 # 進入防火牆設定層級
 edit firewall
 # 以組別來管理防火牆規則
@@ -186,7 +186,7 @@ top
 
 ## 應用及儲存
 
-```shell
+```bash
 # 應用
 commit
 # 儲存(寫入到開機設定)

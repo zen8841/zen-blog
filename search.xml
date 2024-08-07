@@ -4,37 +4,6 @@
   
     
     <entry>
-      <title>使用LNMP環境搭建WordPress網站</title>
-      <link href="/wordpress-with-LNMP-environment/"/>
-      <url>/wordpress-with-LNMP-environment/</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-      
-      <categories>
-          
-          <category> 教程 </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> server </tag>
-            
-            <tag> linux </tag>
-            
-            <tag> nginx </tag>
-            
-            <tag> wordpress </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>配置linux做為router</title>
       <link href="/turning-linux-into-a-router/"/>
       <url>/turning-linux-into-a-router/</url>

@@ -15,35 +15,8 @@
     <atom:link href="https://www.zenwen.eu.org/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>簡單記錄一下折騰的內容，可能還會發發感想？</description>
-    <pubDate>Mon, 05 Aug 2024 15:41:48 GMT</pubDate>
+    <pubDate>Thu, 01 Aug 2024 15:36:18 GMT</pubDate>
     <generator>http://hexo.io/</generator>
-    
-    <item>
-      <title>使用LNMP環境搭建WordPress網站</title>
-      <link>https://www.zenwen.eu.org/wordpress-with-LNMP-environment/</link>
-      <guid>https://www.zenwen.eu.org/wordpress-with-LNMP-environment/</guid>
-      <pubDate>Mon, 05 Aug 2024 15:41:48 GMT</pubDate>
-      
-      <description>記錄使用nginx架設WordPress的過程</description>
-      
-      
-      
-      
-      <category domain="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/">教程</category>
-      
-      
-      <category domain="https://www.zenwen.eu.org/tags/server/">server</category>
-      
-      <category domain="https://www.zenwen.eu.org/tags/linux/">linux</category>
-      
-      <category domain="https://www.zenwen.eu.org/tags/nginx/">nginx</category>
-      
-      <category domain="https://www.zenwen.eu.org/tags/wordpress/">wordpress</category>
-      
-      
-      <comments>https://www.zenwen.eu.org/wordpress-with-LNMP-environment/#disqus_thread</comments>
-      
-    </item>
     
     <item>
       <title>配置linux做為router</title>

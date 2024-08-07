@@ -139,6 +139,7 @@ Imgur原文有提供下載連結，但是有一個已經失效了，可以從[�
 量測V<sub>CC</sub>和V<sub>SS</sub>的阻值，可以理解為供電和GND，發現短路，徹底給CPU判死刑
 
 <video controls width="500">
+  <source src="cpu_test.webm" type="video/webm" />
   <source src="cpu_test.mp4" type="video/mp4" />
 </video>
 

@@ -6,7 +6,7 @@
   <link href="https://www.zenwen.eu.org/atom.xml" rel="self"/>
   
   <link href="https://www.zenwen.eu.org/"/>
-  <updated>2024-05-06T07:45:42.000Z</updated>
+  <updated>2024-08-05T15:41:48.000Z</updated>
   <id>https://www.zenwen.eu.org/</id>
   
   <author>
@@ -15,6 +15,236 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>使用LNMP環境搭建WordPress網站</title>
+    <link href="https://www.zenwen.eu.org/wordpress-with-LNMP-environment/"/>
+    <id>https://www.zenwen.eu.org/wordpress-with-LNMP-environment/</id>
+    <published>2024-08-05T15:41:48.000Z</published>
+    <updated>2024-08-05T15:41:48.000Z</updated>
+    
+    
+    <summary type="html">記錄使用nginx架設WordPress的過程</summary>
+    
+    
+    
+    <category term="教程" scheme="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/"/>
+    
+    
+    <category term="server" scheme="https://www.zenwen.eu.org/tags/server/"/>
+    
+    <category term="linux" scheme="https://www.zenwen.eu.org/tags/linux/"/>
+    
+    <category term="nginx" scheme="https://www.zenwen.eu.org/tags/nginx/"/>
+    
+    <category term="wordpress" scheme="https://www.zenwen.eu.org/tags/wordpress/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>配置linux做為router</title>
+    <link href="https://www.zenwen.eu.org/turning-linux-into-a-router/"/>
+    <id>https://www.zenwen.eu.org/turning-linux-into-a-router/</id>
+    <published>2024-08-01T15:36:18.000Z</published>
+    <updated>2024-08-01T15:36:18.000Z</updated>
+    
+    
+    <summary type="html">如何設定linux實現router應有的功能</summary>
+    
+    
+    
+    <category term="教程" scheme="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/"/>
+    
+    
+    <category term="network" scheme="https://www.zenwen.eu.org/tags/network/"/>
+    
+    <category term="server" scheme="https://www.zenwen.eu.org/tags/server/"/>
+    
+    <category term="linux" scheme="https://www.zenwen.eu.org/tags/linux/"/>
+    
+    <category term="router" scheme="https://www.zenwen.eu.org/tags/router/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Wireguard的keepalive設定</title>
+    <link href="https://www.zenwen.eu.org/wireguard-persistent-keepalive/"/>
+    <id>https://www.zenwen.eu.org/wireguard-persistent-keepalive/</id>
+    <published>2024-07-10T15:28:37.000Z</published>
+    <updated>2024-07-10T15:28:37.000Z</updated>
+    
+    
+    <summary type="html">如何在只有單端能設定PersistentKeepalive下維持連線</summary>
+    
+    
+    
+    <category term="教程" scheme="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/"/>
+    
+    <category term="疑難雜症" scheme="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/%E7%96%91%E9%9B%A3%E9%9B%9C%E7%97%87/"/>
+    
+    
+    <category term="network" scheme="https://www.zenwen.eu.org/tags/network/"/>
+    
+    <category term="wireguard" scheme="https://www.zenwen.eu.org/tags/wireguard/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>VyOS快速設定</title>
+    <link href="https://www.zenwen.eu.org/vyos-quick-setup/"/>
+    <id>https://www.zenwen.eu.org/vyos-quick-setup/</id>
+    <published>2024-07-10T09:18:57.000Z</published>
+    <updated>2024-07-10T09:18:57.000Z</updated>
+    
+    
+    <summary type="html">簡單介紹如何配置VyOS到能通網路</summary>
+    
+    
+    
+    <category term="教程" scheme="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/"/>
+    
+    
+    <category term="network" scheme="https://www.zenwen.eu.org/tags/network/"/>
+    
+    <category term="linux" scheme="https://www.zenwen.eu.org/tags/linux/"/>
+    
+    <category term="router" scheme="https://www.zenwen.eu.org/tags/router/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Hexo的個人化設定</title>
+    <link href="https://www.zenwen.eu.org/hexo-customization/"/>
+    <id>https://www.zenwen.eu.org/hexo-customization/</id>
+    <published>2024-07-09T15:28:06.000Z</published>
+    <updated>2024-07-09T15:28:06.000Z</updated>
+    
+    
+    <summary type="html">分享一些好看的hexo主題和好用的插件</summary>
+    
+    
+    
+    <category term="教程" scheme="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/"/>
+    
+    
+    <category term="blog" scheme="https://www.zenwen.eu.org/tags/blog/"/>
+    
+    <category term="hexo" scheme="https://www.zenwen.eu.org/tags/hexo/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>好文共賞</title>
+    <link href="https://www.zenwen.eu.org/some-good-post/"/>
+    <id>https://www.zenwen.eu.org/some-good-post/</id>
+    <published>2024-07-09T14:46:47.000Z</published>
+    <updated>2024-07-09T14:46:47.000Z</updated>
+    
+    
+    <summary type="html">分享看過的一些文章</summary>
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>I218-V、I219-V系列網卡在Linux下突然關閉的解法</title>
+    <link href="https://www.zenwen.eu.org/e1000e-detected-hardware-unit-hang/"/>
+    <id>https://www.zenwen.eu.org/e1000e-detected-hardware-unit-hang/</id>
+    <published>2024-07-09T14:05:43.000Z</published>
+    <updated>2024-07-09T14:05:43.000Z</updated>
+    
+    
+    <summary type="html">e1000e driver在高流量下網卡會突然關閉並留下錯誤記錄後重啟</summary>
+    
+    
+    
+    <category term="教程" scheme="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/"/>
+    
+    <category term="疑難雜症" scheme="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/%E7%96%91%E9%9B%A3%E9%9B%9C%E7%97%87/"/>
+    
+    
+    <category term="network" scheme="https://www.zenwen.eu.org/tags/network/"/>
+    
+    <category term="server" scheme="https://www.zenwen.eu.org/tags/server/"/>
+    
+    <category term="linux" scheme="https://www.zenwen.eu.org/tags/linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>如何在docker compose file中限制系統資源的使用</title>
+    <link href="https://www.zenwen.eu.org/docker-compose-file-limit-resource/"/>
+    <id>https://www.zenwen.eu.org/docker-compose-file-limit-resource/</id>
+    <published>2024-06-06T19:34:01.000Z</published>
+    <updated>2024-06-06T19:34:01.000Z</updated>
+    
+    
+    <summary type="html">使用compose.yml來限制資源使用</summary>
+    
+    
+    
+    <category term="教程" scheme="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/"/>
+    
+    
+    <category term="server" scheme="https://www.zenwen.eu.org/tags/server/"/>
+    
+    <category term="docker" scheme="https://www.zenwen.eu.org/tags/docker/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Cloudflare Proxy 無限301轉址</title>
+    <link href="https://www.zenwen.eu.org/cloudflare-infinite-301-redirection/"/>
+    <id>https://www.zenwen.eu.org/cloudflare-infinite-301-redirection/</id>
+    <published>2024-06-05T06:17:08.000Z</published>
+    <updated>2024-06-05T06:17:08.000Z</updated>
+    
+    
+    <summary type="html">曾經架TSCCTF網站時遇到的怪事</summary>
+    
+    
+    
+    <category term="教程" scheme="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/"/>
+    
+    <category term="疑難雜症" scheme="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/%E7%96%91%E9%9B%A3%E9%9B%9C%E7%97%87/"/>
+    
+    
+    <category term="network" scheme="https://www.zenwen.eu.org/tags/network/"/>
+    
+    <category term="server" scheme="https://www.zenwen.eu.org/tags/server/"/>
+    
+    <category term="cloudflare" scheme="https://www.zenwen.eu.org/tags/cloudflare/"/>
+    
+    <category term="https" scheme="https://www.zenwen.eu.org/tags/https/"/>
+    
+    <category term="301-redirection" scheme="https://www.zenwen.eu.org/tags/301-redirection/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>DoH、DoT、Networkmanager與systemd-resolved的設定</title>
+    <link href="https://www.zenwen.eu.org/doh-dot-networkmanager-and-systemd-resolved/"/>
+    <id>https://www.zenwen.eu.org/doh-dot-networkmanager-and-systemd-resolved/</id>
+    <published>2024-05-17T03:47:27.000Z</published>
+    <updated>2024-06-09T14:24:00.000Z</updated>
+    
+    
+    <summary type="html">分享有關最近調整DNS設定的一些經驗</summary>
+    
+    
+    
+    <category term="教程" scheme="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/"/>
+    
+    
+    <category term="network" scheme="https://www.zenwen.eu.org/tags/network/"/>
+    
+    <category term="linux" scheme="https://www.zenwen.eu.org/tags/linux/"/>
+    
+    <category term="dns" scheme="https://www.zenwen.eu.org/tags/dns/"/>
+    
+  </entry>
   
   <entry>
     <title>Asus X99 通病</title>

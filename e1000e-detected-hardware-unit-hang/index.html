@@ -1,0 +1,912 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-TW" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/icon.png">
+  <link rel="icon" href="/assets/icon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Zen Wen">
+  <meta name="keywords" content="linux network computer">
+  
+    <meta name="description" content="e1000e driver在高流量下網卡會突然關閉並留下錯誤記錄後重啟">
+<meta property="og:type" content="article">
+<meta property="og:title" content="I218-V、I219-V系列網卡在Linux下突然關閉的解法">
+<meta property="og:url" content="https://www.zenwen.eu.org/e1000e-detected-hardware-unit-hang/index.html">
+<meta property="og:site_name" content="Zen&#39;s Blog">
+<meta property="og:description" content="e1000e driver在高流量下網卡會突然關閉並留下錯誤記錄後重啟">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2024-07-09T14:05:43.000Z">
+<meta property="article:modified_time" content="2024-07-09T14:05:43.000Z">
+<meta property="article:author" content="Zen Wen">
+<meta property="article:tag" content="network">
+<meta property="article:tag" content="server">
+<meta property="article:tag" content="linux">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>I218-V、I219-V系列網卡在Linux下突然關閉的解法 - Zen&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.zenwen.eu.org","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"|","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.2.0"><link rel="alternate" href="/atom.xml" title="Zen's Blog" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="Zen's Blog" type="application/rss+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Zen&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首頁</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>歸檔</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分類</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>標籤</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>關於</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>連結</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-rss"></i>
+                <span>RSS</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/atom.xml" target="_self">
+                    
+                    <span>Atom</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/rss2.xml" target="_self">
+                    
+                    <span>RSS2</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/assets/banner.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="I218-V、I219-V系列網卡在Linux下突然關閉的解法"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-07-09 22:05" pubdate>
+          2024年7月9日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          610 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          6 分鐘
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-right: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="教程"
+        id="heading-b7824d5cd41d06de995a661879fefd3d" role="tab" data-toggle="collapse" href="#collapse-b7824d5cd41d06de995a661879fefd3d"
+        aria-expanded="true"
+      >
+        教程
+        <span class="list-group-count">(11)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-b7824d5cd41d06de995a661879fefd3d"
+           role="tabpanel" aria-labelledby="heading-b7824d5cd41d06de995a661879fefd3d">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/gre-over-ipsec-between-edgeos-and-routeros/" title="在EdgeOS和RouterOS之間建立GRE over IPsec tunnel"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">在EdgeOS和RouterOS之間建立GRE over IPsec tunnel</span>
+        </a>
+      
+    
+      
+      
+        <a href="/doh-dot-networkmanager-and-systemd-resolved/" title="DoH、DoT、Networkmanager與systemd-resolved的設定"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">DoH、DoT、Networkmanager與systemd-resolved的設定</span>
+        </a>
+      
+    
+      
+      
+        <a href="/docker-compose-file-limit-resource/" title="如何在docker compose file中限制系統資源的使用"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">如何在docker compose file中限制系統資源的使用</span>
+        </a>
+      
+    
+      
+      
+        <a href="/hexo-customization/" title="Hexo的個人化設定"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Hexo的個人化設定</span>
+        </a>
+      
+    
+      
+      
+        <a href="/vyos-quick-setup/" title="VyOS快速設定"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">VyOS快速設定</span>
+        </a>
+      
+    
+      
+      
+        <a href="/turning-linux-into-a-router/" title="配置linux做為router"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">配置linux做為router</span>
+        </a>
+      
+    
+      
+      
+        <a href="/wordpress-with-LNMP-environment/" title="使用LNMP環境搭建WordPress網站"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">使用LNMP環境搭建WordPress網站</span>
+        </a>
+      
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="疑難雜症"
+        id="heading-e2411166d77f023169f0978db441925c" role="tab" data-toggle="collapse" href="#collapse-e2411166d77f023169f0978db441925c"
+        aria-expanded="true"
+      >
+        疑難雜症
+        <span class="list-group-count">(4)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-e2411166d77f023169f0978db441925c"
+           role="tabpanel" aria-labelledby="heading-e2411166d77f023169f0978db441925c">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/asus-x99-code-00/" title="Asus X99 通病"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Asus X99 通病</span>
+        </a>
+      
+    
+      
+      
+        <a href="/cloudflare-infinite-301-redirection/" title="Cloudflare Proxy 無限301轉址"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Cloudflare Proxy 無限301轉址</span>
+        </a>
+      
+    
+      
+      
+        <a href="/e1000e-detected-hardware-unit-hang/" title="I218-V、I219-V系列網卡在Linux下突然關閉的解法"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">I218-V、I219-V系列網卡在Linux下突然關閉的解法</span>
+        </a>
+      
+    
+      
+      
+        <a href="/wireguard-persistent-keepalive/" title="Wireguard的keepalive設定"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Wireguard的keepalive設定</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">I218-V、I219-V系列網卡在Linux下突然關閉的解法</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="前情提要">前情提要</h1>
+<p>在今天下午上傳一個檔案的過程中，突然發現傳輸過程斷斷續續的，接著就徹底連不上了，進到pve的後台查看，網卡和IP都還在，但就是無法連線上另一端。</p>
+<h1 id="症狀">症狀</h1>
+<p>使用<code>dmesg</code>查看kernel log後發現出現了一堆err等級的log</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs log">[xxxxxx] e1000e 0000:00:1f.6 eno1: Detected Hardware Unit Hang:<br>                  TDH                  &lt;44&gt;<br>                  TDT                  &lt;9b&gt;<br>                  next_to_use          &lt;9b&gt;<br>                  next_to_clean        &lt;43&gt;<br>                buffer_info[next_to_clean]:<br>                  time_stamp           &lt;101d5f5e3&gt;<br>                  next_to_watch        &lt;44&gt;<br>                  jiffies              &lt;101d5f700&gt;<br>                  next_to_watch.status &lt;0&gt;<br>                MAC Status             &lt;40080083&gt;<br>                PHY Status             &lt;796d&gt;<br>                PHY 1000BASE-T Status  &lt;3800&gt;<br>                PHY Extended Status    &lt;3000&gt;<br>                PCI Status             &lt;10&gt;<br>[xxxxxx] e1000e 0000:00:1f.6 eno1: Reset adapter unexpectedly<br></code></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs log">[xxxxxx] NETDEV WATCHDOG: CPU: 8: transmit queue 0 timed out xxx ms<br></code></pre></td></tr></table></figure>
+<p>類似這樣的log在傳輸的過程中會不斷出現，一開始也許重開後還可以連線，但到後來就會直接徹底斷線，無法傳輸。</p>
+<h1 id="發生原因">發生原因</h1>
+<p>把這些log貼到google上做簡單的查詢後就會發現這是一個存在Intel I218-V、I219-V系列網卡上很久的bug了，在使用e1000e driver時，如果有大流量通過就有可能觸發。</p>
+<p>這個錯誤我查到最早的記錄在2011年就有了<sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span class="hint--top hint--rounded" aria-label="[ubuntu 10.10 - Linux e1000e (Intel networking driver) problem with resume and pcie=off - Server Fault](https://serverfault.com/questions/249080/linux-e1000e-intel-networking-driver-problem-with-resume-and-pcie-off)">[1]</span></a></sup>，我猜測可能是我更新後導致這個問題出現( 目前版本: PVE Version8、Kernel Version 6.8.8 )？不然實在沒有道理之前正常使用，突然就出問題。</p>
+<p>根據這幾篇文章<sup id="fnref:2" class="footnote-ref"><a href="#fn:2" rel="footnote"><span class="hint--top hint--rounded" aria-label="[118721 – e1000e hardware unit hangs when TSO is on](https://bugzilla.kernel.org/show_bug.cgi?id=118721f)">[2]</span></a></sup><sup id="fnref:3" class="footnote-ref"><a href="#fn:3" rel="footnote"><span class="hint--top hint--rounded" aria-label="[e1000e eno1: Detected Hardware Unit Hang: | Proxmox Support Forum](https://forum.proxmox.com/threads/e1000e-eno1-detected-hardware-unit-hang.59928/)">[3]</span></a></sup><sup id="fnref:4" class="footnote-ref"><a href="#fn:4" rel="footnote"><span class="hint--top hint--rounded" aria-label="[e1000 driver hang | Proxmox Support Forum](https://forum.proxmox.com/threads/e1000-driver-hang.58284/)">[4]</span></a></sup>的解釋，問題都指向了網卡開啟的feature。</p>
+<p>最有可能造成問題的可能是tso( tcp-segmentation-offload )，其次可能是gso( generic-segmentation-offload )</p>
+<p>可以使用<code>ethtool -k &lt;network interface&gt; | grep ' on'</code>來檢視網卡開啟了哪些功能。</p>
+<p>使用<code>ethtool -K &lt;network interface&gt; tso off</code>來將網卡的tso功能關閉，如果網卡關閉後仍然有問題，可以嘗試繼續關閉gso或其他功能，透過測試來判斷到底使哪個功能引起錯誤，只需要關閉對應的功能即可。</p>
+<h1 id="解法">解法</h1>
+<p>找到引起錯誤的功能後就需要將設定自動在開機時應用，這一步有很多方法可以用，像是寫一個systemd service，或是其他在開機時執行的方法皆可，不過我習慣將網路設置的部分集中在一起放到<code>/etc/network/interface</code></p>
+<p>舉例來說eno1是有問題的網卡，在他底下加上這行<code>up ethtool -K eno1 tso off</code>即可在網卡開啟時自動關閉對應的feature</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs config">#---<br>auto eno1<br>iface eno1 inet manual<br>#---<br>        up ethtool -K eno1 tso off<br>#---<br></code></pre></td></tr></table></figure>
+<h2 id="參考">參考</h2>
+<section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://serverfault.com/questions/249080/linux-e1000e-intel-networking-driver-problem-with-resume-and-pcie-off">ubuntu 10.10 - Linux e1000e (Intel networking driver) problem with resume and pcie=off - Server Fault</a>
+<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://bugzilla.kernel.org/show_bug.cgi?id=118721f">118721 – e1000e hardware unit hangs when TSO is on</a>
+<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:3" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://forum.proxmox.com/threads/e1000e-eno1-detected-hardware-unit-hang.59928/">e1000e eno1: Detected Hardware Unit Hang: | Proxmox Support Forum</a>
+<a href="#fnref:3" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:4" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://forum.proxmox.com/threads/e1000-driver-hang.58284/">e1000 driver hang | Proxmox Support Forum</a>
+<a href="#fnref:4" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%95%99%E7%A8%8B/" class="category-chain-item">教程</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E6%95%99%E7%A8%8B/%E7%96%91%E9%9B%A3%E9%9B%9C%E7%97%87/" class="category-chain-item">疑難雜症</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/network/" class="print-no-link">#network</a>
+      
+        <a href="/tags/server/" class="print-no-link">#server</a>
+      
+        <a href="/tags/linux/" class="print-no-link">#linux</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>I218-V、I219-V系列網卡在Linux下突然關閉的解法</div>
+      <div>https://www.zenwen.eu.org/e1000e-detected-hardware-unit-hang/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Zen Wen</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>發布於</div>
+          <div>2024年7月9日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>許可協議</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/some-good-post/" title="好文共賞">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">好文共賞</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/docker-compose-file-limit-resource/" title="如何在docker compose file中限制系統資源的使用">
+                        <span class="hidden-mobile">如何在docker compose file中限制系統資源的使用</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目錄</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜尋</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">關鍵字</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+      <div class="col-lg-7 mx-auto nopadding-x-md">
+        <div class="container custom mx-auto">
+          <script>    var titleTime;    var OriginTitile = document.title;    document.addEventListener('visibilitychange', function() {        if (document.hidden) {            document.title = '|ω·) 喵~快回來呀！';            clearTimeout(titleTime);        } else {            document.title = '(/≧▽≦)/ Meow！';            titleTime = setTimeout(function() {            document.title = OriginTitile;            }, 800);        }    });</script>
+        </div>
+      </div>
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Power By Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Theme：Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允許 JavaScript 運行的環境下瀏覽效果更佳</div>
+  </noscript>
+</body>
+</html>

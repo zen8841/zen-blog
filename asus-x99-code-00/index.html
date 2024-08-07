@@ -283,7 +283,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          883 字
+          949 字
         
       </span>
     
@@ -344,7 +344,7 @@
         aria-expanded="true"
       >
         教程
-        <span class="list-group-count">(2)</span>
+        <span class="list-group-count">(11)</span>
         <i class="iconfont icon-arrowright"></i>
       </a>
       
@@ -366,6 +366,60 @@
         </a>
       
     
+      
+      
+        <a href="/doh-dot-networkmanager-and-systemd-resolved/" title="DoH、DoT、Networkmanager與systemd-resolved的設定"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">DoH、DoT、Networkmanager與systemd-resolved的設定</span>
+        </a>
+      
+    
+      
+      
+        <a href="/docker-compose-file-limit-resource/" title="如何在docker compose file中限制系統資源的使用"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">如何在docker compose file中限制系統資源的使用</span>
+        </a>
+      
+    
+      
+      
+        <a href="/hexo-customization/" title="Hexo的個人化設定"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Hexo的個人化設定</span>
+        </a>
+      
+    
+      
+      
+        <a href="/vyos-quick-setup/" title="VyOS快速設定"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">VyOS快速設定</span>
+        </a>
+      
+    
+      
+      
+        <a href="/turning-linux-into-a-router/" title="配置linux做為router"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">配置linux做為router</span>
+        </a>
+      
+    
+      
+      
+        <a href="/wordpress-with-LNMP-environment/" title="使用LNMP環境搭建WordPress網站"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">使用LNMP環境搭建WordPress網站</span>
+        </a>
+      
+    
   </div>
 
           
@@ -380,7 +434,7 @@
         aria-expanded="true"
       >
         疑難雜症
-        <span class="list-group-count">(1)</span>
+        <span class="list-group-count">(4)</span>
         <i class="iconfont icon-arrowright"></i>
       </a>
       
@@ -398,6 +452,33 @@
            class="list-group-item list-group-item-action
            active">
           <span class="category-post">Asus X99 通病</span>
+        </a>
+      
+    
+      
+      
+        <a href="/cloudflare-infinite-301-redirection/" title="Cloudflare Proxy 無限301轉址"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Cloudflare Proxy 無限301轉址</span>
+        </a>
+      
+    
+      
+      
+        <a href="/e1000e-detected-hardware-unit-hang/" title="I218-V、I219-V系列網卡在Linux下突然關閉的解法"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">I218-V、I219-V系列網卡在Linux下突然關閉的解法</span>
+        </a>
+      
+    
+      
+      
+        <a href="/wireguard-persistent-keepalive/" title="Wireguard的keepalive設定"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Wireguard的keepalive設定</span>
         </a>
       
     
@@ -430,7 +511,7 @@
                 
                 <h1 id="前情提要">前情提要</h1>
 <p>簡單來說，當時我正在讓服務器跑從遠端備份回來文件的哈希來驗證完整性，結果回頭一看服務器，發現就關機了。</p>
-<h2 id="症狀">症狀</h2>
+<h1 id="症狀">症狀</h1>
 <p>此時CPU右上角的紅色LED亮起，按開機鍵都無反應，斷電重新上電紅色LED仍然點亮，這個時候我的第一猜測是可能是CPU過熱，也許讓他散熱一下就能好了。</p>
 <p>在過一陣子重新上電後，紅色LED不亮了，現在按開機鍵則變成整台機器的LED瞬間閃爍一次，主板偵錯碼(Q-code)也是和LED一樣瞬間閃00後，之後按開機鍵也無任何反應，不過將電源供應器重新上電後又會有同樣的行為。</p>
 <h1 id="偵錯">偵錯</h1>
@@ -449,6 +530,8 @@
 <h1 id="檢測">檢測</h1>
 <p>那麼，對電腦的錯誤有了猜測，接下來就是檢測了</p>
 <h2 id="主機板">主機板</h2>
+<p>在開始檢測前可以先看底下這篇文章來大致了解主板供電的組成</p>
+<p><a target="_blank" rel="noopener" href="https://forum.gamer.com.tw/C.php?bsn=60030&amp;snA=512806">【科普】主機板供電能力解析</a><sup id="fnref:5" class="footnote-ref"><a href="#fn:5" rel="footnote"><span class="hint--top hint--rounded" aria-label="[【科普】主機板供電能力解析 @電腦應用綜合討論 哈啦板 - 巴哈姆特](https://forum.gamer.com.tw/C.php?bsn=60030&snA=512806)">[5]</span></a></sup></p>
 
     <div class="fold">
       <div class="fold-title fold-default collapsed" data-toggle="collapse" href="#collapse-55b26b0e" role="button" aria-expanded="false" aria-controls="collapse-55b26b0e">
@@ -489,8 +572,8 @@
 <h2 id="CPU">CPU</h2>
 <p>雖然前面已經猜測這顆CPU死定了，不過不看到確切的結果還是不會認命</p>
 <p>首先要找到2011-3腳位的定義，不過幸好已經有人幫我們畫出來了</p>
-<p><a target="_blank" rel="noopener" href="https://imgur.com/gallery/intel-socket-2011v3-land-grid-layout-thanks-sdgus68-12PjUu8">Intel Socket 2011v3 Land Grid Layout. (Thanks sdgus68!) - computer hardware post - Imgur</a><sup id="fnref:5" class="footnote-ref"><a href="#fn:5" rel="footnote"><span class="hint--top hint--rounded" aria-label="[Intel Socket 2011v3 Land Grid Layout. (Thanks sdgus68!) - computer hardware post - Imgur](https://imgur.com/gallery/intel-socket-2011v3-land-grid-layout-thanks-sdgus68-12PjUu8)">[5]</span></a></sup></p>
-<p><a target="_blank" rel="noopener" href="https://www.reddit.com/r/intel/comments/lpp83e/lga20113_landlayout/">LGA2011-3 Land-Layout : r/intel</a><sup id="fnref:6" class="footnote-ref"><a href="#fn:6" rel="footnote"><span class="hint--top hint--rounded" aria-label="[LGA2011-3 Land-Layout : r/intel](https://www.reddit.com/r/intel/comments/lpp83e/lga20113_landlayout/)">[6]</span></a></sup></p>
+<p><a target="_blank" rel="noopener" href="https://imgur.com/gallery/intel-socket-2011v3-land-grid-layout-thanks-sdgus68-12PjUu8">Intel Socket 2011v3 Land Grid Layout. (Thanks sdgus68!) - computer hardware post - Imgur</a><sup id="fnref:6" class="footnote-ref"><a href="#fn:6" rel="footnote"><span class="hint--top hint--rounded" aria-label="[Intel Socket 2011v3 Land Grid Layout. (Thanks sdgus68!) - computer hardware post - Imgur](https://imgur.com/gallery/intel-socket-2011v3-land-grid-layout-thanks-sdgus68-12PjUu8)">[6]</span></a></sup></p>
+<p><a target="_blank" rel="noopener" href="https://www.reddit.com/r/intel/comments/lpp83e/lga20113_landlayout/">LGA2011-3 Land-Layout : r/intel</a><sup id="fnref:7" class="footnote-ref"><a href="#fn:7" rel="footnote"><span class="hint--top hint--rounded" aria-label="[LGA2011-3 Land-Layout : r/intel](https://www.reddit.com/r/intel/comments/lpp83e/lga20113_landlayout/)">[7]</span></a></sup></p>
 <p>我是使用第一份，我覺得那比較直觀</p>
 
     <div class="fold">
@@ -506,6 +589,7 @@
 <p><img src="2011-3_layout.png" srcset="/img/loading.gif" lazyload alt=""></p>
 <p>量測V<sub>CC</sub>和V<sub>SS</sub>的阻值，可以理解為供電和GND，發現短路，徹底給CPU判死刑</p>
 <video controls width="500">
+  <source src="cpu_test.webm" type="video/webm" />
   <source src="cpu_test.mp4" type="video/mp4" />
 </video>
 <h2 id="參考">參考</h2>
@@ -513,9 +597,10 @@
 <a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://www.overclock.net/threads/asus-x99-a-ii-code-00-not-listed-red-cpu-light-on.1615149/">ASUS X99 A-II Code 00 (Not Listed) Red CPU Light On | Overclock.net</a>
 <a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:3" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://www.reddit.com/r/buildapc/comments/5sywuu/x99_a_ii_will_not_post/">X99 A II will not POST!! : r/buildapc</a>
 <a href="#fnref:3" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:4" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://forums.tomshardware.com/threads/asus-x99-a-ii-suddenly-shutdown-and-now-giving-q-code-00.2915943/">Asus X99-A II suddenly shutdown and now giving Q code 00 | Tom’s Hardware Forum</a>
-<a href="#fnref:4" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:5" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://imgur.com/gallery/intel-socket-2011v3-land-grid-layout-thanks-sdgus68-12PjUu8">Intel Socket 2011v3 Land Grid Layout. (Thanks sdgus68!) - computer hardware post - Imgur</a>
-<a href="#fnref:5" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:6" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://www.reddit.com/r/intel/comments/lpp83e/lga20113_landlayout/">LGA2011-3 Land-Layout : r/intel</a>
-<a href="#fnref:6" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
+<a href="#fnref:4" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:5" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://forum.gamer.com.tw/C.php?bsn=60030&amp;snA=512806">【科普】主機板供電能力解析 @電腦應用綜合討論 哈啦板 - 巴哈姆特</a>
+<a href="#fnref:5" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:6" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://imgur.com/gallery/intel-socket-2011v3-land-grid-layout-thanks-sdgus68-12PjUu8">Intel Socket 2011v3 Land Grid Layout. (Thanks sdgus68!) - computer hardware post - Imgur</a>
+<a href="#fnref:6" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:7" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://www.reddit.com/r/intel/comments/lpp83e/lga20113_landlayout/">LGA2011-3 Land-Layout : r/intel</a>
+<a href="#fnref:7" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
                 
               </div>
             
@@ -611,6 +696,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/doh-dot-networkmanager-and-systemd-resolved/" title="DoH、DoT、Networkmanager與systemd-resolved的設定">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">DoH、DoT、Networkmanager與systemd-resolved的設定</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">

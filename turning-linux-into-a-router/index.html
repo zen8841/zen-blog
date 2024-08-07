@@ -1,0 +1,958 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-TW" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/icon.png">
+  <link rel="icon" href="/assets/icon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Zen Wen">
+  <meta name="keywords" content="linux network computer">
+  
+    <meta name="description" content="如何設定linux實現router應有的功能">
+<meta property="og:type" content="article">
+<meta property="og:title" content="配置linux做為router">
+<meta property="og:url" content="https://www.zenwen.eu.org/turning-linux-into-a-router/index.html">
+<meta property="og:site_name" content="Zen&#39;s Blog">
+<meta property="og:description" content="如何設定linux實現router應有的功能">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2024-08-01T15:36:18.000Z">
+<meta property="article:modified_time" content="2024-08-01T15:36:18.000Z">
+<meta property="article:author" content="Zen Wen">
+<meta property="article:tag" content="network">
+<meta property="article:tag" content="server">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="router">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>配置linux做為router - Zen&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.zenwen.eu.org","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"|","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.2.0"><link rel="alternate" href="/atom.xml" title="Zen's Blog" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="Zen's Blog" type="application/rss+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Zen&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首頁</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>歸檔</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分類</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>標籤</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>關於</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>連結</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-rss"></i>
+                <span>RSS</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/atom.xml" target="_self">
+                    
+                    <span>Atom</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/rss2.xml" target="_self">
+                    
+                    <span>RSS2</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/assets/banner.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="配置linux做為router"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-08-01 23:36" pubdate>
+          2024年8月1日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          11 分鐘
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-right: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="教程"
+        id="heading-b7824d5cd41d06de995a661879fefd3d" role="tab" data-toggle="collapse" href="#collapse-b7824d5cd41d06de995a661879fefd3d"
+        aria-expanded="true"
+      >
+        教程
+        <span class="list-group-count">(11)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-b7824d5cd41d06de995a661879fefd3d"
+           role="tabpanel" aria-labelledby="heading-b7824d5cd41d06de995a661879fefd3d">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/gre-over-ipsec-between-edgeos-and-routeros/" title="在EdgeOS和RouterOS之間建立GRE over IPsec tunnel"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">在EdgeOS和RouterOS之間建立GRE over IPsec tunnel</span>
+        </a>
+      
+    
+      
+      
+        <a href="/doh-dot-networkmanager-and-systemd-resolved/" title="DoH、DoT、Networkmanager與systemd-resolved的設定"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">DoH、DoT、Networkmanager與systemd-resolved的設定</span>
+        </a>
+      
+    
+      
+      
+        <a href="/docker-compose-file-limit-resource/" title="如何在docker compose file中限制系統資源的使用"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">如何在docker compose file中限制系統資源的使用</span>
+        </a>
+      
+    
+      
+      
+        <a href="/hexo-customization/" title="Hexo的個人化設定"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Hexo的個人化設定</span>
+        </a>
+      
+    
+      
+      
+        <a href="/vyos-quick-setup/" title="VyOS快速設定"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">VyOS快速設定</span>
+        </a>
+      
+    
+      
+      
+        <a href="/turning-linux-into-a-router/" title="配置linux做為router"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">配置linux做為router</span>
+        </a>
+      
+    
+      
+      
+        <a href="/wordpress-with-LNMP-environment/" title="使用LNMP環境搭建WordPress網站"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">使用LNMP環境搭建WordPress網站</span>
+        </a>
+      
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="疑難雜症"
+        id="heading-e2411166d77f023169f0978db441925c" role="tab" data-toggle="collapse" href="#collapse-e2411166d77f023169f0978db441925c"
+        aria-expanded="false"
+      >
+        疑難雜症
+        <span class="list-group-count">(4)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse " id="collapse-e2411166d77f023169f0978db441925c"
+           role="tabpanel" aria-labelledby="heading-e2411166d77f023169f0978db441925c">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/asus-x99-code-00/" title="Asus X99 通病"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Asus X99 通病</span>
+        </a>
+      
+    
+      
+      
+        <a href="/cloudflare-infinite-301-redirection/" title="Cloudflare Proxy 無限301轉址"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Cloudflare Proxy 無限301轉址</span>
+        </a>
+      
+    
+      
+      
+        <a href="/e1000e-detected-hardware-unit-hang/" title="I218-V、I219-V系列網卡在Linux下突然關閉的解法"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">I218-V、I219-V系列網卡在Linux下突然關閉的解法</span>
+        </a>
+      
+    
+      
+      
+        <a href="/wireguard-persistent-keepalive/" title="Wireguard的keepalive設定"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Wireguard的keepalive設定</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">配置linux做為router</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="前言">前言</h1>
+<p>在更換主路由為VyOS的一段時間後，我突然想嘗試使用linux直接手動設定router的功能，藉此達成更靈活的設定，因此有了這篇記錄。</p>
+<h1 id="基本設定">基本設定</h1>
+<p>在以下設定中eth0代表wan接廣域網路，eth1～n代表lan接內部網，內部網路10.0.0.0/24，gateway: 10.0.0.254</p>
+<p>使用的linux distro為debian，netinst最小安裝</p>
+<h2 id="安裝">安裝</h2>
+<p>這個應該不用教吧。 =_=</p>
+<h2 id="SSH及權限設定">SSH及權限設定</h2>
+<h3 id="SSH">SSH</h3>
+<p>因為這台機器接觸廣域網路，最好限制SSH的登入設定</p>
+<p><code>/etc/ssh/sshd_config</code>，自行替換&lt;username&gt;</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs conf">AllowUsers &lt;username&gt;<br></code></pre></td></tr></table></figure>
+<h3 id="sudo">sudo</h3>
+<p>更新並安裝sudo，讓管理帳戶允許使用sudo</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">apt update</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">apt upgrade</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">apt install sudo</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">usermod -aG sudo &lt;username&gt;</span><br></code></pre></td></tr></table></figure>
+<h2 id="設定網路介面">設定網路介面</h2>
+<p>編輯<code>/etc/network/interface</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs conf"># 應該都會有這段<br># The loopback network interface<br>auto lo<br>iface lo inet loopback<br><br># 安裝時如果有設定網路應該有這段，刪掉或註解掉<br># allow-hotplug eth0<br># iface eth0 inet dhcp<br><br># 重新命名介面名稱，可不做，方便辨認而已<br>rename eth0=wan<br>rename eth1=lan<br><br># 配置使用auto，自動啟動介面，而非有接入才啟動，如果有重命名，需使用重命名的接口名稱<br>auto wan<br># 如果wan是dhcp<br>iface wan inet dhcp<br># 如果是手動設IP<br># iface wan inet static<br>#     address x.x.x.x/x<br>#     gateway x.x.x.x<br># 如果是pppoe撥號，參考https://wiki.debian.org/PPPoE<br><br>auto lan<br>iface lan inet static<br># 不用設gateway，這是和lan通訊的介面<br>    address 10.0.0.254/24<br></code></pre></td></tr></table></figure>
+<p>重啟<code>networking.service</code>應用設定，或是直接重開機(改介面名稱可能導致重啟<code>networking.service</code>失敗，可以用重開機解決)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># systemctl restart networking.service</span><br></code></pre></td></tr></table></figure>
+<h3 id="DNS">DNS</h3>
+<p>一般我不希望router上的dns受到其他因素影響而變動，像是DHCP之類的</p>
+<p>可以在設定完<code>/etc/resolv.conf</code>後直接鎖死這個檔案的編輯</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">chattr +i /etc/resolv.conf</span><br></code></pre></td></tr></table></figure>
+<p>如果不想看到DHCP client報錯，可以讓DHCP client不更改<code>/etc/resolv.conf</code></p>
+<p>編輯新檔案<code>/etc/dhcp/dhclient-enter-hooks.d/nodnsupdate</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs conf">#!/bin/sh<br><br>make_resolv_conf()&#123;<br>        :<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>覆蓋掉更新dns的部分則不會更新dns</p>
+<p>並加上執行權限</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-built_in">chmod</span> +x /etc/dhcp/dhclient-enter-hooks.d/nodnsupdate</span><br></code></pre></td></tr></table></figure>
+<h2 id="NAT">NAT</h2>
+<p>接下來有關防火牆的部分可以使用<code>iptables</code>亦或是<code>nft</code>來進行設定，不過現在iptables-nft後端同樣是hook nft，在少量規則的情況下並不會有太大的性能差異，如果不想學習nft可以使用iptables設定即可。</p>
+<p>不管使用哪個工具都必須先開啟轉發鏈，編輯<code>/etc/sysctl.conf</code>，找到<code>net.ipv4.ip_forward=1</code>取消註解</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs conf"># Uncomment the next line to enable packet forwarding for IPv4<br>net.ipv4.ip_forward=1<br></code></pre></td></tr></table></figure>
+<p>應用配置，或是直接重開也會自動應用</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">sysctl -p</span><br></code></pre></td></tr></table></figure>
+<h3 id="iptables">iptables</h3>
+<p>安裝iptables及儲存iptables設定的工具(iptables-persistent是debian系的工具，RedHat系好像是用其他工具)</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">apt install iptables iptables-persistent</span><br></code></pre></td></tr></table></figure>
+<p>新增nat規則</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">iptables -A POSTROUTING -t nat -s 10.60.0.0/24 -o wan -j MASQUERADE</span><br></code></pre></td></tr></table></figure>
+<p>如果wan和lan的介面MTU不同，最好加上mss clamping</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">iptables -A FORWARD -t mangle -p tcp -m tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu</span><br></code></pre></td></tr></table></figure>
+<p>儲存配置</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">iptables-save &gt; /etc/iptables/rules.v4</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">systemctl <span class="hljs-built_in">enable</span> iptables.service</span><br></code></pre></td></tr></table></figure>
+<p>記得編輯<code>/etc/iptables/rules.v4</code>中的封包計數，讓其歸零</p>
+<p>以filter表的部分舉例，將[x:x]中的x都改為0，其他幾個表也相同</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs conf">*filter<br>:INPUT ACCEPT [0:0]<br>:FORWARD DROP [0:0]<br>:OUTPUT ACCEPT [0:0]<br>...<br>COMMIT<br></code></pre></td></tr></table></figure>
+<p>應用設定</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">iptables-restore /etc/iptables/rules.v4</span><br></code></pre></td></tr></table></figure>
+<p>未來想更改設定，可以直接編輯<code>/etc/iptables/rules.v4</code>，語法和iptables相同，只是不用加iptables，也不用加<code>-t 表名</code> 只要將配置增加到對應表的部分內即可</p>
+<p>如果不知道怎麼寫<code>rules.v4</code>也可以直接使用iptables新增規則，在直接執行<code>iptables-save</code>複製輸出新增的部分到<code>rules.v4</code>中</p>
+<h3 id="nft">nft</h3>
+<p>待更新</p>
+<h2 id="DHCP-server">DHCP server</h2>
+<p>安裝<code>isc-dhcp-server</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">apt install isc-dhcp-server</span><br></code></pre></td></tr></table></figure>
+<p>編輯<code>/etc/default/isc-dhcp-server</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs conf">INTERFACESv4=&quot;lan&quot;<br></code></pre></td></tr></table></figure>
+<p>在雙引號中加入內部網路使用的介面，如果有多個，使用空格分隔</p>
+<p>編輯<code>/etc/dhcp/dhcpd.conf</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs conf"># 檔案最前面的option、default-lease-time和max-lease-time可動可不動<br># 我一般會修改max-lease-time到86400，不過這些設定可以被subnet區域的設定覆蓋<br># 將authoritative;取消註解<br>authoritative;<br><br># 新增一個subnet，subnet和netmask使用子網對應的值<br>subnet 10.0.0.0 netmask 255.255.255.0 &#123;<br>    # 發的IP範圍<br>    range 10.0.0.2 10.60.0.99;<br>    # 可設可不設<br>    option domain-name &quot;example.com&quot;;<br>    # 指定DHCP分配的DNS<br>    option domain-name-servers 1.1.1.1;<br>    # 網關<br>    option routers 10.0.0.254;<br>    # 好像可加可不加？<br>    option broadcast-address 10.0.0.255;<br>    default-lease-time 3600;<br>    max-lease-time 86400;<br>&#125;<br><br># 如果想做static DHCP可以新增host區段<br>host example-device &#123;<br>    # mac位置，也可以用其他方式匹配客戶端，<br>    hardware ethernet e8:65:d4:67:1f:68;<br>    # 可以配發前面range以外的IP<br>    fixed-address 10.0.0.101;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>基本上設定檔本身就有做教學了，可以直接跟著設定檔做</p>
+<h2 id="防火牆">防火牆</h2>
+<h3 id="iptables-2">iptables</h3>
+<p>編輯<code>/etc/iptables/rules.v4</code>中的filter區段</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs conf">*filter<br>:INPUT ACCEPT [0:0]<br>:FORWARD DROP [0:0]<br>:OUTPUT ACCEPT [0:0]<br># 基於狀態放行或丟棄封包<br>-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT<br>-A INPUT -m state --state INVALID -j DROP<br># 允許icmp封包(ping)<br>-A INPUT -p icmp -j ACCEPT<br># 允許loopback的所有封包<br>-A INPUT -i lo -j ACCEPT<br># 一分鐘內如果超過10的新連接，則DROP掉這個IP的封包<br>-A INPUT -i wan -m state --state NEW -m recent --set --name filter --mask 255.255.255.255 --rsource<br>-A INPUT -i wan -m state --state NEW -m recent --rcheck --seconds 60 --hitcount 10 --name filter --mask 255.255.255.255 --rsource -j DROP<br># 允許SSH連線<br>-A INPUT -p tcp -m tcp --dport 22 -j ACCEPT<br># 設定入站規則若都沒匹配，則用icmp-host-prohibited拒絕封包<br>-A INPUT -j REJECT --reject-with icmp-host-prohibited<br># 基於狀態放行或丟棄封包<br>-A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT<br>-A FORWARD -m state --state INVALID -j DROP<br># 允許子網對外發起連線<br>-A FORWARD -m state --state NEW --source 10.0.0.0/24 -j ACCEPT<br>COMMIT<br></code></pre></td></tr></table></figure>
+<p>應用設定</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">iptables-restore /etc/iptables/rules.v4</span><br></code></pre></td></tr></table></figure>
+<h3 id="nft-2">nft</h3>
+<p>待更新</p>
+<h1 id="進階設定">進階設定</h1>
+<p>待更新</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%95%99%E7%A8%8B/" class="category-chain-item">教程</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/network/" class="print-no-link">#network</a>
+      
+        <a href="/tags/server/" class="print-no-link">#server</a>
+      
+        <a href="/tags/linux/" class="print-no-link">#linux</a>
+      
+        <a href="/tags/router/" class="print-no-link">#router</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>配置linux做為router</div>
+      <div>https://www.zenwen.eu.org/turning-linux-into-a-router/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Zen Wen</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>發布於</div>
+          <div>2024年8月1日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>許可協議</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/wordpress-with-LNMP-environment/" title="使用LNMP環境搭建WordPress網站">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">使用LNMP環境搭建WordPress網站</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/wireguard-persistent-keepalive/" title="Wireguard的keepalive設定">
+                        <span class="hidden-mobile">Wireguard的keepalive設定</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目錄</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜尋</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">關鍵字</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+      <div class="col-lg-7 mx-auto nopadding-x-md">
+        <div class="container custom mx-auto">
+          <script>    var titleTime;    var OriginTitile = document.title;    document.addEventListener('visibilitychange', function() {        if (document.hidden) {            document.title = '|ω·) 喵~快回來呀！';            clearTimeout(titleTime);        } else {            document.title = '(/≧▽≦)/ Meow！';            titleTime = setTimeout(function() {            document.title = OriginTitile;            }, 800);        }    });</script>
+        </div>
+      </div>
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Power By Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Theme：Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允許 JavaScript 運行的環境下瀏覽效果更佳</div>
+  </noscript>
+</body>
+</html>

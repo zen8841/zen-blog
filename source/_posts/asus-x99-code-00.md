@@ -130,7 +130,7 @@ Imgur原文有提供下載連結，但是有一個已經失效了，可以從[�
 
 [core-i7-lga2011-3-tmsdg.pdf](core-i7-lga2011-3-tmsdg.pdf)的52頁有針腳編號的定義
 
-[core-i7-lga2011-3-datasheet-vol-1](core-i7-lga2011-3-datasheet-vol-1)的64頁開始有編號對應的用途
+[core-i7-lga2011-3-datasheet-vol-1.pdf](core-i7-lga2011-3-datasheet-vol-1.pdf)的64頁開始有編號對應的用途
 
 {% endfold %}
 

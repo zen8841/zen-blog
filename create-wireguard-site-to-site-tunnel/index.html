@@ -18,23 +18,25 @@
   <meta name="author" content="Zen Wen">
   <meta name="keywords" content="linux network computer">
   
-    <meta name="description" content="使用compose.yml來限制資源使用">
+    <meta name="description" content="在router上建立site to site tunnel，並讓路由通過">
 <meta property="og:type" content="article">
-<meta property="og:title" content="如何在docker compose file中限制系統資源的使用">
-<meta property="og:url" content="https://www.zenwen.eu.org/docker-compose-file-limit-resource/index.html">
+<meta property="og:title" content="使用Wireguard建立Site to Site Tunnel">
+<meta property="og:url" content="https://www.zenwen.eu.org/create-wireguard-site-to-site-tunnel/index.html">
 <meta property="og:site_name" content="Zen&#39;s Blog">
-<meta property="og:description" content="使用compose.yml來限制資源使用">
+<meta property="og:description" content="在router上建立site to site tunnel，並讓路由通過">
 <meta property="og:locale" content="zh_TW">
-<meta property="article:published_time" content="2024-06-06T19:34:01.000Z">
-<meta property="article:modified_time" content="2024-06-06T19:34:01.000Z">
+<meta property="article:published_time" content="2024-08-18T10:30:54.000Z">
+<meta property="article:modified_time" content="2024-08-18T10:30:54.000Z">
 <meta property="article:author" content="Zen Wen">
-<meta property="article:tag" content="server">
-<meta property="article:tag" content="docker">
+<meta property="article:tag" content="network">
+<meta property="article:tag" content="router">
+<meta property="article:tag" content="wireguard">
+<meta property="article:tag" content="linux">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>如何在docker compose file中限制系統資源的使用 - Zen&#39;s Blog</title>
+  <title>使用Wireguard建立Site to Site Tunnel - Zen&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" />
 
@@ -250,7 +252,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="如何在docker compose file中限制系統資源的使用"></span>
+            <span id="subtitle" data-typed-text="使用Wireguard建立Site to Site Tunnel"></span>
           
         </div>
 
@@ -261,8 +263,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-06-07 03:34" pubdate>
-          2024年6月7日 凌晨
+        <time datetime="2024-08-18 18:30" pubdate>
+          2024年8月18日 晚上
         </time>
       </span>
     
@@ -273,7 +275,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          706 字
+          484 字
         
       </span>
     
@@ -284,7 +286,7 @@
         
         
         
-          6 分鐘
+          5 分鐘
         
       </span>
     
@@ -369,7 +371,7 @@
       
         <a href="/docker-compose-file-limit-resource/" title="如何在docker compose file中限制系統資源的使用"
            class="list-group-item list-group-item-action
-           active">
+           ">
           <span class="category-post">如何在docker compose file中限制系統資源的使用</span>
         </a>
       
@@ -414,7 +416,7 @@
       
         <a href="/create-wireguard-site-to-site-tunnel/" title="使用Wireguard建立Site to Site Tunnel"
            class="list-group-item list-group-item-action
-           ">
+           active">
           <span class="category-post">使用Wireguard建立Site to Site Tunnel</span>
         </a>
       
@@ -503,39 +505,48 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">如何在docker compose file中限制系統資源的使用</h1>
+            <h1 id="seo-header">使用Wireguard建立Site to Site Tunnel</h1>
             
             
               <div class="markdown-body">
                 
                 <h1 id="前言">前言</h1>
-<p>這也算是在舉辦 TSCCTF 中整理的一些資訊，因為題目都是放在docker container中跑，為了避免題目被打穿佔用資源影響到其他題目的正常運作，所以當時幫出題人員整理了一下在docker compose  file中限制系統資源使用的方式。</p>
-<p>不過現在docker中已經包含了compose組件，而compose組件吃的格式和<code>docker-compose</code>指令吃的格式有點不一樣，所以重新整理了這一篇文章。</p>
-<h1 id="格式">格式</h1>
+<p>算是接續之前的linux router設定的部分，建立wireguard site to site tunnel</p>
+<h1 id="設定">設定</h1>
+<h2 id="Wireguard">Wireguard</h2>
+<p>首先在兩端分別產生公、私鑰</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">wg genkey | <span class="hljs-built_in">tee</span> private.key | wg pubkey &gt; public.key</span><br></code></pre></td></tr></table></figure>
+<p>也可以多產生一個PresharedKey，這個只要在其中一邊產生就好，兩邊都是相同的</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">wg genpsk</span><br></code></pre></td></tr></table></figure>
+<p>編輯<code>/etc/wireguard/&lt;wg-interface&gt;.conf</code>，<code>&lt;wg-interface&gt;</code>就是待會interface的名字，我一般會設定成<code>wg-&lt;toLocation&gt;</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs conf">[Interface]<br>PrivateKey = xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>ListenPort = xxxxx<br><br>[Peer]<br>PublicKey = xxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>Endpoint = x.x.x.x:xxxxx<br>PresharedKey = xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>AllowedIPs = 0.0.0.0/0<br>PersistentKeepalive = 25<br></code></pre></td></tr></table></figure>
+<ul>
+<li>PrivateKey填自己的私鑰</li>
+<li>PublicKey填另一個端點的公鑰</li>
+<li>PresharedKey都是一樣的值(可選)</li>
+<li>AllowedIPs填0.0.0.0/0才可以讓所有路由通過，如果有IPv6要過，也可多加::/0
+<ul>
+<li>如果使用wg-quick或其他工具啟動wireguard，會使用AllowedIPs來設定路由，不過這個設定使用<code>ip</code>和<code>wg</code>指令來建立通道，AllowedIPs就只會限制可以通過這個Tunnel的封包IP，所以全開</li>
+</ul>
+</li>
+<li>Endpoint填對方的IP和ListenPort
+<ul>
+<li>也可以只有一邊有ListenPort，不設定Endpoint，另一端設定Endpoint，不設定ListenPort，讓另一端來連接有ListenPort的這一端</li>
+</ul>
+</li>
+</ul>
+<p>在兩邊都完成wireguard的config</p>
+<h2 id="ifupdown">ifupdown</h2>
+<p>編輯<code>/etc/network/interfaces</code>，增加這段，<code>&lt;wg-interface&gt;</code>就是剛才設定的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs conf">auto &lt;wg-interface&gt;<br>iface &lt;wg-interface&gt; inet static<br>    address 10.10.10.1/32<br>    pointopoint 10.10.10.2<br>    pre-up ip link add $IFACE type wireguard<br>    pre-up wg setconf $IFACE /etc/wireguard/$IFACE.conf<br>    post-down ip link del $IFACE<br></code></pre></td></tr></table></figure>
+<p>另一端的interface設定</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs conf">auto &lt;wg-interface&gt;<br>iface &lt;wg-interface&gt; inet static<br>    address 10.10.10.2/32<br>    pointopoint 10.10.10.1<br>    pre-up ip link add $IFACE type wireguard<br>    pre-up wg setconf $IFACE /etc/wireguard/$IFACE.conf<br>    post-down ip link del $IFACE<br></code></pre></td></tr></table></figure>
+<p>其實就是<code>address</code>和<code>pointopoint</code>互換，使用<code>/32的address</code>和<code>pointopoint</code>可以節省IP，這會設定一個/32的路由到對方</p>
+<p>如果想要設定路由可以跑OSPF之類的動態路由協議，或是直接設定static route，如下</p>
+<p>假設<code>10.10.10.2</code>這一邊一邊有<code>10.0.0.0/24</code>的路由，可以在<code>10.10.10.1</code>的這邊在&lt;wg-interface&gt;這邊設定這些</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs conf">up ip route add 10.0.0.0/24 dev $IFACE via 10.10.10.2<br>down ip route del 10.0.0.0/24<br></code></pre></td></tr></table></figure>
+<p>這樣static route就會隨著wireguard interface的啟動和關閉被設定</p>
 
-    <div class="fold">
-      <div class="fold-title fold-default collapsed" data-toggle="collapse" href="#collapse-631c5d3e" role="button" aria-expanded="false" aria-controls="collapse-631c5d3e">
-        <div class="fold-arrow">▶</div>docker-compose version 2、3中限制的方法
-      </div>
-      <div class="fold-collapse collapse" id="collapse-631c5d3e">
-        <div class="fold-content">
-          <p>這兩種格式已經被棄用<sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span class="hint--top hint--rounded" aria-label="[Legacy versions | Docker Docs](https://docs.docker.com/compose/compose-file/legacy-versions)">[1]</span></a></sup></p><h2 id="version-2">version 2</h2><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">version:</span> <span class="hljs-string">&quot;2&quot;</span><br><span class="hljs-attr">services:</span><br>  <span class="hljs-attr">service_name:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">image_name</span><br>    <br>    <span class="hljs-comment">## 若沒有寫入的需求請一律使用read_only，volume也請使用ro掛載</span><br>    <span class="hljs-attr">read_only:</span> <span class="hljs-literal">true</span><br>    <br>    <span class="hljs-comment">## 若有寫入需求請註解掉read_only，改用以下兩行限制rootfs size</span><br>    <span class="hljs-comment">## 此選項只支援部分storage driver，在overlay2中只支援xfs</span><br>    <span class="hljs-comment">## https://docs.docker.com/reference/cli/docker/container/run/#storage-opt</span><br>    <span class="hljs-comment"># storage_opt:</span><br>      <span class="hljs-comment"># size: 1G</span><br>      <br>    <span class="hljs-comment">## 可使用的cpu數</span><br>    <span class="hljs-attr">cpus:</span> <span class="hljs-number">1</span><br>    <br>    <span class="hljs-comment">## 優先級，可不設定</span><br>    <span class="hljs-comment">## 可以理解為在資源不足時，容器搶資源的能力，按照cpu_share的比例來分資源，預設為1024</span><br>    <span class="hljs-comment"># cpu_shares: 1024</span><br>    <br>    <span class="hljs-comment">## 限制memory大小，視個別情況決定限制的大小</span><br>    <span class="hljs-attr">mem_limit:</span> <span class="hljs-string">1G</span><br>    <br>    <span class="hljs-comment">## 資源不足時啟用的限制，可不設定</span><br>    <span class="hljs-comment"># mem_reservation: 128M</span><br></code></pre></td></tr></table></figure><h2 id="version3">version3</h2><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment">## 請使用3.7以上</span><br><span class="hljs-attr">version:</span> <span class="hljs-string">&quot;3.7&quot;</span><br><span class="hljs-attr">services:</span><br>  <span class="hljs-attr">service_name:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">image_name</span><br>    <br>    <span class="hljs-comment">## 若沒有寫入的需求請一律使用read_only，volume也請使用ro掛載</span><br>    <span class="hljs-attr">read_only:</span> <span class="hljs-literal">true</span><br>    <br>    <span class="hljs-comment">## 若有寫入需求請註解掉read_only，改用以下兩行限制rootfs size</span><br>    <span class="hljs-comment">## 此選項只支援部分storage driver，在overlay2中只支援xfs</span><br>    <span class="hljs-comment">## https://docs.docker.com/reference/cli/docker/container/run/#storage-opt</span><br>    <span class="hljs-comment"># storage_opt:</span><br>      <span class="hljs-comment"># size: 1G</span><br>      <br>    <span class="hljs-attr">deploy:</span><br>      <span class="hljs-attr">resources:</span><br>        <span class="hljs-attr">limits:</span><br>          <span class="hljs-comment">## 可使用的cpu數，可以設定為小數</span><br>          <span class="hljs-attr">cpus:</span> <span class="hljs-string">&#x27;1&#x27;</span><br>          <span class="hljs-comment">## 限制memory大小，視個別情況決定限制的大小</span><br>          <span class="hljs-attr">memory:</span> <span class="hljs-string">1G</span><br><br>        <span class="hljs-comment">## 資源不足時啟用的限制，可不設定</span><br>        <span class="hljs-comment"># reservations:</span><br>          <span class="hljs-comment"># cpus: &#x27;0.5&#x27;</span><br>          <span class="hljs-comment"># memory: 128M</span><br></code></pre></td></tr></table></figure><p>docker-compose v3下必須在<code>docker-compose</code>後加上參數啟動</p><p><code>docker-compose --compatibility up -d</code></p><p>其實也可以用<code>docker stack deploy --compose-file docker-compose.yml stack_name</code>來deploy，但是必須先初始化docker stack</p>
-        </div>
-      </div>
-    </div>
-<h2 id="compose組件">compose組件</h2>
-<p>這個版本的compose格式應該會是現行的版本，這部份參考自docker官網的文檔<sup id="fnref:2" class="footnote-ref"><a href="#fn:2" rel="footnote"><span class="hint--top hint--rounded" aria-label="[Services top-level elements | Docker Docs](https://docs.docker.com/compose/compose-file/05-services)">[2]</span></a></sup></p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">services:</span><br>  <span class="hljs-attr">service_name:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">image_name</span><br>    <br>    <span class="hljs-comment">## 若沒有寫入的需求請一律使用read_only，volume也請使用ro掛載</span><br>    <span class="hljs-attr">read_only:</span> <span class="hljs-literal">true</span><br>    <br>    <span class="hljs-comment">## 若有寫入需求請註解掉read_only，改用以下兩行限制rootfs size</span><br>    <span class="hljs-comment">#storage_opt:</span><br>      <span class="hljs-comment">#size: 1G</span><br>      <br>    <span class="hljs-comment">## 可使用的cpu數(還有很多其他的限制種類，可以在參考中查看)</span><br>    <span class="hljs-attr">cpus:</span> <span class="hljs-number">1</span><br>    <br>    <span class="hljs-comment">## 優先級，可不設定</span><br>    <span class="hljs-comment">#cpu_shares: 1024</span><br>    <br>    <span class="hljs-comment">## 限制memory大小，視個別情況決定限制的大小</span><br>    <span class="hljs-attr">mem_limit:</span> <span class="hljs-string">1G</span><br>    <br>    <span class="hljs-comment">## 資源不足時啟用的限制，可不設定</span><br>    <span class="hljs-comment">#mem_reservation: 128M</span><br></code></pre></td></tr></table></figure>
-<p>這個版本的格式不再需要指定<code>version</code>，使用<code>docker compose -f compose.yml up -d</code>啟動(如果在<code>compose.yml</code>的目錄可以不加<code>-f</code>)</p>
-<h2 id="參考">參考</h2>
-<section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://docs.docker.com/compose/compose-file/legacy-versions">Legacy versions | Docker Docs</a>
-<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://docs.docker.com/compose/compose-file/05-services">Services top-level elements | Docker Docs</a>
-<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:3" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://www.baeldung.com/ops/docker-memory-limit">Setting Memory And CPU Limits In Docker | Baeldung on Ops</a>
-<a href="#fnref:3" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:4" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://blog.yowko.com/docker-compose-3-cpu-memory-limit/">在 Docker Compose file 3 下限制 CPU 與 Memory - Yowko’s Notes</a>
-<a href="#fnref:4" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:5" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/42345235/how-to-specify-memory-cpu-limit-in-docker-compose-version-3">How to specify Memory &amp; CPU limit in docker compose version 3 - Stack Overflow</a>
-<a href="#fnref:5" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:6" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/36145817/how-to-limit-io-speed-in-docker-and-share-file-with-system-in-the-same-time">How to limit IO speed in docker and share file with system in the same time? - Stack Overflow</a>
-<a href="#fnref:6" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:7" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/19158810/docker-mount-volumes-as-readonly">Docker, mount volumes as readonly - Stack Overflow</a>
-<a href="#fnref:7" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
                 
               </div>
             
@@ -568,9 +579,13 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/server/" class="print-no-link">#server</a>
+        <a href="/tags/network/" class="print-no-link">#network</a>
       
-        <a href="/tags/docker/" class="print-no-link">#docker</a>
+        <a href="/tags/router/" class="print-no-link">#router</a>
+      
+        <a href="/tags/wireguard/" class="print-no-link">#wireguard</a>
+      
+        <a href="/tags/linux/" class="print-no-link">#linux</a>
       
     </div>
   
@@ -582,8 +597,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>如何在docker compose file中限制系統資源的使用</div>
-      <div>https://www.zenwen.eu.org/docker-compose-file-limit-resource/</div>
+      <div>使用Wireguard建立Site to Site Tunnel</div>
+      <div>https://www.zenwen.eu.org/create-wireguard-site-to-site-tunnel/</div>
     </div>
     <div class="license-meta">
       
@@ -595,7 +610,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>發布於</div>
-          <div>2024年6月7日</div>
+          <div>2024年8月18日</div>
         </div>
       
       
@@ -627,18 +642,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/e1000e-detected-hardware-unit-hang/" title="I218-V、I219-V系列網卡在Linux下突然關閉的解法">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">I218-V、I219-V系列網卡在Linux下突然關閉的解法</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/cloudflare-infinite-301-redirection/" title="Cloudflare Proxy 無限301轉址">
-                        <span class="hidden-mobile">Cloudflare Proxy 無限301轉址</span>
+                      <a href="/wordpress-with-LNMP-environment/" title="使用LNMP環境搭建WordPress網站">
+                        <span class="hidden-mobile">使用LNMP環境搭建WordPress網站</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

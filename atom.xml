@@ -6,7 +6,7 @@
   <link href="https://www.zenwen.eu.org/atom.xml" rel="self"/>
   
   <link href="https://www.zenwen.eu.org/"/>
-  <updated>2024-08-05T15:41:48.000Z</updated>
+  <updated>2024-08-18T10:30:54.000Z</updated>
   <id>https://www.zenwen.eu.org/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>使用Wireguard建立Site to Site Tunnel</title>
+    <link href="https://www.zenwen.eu.org/create-wireguard-site-to-site-tunnel/"/>
+    <id>https://www.zenwen.eu.org/create-wireguard-site-to-site-tunnel/</id>
+    <published>2024-08-18T10:30:54.000Z</published>
+    <updated>2024-08-18T10:30:54.000Z</updated>
+    
+    
+    <summary type="html">在router上建立site to site tunnel，並讓路由通過</summary>
+    
+    
+    
+    <category term="教程" scheme="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/"/>
+    
+    
+    <category term="network" scheme="https://www.zenwen.eu.org/tags/network/"/>
+    
+    <category term="router" scheme="https://www.zenwen.eu.org/tags/router/"/>
+    
+    <category term="wireguard" scheme="https://www.zenwen.eu.org/tags/wireguard/"/>
+    
+    <category term="linux" scheme="https://www.zenwen.eu.org/tags/linux/"/>
+    
+  </entry>
   
   <entry>
     <title>使用LNMP環境搭建WordPress網站</title>
@@ -46,7 +71,7 @@
     <link href="https://www.zenwen.eu.org/turning-linux-into-a-router/"/>
     <id>https://www.zenwen.eu.org/turning-linux-into-a-router/</id>
     <published>2024-08-01T15:36:18.000Z</published>
-    <updated>2024-08-01T15:36:18.000Z</updated>
+    <updated>2024-08-17T19:33:10.000Z</updated>
     
     
     <summary type="html">如何設定linux實現router應有的功能</summary>
@@ -60,9 +85,9 @@
     
     <category term="server" scheme="https://www.zenwen.eu.org/tags/server/"/>
     
-    <category term="linux" scheme="https://www.zenwen.eu.org/tags/linux/"/>
-    
     <category term="router" scheme="https://www.zenwen.eu.org/tags/router/"/>
+    
+    <category term="linux" scheme="https://www.zenwen.eu.org/tags/linux/"/>
     
   </entry>
   
@@ -106,9 +131,9 @@
     
     <category term="network" scheme="https://www.zenwen.eu.org/tags/network/"/>
     
-    <category term="linux" scheme="https://www.zenwen.eu.org/tags/linux/"/>
-    
     <category term="router" scheme="https://www.zenwen.eu.org/tags/router/"/>
+    
+    <category term="linux" scheme="https://www.zenwen.eu.org/tags/linux/"/>
     
   </entry>
   

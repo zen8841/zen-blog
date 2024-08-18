@@ -5,7 +5,7 @@ mathjax: false
 mermaid: false
 excerpt: 如何設定linux實現router應有的功能
 date: 2024-08-01 23:36:18
-updated: 2024-08-01 23:36:18
+updated: 2024-08-18 03:33:10
 index_img:
 categories:
 - 教程
@@ -15,6 +15,12 @@ tags:
 - router
 - server
 ---
+
+{% note info %}
+
+2024/8/18更新： 更新nftables的操作說明及進階設定：使用Wireguard建立Site to Site Tunnel
+
+{% endnote %}
 
 # 前言
 
@@ -150,7 +156,7 @@ net.ipv4.ip_forward=1
 新增nat規則
 
 ```shell
-# iptables -A POSTROUTING -t nat -s 10.60.0.0/24 -o wan -j MASQUERADE
+# iptables -A POSTROUTING -t nat -s 10.0.0.0/24 -o wan -j MASQUERADE
 ```
 
 如果wan和lan的介面MTU不同，最好加上mss clamping
@@ -158,6 +164,8 @@ net.ipv4.ip_forward=1
 ```shell
 # iptables -A FORWARD -t mangle -p tcp -m tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
 ```
+
+---
 
 儲存配置
 
@@ -179,6 +187,8 @@ net.ipv4.ip_forward=1
 COMMIT
 ```
 
+---
+
 應用設定
 
 ```shell
@@ -189,9 +199,89 @@ COMMIT
 
 如果不知道怎麼寫`rules.v4`也可以直接使用iptables新增規則，在直接執行`iptables-save`複製輸出新增的部分到`rules.v4`中
 
-### nft
+### nftables
 
-待更新
+安裝nftables
+
+```shell
+# apt install nftables
+```
+
+nftables預設沒有任何表或鏈，可以用`nft list ruleset`查看目前的防火牆狀態，應該是不會看到任何東西輸出
+
+#### 簡易介紹
+
+nftables的結構是tables-chains-rules三層，可以這樣新增一個表
+
+```shell
+# nft add table inet filter
+```
+
+inet是table的family，可以同時包含ipv4或ipv6，也可以使用ip作為family，不過這樣就和iptables一樣了，其他family可以參考[這裡](https://wiki.nftables.org/wiki-nftables/index.php/Nftables_families)[^1]
+
+---
+
+可以這樣新增位於filter底下的鏈
+
+```shell
+# nft add chain inet filter INPUT [ { type filter hook input priority filter; policy accept;  } ]
+```
+
+這邊的參數比較多，可以參考[wiki的說明](https://wiki.nftables.org/wiki-nftables/index.php/Configuring_chains)[^2]，要注意的是預設的policy和type要在創建時就指定，不然想要改只能刪掉鏈重新創建
+
+---
+
+可以這樣創建位於INPUT鏈底下的規則
+
+```shell
+# nft add rule inet filter INPUT <match> <statements>
+```
+
+match和stataement和iptables的概念類似，就是匹配，然後決定行為，詳細可以看[wiki的說明](https://wiki.nftables.org/wiki-nftables/index.php/Simple_rule_management)[^3]
+
+---
+
+簡易的介紹大概這樣，更詳細的可以直接看[wiki](https://wiki.nftables.org/wiki-nftables/index.php/Main_Page)[^4]
+
+#### NAT的設定
+
+雖然可以打指令來配置防火牆，但是編輯設定檔再來直接應用我覺得更加好理解及方便，因此設定會直接編輯設定檔
+
+編輯`/etc/nftables.conf`
+
+```conf
+#!/usr/sbin/nft -f
+
+flush ruleset
+
+table inet mangle {
+        chain FORWARD {
+                type filter hook forward priority mangle; policy accept;
+                tcp flags syn tcp option maxseg size set rt mtu
+        }
+}
+table inet nat {
+        chain POSTROUTING {
+                type nat hook postrouting priority srcnat; policy accept;
+                oifname "wan" ip saddr 10.0.0.0/24 masquerade
+        }
+}
+```
+
+最上面的兩行代表使用nft來執行設定檔的腳本還有清空nftables的規則，nftables的一個優點是Atomic Rule Replacement，可以讓規則在更換時不會像iptables-restore之類的腳本出現一瞬間沒有防火牆的漏洞
+
+table nat設定了POSTROUTING鏈，裡面的規則和前面iptables設定的相同，都是執行masquerade，不過我把counter這個statements取消了，反正我也不會去看計數器
+
+table mangle則是設定了MSS Clamping的規則，同前面的iptables
+
+---
+
+應用設定直接執行`/etc/nftables.conf`即可，啟動nftables服務可以在開機時回復防火牆
+
+```
+# /etc/nftables.conf
+# systemctl enable nftables.service
+```
 
 ## DHCP server
 
@@ -220,7 +310,7 @@ authoritative;
 # 新增一個subnet，subnet和netmask使用子網對應的值
 subnet 10.0.0.0 netmask 255.255.255.0 {
     # 發的IP範圍
-    range 10.0.0.2 10.60.0.99;
+    range 10.0.0.2 10.0.0.99;
     # 可設可不設
     option domain-name "example.com";
     # 指定DHCP分配的DNS
@@ -283,10 +373,63 @@ COMMIT
 # iptables-restore /etc/iptables/rules.v4
 ```
 
-### nft
+### nftables
 
-待更新
+編輯`/etc/nftables.conf`，增加以下設定
+
+```conf
+table inet filter {
+        set internalv4 {
+                type ipv4_addr
+                flags interval
+                auto-merge
+                elements = { 10.0.0.0/24 }
+        }
+        set global_ratelimitv4 {
+                type ipv4_addr
+                timeout 60s
+                flags dynamic
+        }
+        set global_ratelimitv6 {
+                type ipv6_addr
+                timeout 60s
+                flags dynamic
+        }
+        set input_service_port {
+                type inet_service
+                elements = { 22 }
+        }
+        chain INPUT {
+                type filter hook input priority filter; policy accept;
+                ct state related,established accept
+                ct state invalid drop
+                ip saddr @global_ratelimitv4 reject with icmp type admin-prohibited
+                ip6 saddr @global_ratelimitv6 reject with icmpv6 type admin-prohibited
+                meta l4proto icmp accept
+                iif "lo" accept
+                iifname "wan" tcp dport @input_service_port ct state new limit rate over 10/minute update @global_ratelimitv4 { ip saddr }
+                iifname "wan" tcp dport @input_service_port ct state new limit rate over 10/minute update @global_ratelimitv6 { ip6 saddr }
+                tcp dport @input_service_port accept
+                reject with icmpx type admin-prohibited
+        }
+        chain FORWARD {
+                type filter hook forward priority filter; policy drop;
+                ct state related,established accept
+                ct state invalid drop
+                ip saddr @internalv4 ct state new accept
+        }
+}
+```
+
+整體設定的邏輯和前面iptables的部分相同，不過為了配合ipv4+ipv6雙棧做了一些修改，nftables的可讀性還不錯，應該可以直接理解設定的內容
 
 # 進階設定
 
-待更新
+[使用Wireguard建立Site to Site Tunnel](/create-wireguard-site-to-site-tunnel)
+
+## 參考
+
+[^1]: [Nftables families - nftables wiki](https://wiki.nftables.org/wiki-nftables/index.php/Nftables_families)
+[^2]: [Configuring chains - nftables wiki](https://wiki.nftables.org/wiki-nftables/index.php/Configuring_chains)
+[^3]: [Simple rule management - nftables wiki](https://wiki.nftables.org/wiki-nftables/index.php/Simple_rule_management)
+[^4]: [nftables wiki](https://wiki.nftables.org/wiki-nftables/index.php/Main_Page)

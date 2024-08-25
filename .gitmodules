@@ -1,0 +1,3 @@
+[submodule "themes/fluid"]
+	path = themes/fluid
+	url = git@github.com:zen8841/hexo-theme-fluid.git

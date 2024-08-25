@@ -237,23 +237,7 @@ custom_js:
 # The usage is the same as custom_js
 custom_css:
 
-custom_html: "<script>    var titleTime;    var OriginTitile = document.title;    document.addEventListener('visibilitychange', function() {        if (document.hidden) {            document.title = '|ω·) 喵~快回來呀！';            clearTimeout(titleTime);        } else {            document.title = '(/≧▽≦)/ Meow！';            titleTime = setTimeout(function() {            document.title = OriginTitile;            }, 800);        }    });</script>"
-# <script>
-#         var titleTime;
-#         var OriginTitile = document.title;
-#         document.addEventListener('visibilitychange', function() {
-#             if (document.hidden) {
-#                 document.title = '|ω·) 喵~快回來呀！';
-#                 clearTimeout(titleTime);
-#             } else {
-#                 document.title = '(/≧▽≦)/ Meow！';
-#                 titleTime = setTimeout(function() {
-#               document.title = OriginTitile;
-#         }, 800);
-#             }
-#         });
-#</script>
-
+custom_html:
 
 # 网页访问统计
 # Analysis of website visitors

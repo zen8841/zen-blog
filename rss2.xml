@@ -15,8 +15,33 @@
     <atom:link href="https://www.zenwen.eu.org/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>簡單記錄一下折騰的內容，可能還會發發感想？</description>
-    <pubDate>Sun, 18 Aug 2024 10:30:54 GMT</pubDate>
+    <pubDate>Sun, 25 Aug 2024 16:38:38 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>使用openssl在linux上建立CA</title>
+      <link>https://www.zenwen.eu.org/using-openssl-to-create-ca-on-linux/</link>
+      <guid>https://www.zenwen.eu.org/using-openssl-to-create-ca-on-linux/</guid>
+      <pubDate>Sun, 25 Aug 2024 16:38:38 GMT</pubDate>
+      
+      <description>如何在linux上建立Certificate Authority</description>
+      
+      
+      
+      
+      <category domain="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/">教程</category>
+      
+      
+      <category domain="https://www.zenwen.eu.org/tags/network/">network</category>
+      
+      <category domain="https://www.zenwen.eu.org/tags/server/">server</category>
+      
+      <category domain="https://www.zenwen.eu.org/tags/linux/">linux</category>
+      
+      
+      <comments>https://www.zenwen.eu.org/using-openssl-to-create-ca-on-linux/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>使用Wireguard建立Site to Site Tunnel</title>

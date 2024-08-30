@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/about/index.html</loc>
+    
+    <lastmod>2024-08-30</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/using-openssl-to-create-ca-on-linux/</loc>
+    
+    <lastmod>2024-08-25</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/create-wireguard-site-to-site-tunnel/</loc>
+    
+    <lastmod>2024-08-18</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/turning-linux-into-a-router/</loc>
+    
+    <lastmod>2024-08-17</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/wordpress-with-LNMP-environment/</loc>
+    
+    <lastmod>2024-08-05</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/wireguard-persistent-keepalive/</loc>
+    
+    <lastmod>2024-07-10</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/vyos-quick-setup/</loc>
+    
+    <lastmod>2024-07-10</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/hexo-customization/</loc>
+    
+    <lastmod>2024-07-09</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/some-good-post/</loc>
+    
+    <lastmod>2024-07-09</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/e1000e-detected-hardware-unit-hang/</loc>
+    
+    <lastmod>2024-07-09</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/doh-dot-networkmanager-and-systemd-resolved/</loc>
+    
+    <lastmod>2024-06-09</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/docker-compose-file-limit-resource/</loc>
+    
+    <lastmod>2024-06-06</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/cloudflare-infinite-301-redirection/</loc>
+    
+    <lastmod>2024-06-05</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/asus-x99-code-00/</loc>
+    
+    <lastmod>2024-05-06</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/xz-CVE-2024-3094/</loc>
+    
+    <lastmod>2024-04-29</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/gre-over-ipsec-between-edgeos-and-routeros/</loc>
+    
+    <lastmod>2024-04-24</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/54th-skills39-south-area/</loc>
+    
+    <lastmod>2024-04-23</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+
+  <url>
+    <loc>https://www.zenwen.eu.org/</loc>
+    <lastmod>2024-08-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/tags/network/</loc>
+    <lastmod>2024-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/tags/server/</loc>
+    <lastmod>2024-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/tags/3C%E7%A1%AC%E9%AB%94/</loc>
+    <lastmod>2024-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/tags/cloudflare/</loc>
+    <lastmod>2024-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/tags/https/</loc>
+    <lastmod>2024-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/tags/301-redirection/</loc>
+    <lastmod>2024-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/tags/router/</loc>
+    <lastmod>2024-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/tags/wireguard/</loc>
+    <lastmod>2024-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/tags/linux/</loc>
+    <lastmod>2024-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/tags/docker/</loc>
+    <lastmod>2024-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/tags/dns/</loc>
+    <lastmod>2024-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/tags/UBNT/</loc>
+    <lastmod>2024-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/tags/Ubiquiti/</loc>
+    <lastmod>2024-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/tags/EdgeOS/</loc>
+    <lastmod>2024-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/tags/Mikrotik/</loc>
+    <lastmod>2024-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/tags/RouterOS/</loc>
+    <lastmod>2024-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/tags/GRE-over-IPsec/</loc>
+    <lastmod>2024-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/tags/IPsec/</loc>
+    <lastmod>2024-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/tags/blog/</loc>
+    <lastmod>2024-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/tags/hexo/</loc>
+    <lastmod>2024-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/tags/nginx/</loc>
+    <lastmod>2024-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/tags/wordpress/</loc>
+    <lastmod>2024-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/tags/xz/</loc>
+    <lastmod>2024-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/tags/CVE-2024-3094/</loc>
+    <lastmod>2024-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/categories/%E6%AF%94%E8%B3%BD/</loc>
+    <lastmod>2024-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/</loc>
+    <lastmod>2024-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/%E7%96%91%E9%9B%A3%E9%9B%9C%E7%97%87/</loc>
+    <lastmod>2024-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zenwen.eu.org/categories/%E8%B3%87%E5%AE%89/</loc>
+    <lastmod>2024-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+</urlset>

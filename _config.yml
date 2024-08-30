@@ -66,6 +66,16 @@ index_generator:
   order_by: -date
   pagination_dir: page
 
+sitemap:
+  path: 
+    - sitemap.xml
+    - sitemap.txt
+  template: ./sitemap_template.xml
+  template_txt: ./sitemap_template.txt
+  rel: false
+  tags: true
+  categories: true
+
 # Category & Tag
 # https://hexo.io/docs/configuration.html#Category-Tag
 default_category: others

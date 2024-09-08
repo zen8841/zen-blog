@@ -5,7 +5,7 @@ mathjax: false
 mermaid: false
 excerpt: 如何設定linux實現router應有的功能
 date: 2024-08-01 23:36:18
-updated: 2024-08-18 03:33:10
+updated: 2024-09-08 21:33:10
 index_img:
 categories:
 - 教程
@@ -19,6 +19,8 @@ tags:
 {% note info %}
 
 2024/8/18更新： 更新nftables的操作說明及進階設定：使用Wireguard建立Site to Site Tunnel
+
+2024/9/8更新： 更新QoS的設定：使用nftables和tc在linux上實現QoS
 
 {% endnote %}
 
@@ -426,6 +428,8 @@ table inet filter {
 # 進階設定
 
 [使用Wireguard建立Site to Site Tunnel](/create-wireguard-site-to-site-tunnel)
+
+[使用nftables和tc在linux上實現QoS](/linux-qos-with-tc-and-nft)
 
 ## 參考
 

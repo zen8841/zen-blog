@@ -15,8 +15,35 @@
     <atom:link href="https://www.zenwen.eu.org/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>簡單記錄一下折騰的內容，可能還會發發感想？</description>
-    <pubDate>Sun, 25 Aug 2024 16:38:38 GMT</pubDate>
+    <pubDate>Sun, 08 Sep 2024 12:43:12 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>使用nftables和tc在linux上實現QoS</title>
+      <link>https://www.zenwen.eu.org/linux-qos-with-tc-and-nft/</link>
+      <guid>https://www.zenwen.eu.org/linux-qos-with-tc-and-nft/</guid>
+      <pubDate>Sun, 08 Sep 2024 12:43:12 GMT</pubDate>
+      
+      <description>介紹tc的使用，以及如何使用nftables和tc配合實現自動針對每個IP進行流量控制</description>
+      
+      
+      
+      
+      <category domain="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/">教程</category>
+      
+      
+      <category domain="https://www.zenwen.eu.org/tags/network/">network</category>
+      
+      <category domain="https://www.zenwen.eu.org/tags/server/">server</category>
+      
+      <category domain="https://www.zenwen.eu.org/tags/router/">router</category>
+      
+      <category domain="https://www.zenwen.eu.org/tags/linux/">linux</category>
+      
+      
+      <comments>https://www.zenwen.eu.org/linux-qos-with-tc-and-nft/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>使用openssl在linux上建立CA</title>

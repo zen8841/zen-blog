@@ -6,7 +6,7 @@
   <link href="https://www.zenwen.eu.org/atom.xml" rel="self"/>
   
   <link href="https://www.zenwen.eu.org/"/>
-  <updated>2024-08-25T16:38:38.000Z</updated>
+  <updated>2024-09-08T12:43:12.000Z</updated>
   <id>https://www.zenwen.eu.org/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>使用nftables和tc在linux上實現QoS</title>
+    <link href="https://www.zenwen.eu.org/linux-qos-with-tc-and-nft/"/>
+    <id>https://www.zenwen.eu.org/linux-qos-with-tc-and-nft/</id>
+    <published>2024-09-08T12:43:12.000Z</published>
+    <updated>2024-09-08T12:43:12.000Z</updated>
+    
+    
+    <summary type="html">介紹tc的使用，以及如何使用nftables和tc配合實現自動針對每個IP進行流量控制</summary>
+    
+    
+    
+    <category term="教程" scheme="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/"/>
+    
+    
+    <category term="network" scheme="https://www.zenwen.eu.org/tags/network/"/>
+    
+    <category term="server" scheme="https://www.zenwen.eu.org/tags/server/"/>
+    
+    <category term="router" scheme="https://www.zenwen.eu.org/tags/router/"/>
+    
+    <category term="linux" scheme="https://www.zenwen.eu.org/tags/linux/"/>
+    
+  </entry>
   
   <entry>
     <title>使用openssl在linux上建立CA</title>
@@ -94,7 +119,7 @@
     <link href="https://www.zenwen.eu.org/turning-linux-into-a-router/"/>
     <id>https://www.zenwen.eu.org/turning-linux-into-a-router/</id>
     <published>2024-08-01T15:36:18.000Z</published>
-    <updated>2024-08-17T19:33:10.000Z</updated>
+    <updated>2024-09-08T13:33:10.000Z</updated>
     
     
     <summary type="html">如何設定linux實現router應有的功能</summary>

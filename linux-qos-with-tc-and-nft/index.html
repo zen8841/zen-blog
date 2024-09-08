@@ -21,25 +21,27 @@
   <meta name="author" content="Zen Wen">
   <meta name="keywords" content="linux network computer">
   
-    <meta name="description" content="在router上建立site to site tunnel，並讓路由通過">
+    <meta name="description" content="介紹tc的使用，以及如何使用nftables和tc配合實現自動針對每個IP進行流量控制">
 <meta property="og:type" content="article">
-<meta property="og:title" content="使用Wireguard建立Site to Site Tunnel">
-<meta property="og:url" content="https://www.zenwen.eu.org/create-wireguard-site-to-site-tunnel/index.html">
+<meta property="og:title" content="使用nftables和tc在linux上實現QoS">
+<meta property="og:url" content="https://www.zenwen.eu.org/linux-qos-with-tc-and-nft/index.html">
 <meta property="og:site_name" content="Zen&#39;s Blog">
-<meta property="og:description" content="在router上建立site to site tunnel，並讓路由通過">
+<meta property="og:description" content="介紹tc的使用，以及如何使用nftables和tc配合實現自動針對每個IP進行流量控制">
 <meta property="og:locale" content="zh_TW">
-<meta property="article:published_time" content="2024-08-18T10:30:54.000Z">
-<meta property="article:modified_time" content="2024-08-18T10:30:54.000Z">
+<meta property="og:image" content="https://www.zenwen.eu.org/linux-qos-with-tc-and-nft/tc_tree.png">
+<meta property="article:published_time" content="2024-09-08T12:43:12.000Z">
+<meta property="article:modified_time" content="2024-09-08T12:43:12.000Z">
 <meta property="article:author" content="Zen Wen">
 <meta property="article:tag" content="network">
+<meta property="article:tag" content="server">
 <meta property="article:tag" content="router">
-<meta property="article:tag" content="wireguard">
 <meta property="article:tag" content="linux">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.zenwen.eu.org/linux-qos-with-tc-and-nft/tc_tree.png">
   
   
   
-  <title>使用Wireguard建立Site to Site Tunnel - Zen&#39;s Blog</title>
+  <title>使用nftables和tc在linux上實現QoS - Zen&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" />
 
@@ -286,7 +288,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="使用Wireguard建立Site to Site Tunnel"></span>
+            <span id="subtitle" data-typed-text="使用nftables和tc在linux上實現QoS"></span>
           
         </div>
 
@@ -297,8 +299,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-08-18 18:30" pubdate>
-          2024年8月18日 晚上
+        <time datetime="2024-09-08 20:43" pubdate>
+          2024年9月8日 晚上
         </time>
       </span>
     
@@ -309,7 +311,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          484 字
+          2.3k 字
         
       </span>
     
@@ -320,7 +322,7 @@
         
         
         
-          5 分鐘
+          20 分鐘
         
       </span>
     
@@ -450,7 +452,7 @@
       
         <a href="/create-wireguard-site-to-site-tunnel/" title="使用Wireguard建立Site to Site Tunnel"
            class="list-group-item list-group-item-action
-           active">
+           ">
           <span class="category-post">使用Wireguard建立Site to Site Tunnel</span>
         </a>
       
@@ -468,7 +470,7 @@
       
         <a href="/linux-qos-with-tc-and-nft/" title="使用nftables和tc在linux上實現QoS"
            class="list-group-item list-group-item-action
-           ">
+           active">
           <span class="category-post">使用nftables和tc在linux上實現QoS</span>
         </a>
       
@@ -557,48 +559,151 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">使用Wireguard建立Site to Site Tunnel</h1>
+            <h1 id="seo-header">使用nftables和tc在linux上實現QoS</h1>
             
             
               <div class="markdown-body">
                 
                 <h1 id="前言">前言</h1>
-<p>算是接續之前的linux router設定的部分，建立wireguard site to site tunnel</p>
+<p>在家中的網路會需要做QoS，主要是因為ISP的限速策略做的挺爛的，我家的ISP是屬於二級ISP，簡單來說就是他會和中華電信買幾條網路，在往下分租給整棟樓的人。</p>
+<p>我家的網路是100/10Mbps (down/up)，與ISP的鏈路速度是100Mbps full duplex，下載當然沒什麼問題，就跑滿鏈路速度，但是上傳就有問題了，ISP允許客戶以鏈路速度進行上傳，但當滿速上傳時只要0.1秒就會達成速度上限，然後ISP就會直接drop掉你後面0.9秒的流量(大約)，這就導致只要有東西在上傳，那麼其他人的延遲會直接從 &lt; 30ms，跳到 &gt; 4000ms以上，所以只好在內部先對上行流量做完整型限制後再上傳，以此來控制延遲。</p>
+<h1 id="介紹">介紹</h1>
+<h2 id="tc-traffic-control">tc (traffic control)</h2>
+<p>tc一般都只對出站(egress)流量進行操作，雖然也可以對入站(ingress)流量進行操作，但相比出站的操作就少很多，所以如果要限制下載速度的話，一般就是在內網對應的網卡上進行限制(這裡的出站流量相當於內網的下載)</p>
+<h2 id="結構介紹">結構介紹</h2>
+<p>tc由三個部分組成</p>
+<ul>
+<li>qdisc (queueing discipline)： 隊列規則</li>
+<li>class： 類別</li>
+<li>filter： 過濾器</li>
+</ul>
+<p>整體結構如下。</p>
+<p><img src="tc_tree.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<p>圖片來自<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_44577070/article/details/123967699">CSDN文章</a><sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span class="hint--top hint--rounded" aria-label="[Linux TC 流量控制与排队规则 qdisc 树型结构详解（以HTB和RED为例）-CSDN博客](https://blog.csdn.net/qq_44577070/article/details/123967699)">[1]</span></a></sup>，依據CC BY-SA授權</p>
+<p>每個網路設備只會有一個根(root)的隊列規則(qdisc)，而qdisc又分為無類規則(Classless Qdisc)和有纇規則(Classful Qdisc)。</p>
+<ul>
+<li>
+<p>Classless Qdisc很簡單，他底下不會有手動創建的類別，流量怎麼排隊全看規則內部的設定，在systemd 217後，預設的規則是fq_codel，就是一種無類規則。</p>
+</li>
+<li>
+<p>Classful Qdisc則是比較複雜，你可以在root qdisc底下創建各種不同的纇(class)，每個class可能對流量有不同的速度限制，而在class底下還可以放不同的class，或是在class底下再放一個qdisc，如果是Classful Qdisc，就可以在底下創建更多的class，因此Classful Qdisc可以達成較複雜、較精細化的流量控制。</p>
+</li>
+</ul>
+<p>而filter則是負責決定要將哪個封包丟到哪個class，如果class底下還有class，那就要被第二個filter決定要丟到更底下的哪個class，直到最後到達最底下的class，就會接受這個class底下的qdisc進行排隊(如果沒有給class設定最後的qdisc，會因為不同種類的parent qdisc會有不同的最終qdisc)</p>
+<h3 id="qdisc">qdisc</h3>
+<p>常見的隊列規則如下，更詳細的介紹可以參考<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/Advanced_traffic_control">ArchWiki</a><sup id="fnref:2" class="footnote-ref"><a href="#fn:2" rel="footnote"><span class="hint--top hint--rounded" aria-label="[Advanced traffic control - ArchWiki](https://wiki.archlinux.org/title/Advanced_traffic_control)">[2]</span></a></sup>，還有很多種隊列規則，各有不同的特性，有興趣可以自己去翻man page。</p>
+<ul>
+<li>Classless Qdisc
+<ul>
+<li>fq： 公平隊列</li>
+<li>fq_codel： 結合公平隊列和延遲控制</li>
+<li>fq_pie： 結合公平隊列和pie</li>
+<li>codel： 延遲控制</li>
+<li>pie： Proportional Integral controller-Enhanced</li>
+<li>cake： Common Applications Kept Enhanced</li>
+<li>red： 隨機早期探測</li>
+<li>sfq： 隨機公平隊列</li>
+<li>pfifo： 先進先出</li>
+<li>pfifo_fast： 先進先出，但有分三個通道，直到高優先級的通道沒有封包，才會輪到低優先級的通道</li>
+<li>tbf： 令牌桶過濾，限速的好選擇</li>
+</ul>
+</li>
+<li>Classful Qdisc
+<ul>
+<li>htb： 分層令牌桶，基本上要分區流量控制都是用這個</li>
+<li>cbq： Class Based Queueing</li>
+<li>prio： 優先級分類，不進行限速</li>
+</ul>
+</li>
+</ul>
+<h3 id="filter">filter</h3>
+<p>filter也有很多種規則，有興趣可以自己去翻man page。</p>
+<p>基本上會用到的只有兩種過濾器，u32和fw。</p>
+<p>u32會使用IP封包標頭的內容來過濾，簡單來說就是可以按照來源/目標位置、來源/目標端口來決定要分到哪個class。</p>
+<p>fw就更好理解了，按照fwmark來決定要分到哪個class，舊型iptables就是這樣與tc配合進行流量限速</p>
+<p>不過如果有使用nftables的話，就可以直接跳過filter了，nftables可以直接匹配後將封包直接塞到某個class裡，不需要進行mark再由tc分配，配合nftables的結構可以達成更好的效能和匹配。</p>
+<h3 id="handle-classid">handle/classid</h3>
+<p>handle/classid就是圖上顯示的<code>x:y</code>的數字，<code>x</code>和<code>y</code>都是可以允許最高16位的16進制數字。</p>
+<p>每個qdisc都會有一個handle也就是<code>x:0</code>，也可簡寫為<code>x:</code>，而在這個qdisc底下的class就會有對應的classid <code>x:y</code>，這會是識別不同class的參數。</p>
+<h2 id="分配規則">分配規則</h2>
+<p>以HTB為例，結構如下</p>
+<ul>
+<li>root qdisc HTB 1:0
+<ul>
+<li>class 1:1 rate 2Mbit ceil 3Mbit prio 0</li>
+<li>class 1:2 rate 2Mbit ceil 8Mbit prio 1</li>
+<li>class 1:3 rate 1Mbit ceil 8Mbit prio 1</li>
+</ul>
+</li>
+</ul>
+<p>rate代表保證帶寬，ceil則是最高帶寬，prio代表優先級，0最高7最低，這個設備上傳總帶寬為10Mbit</p>
+<p>當今天只有class 1:1在使用時，他可以使用最高3Mbit的帶寬，同理，只有class 1:2或1:3使用時，他們都可以使用8Mbit的帶寬，這些都小於總帶寬10Mbit。</p>
+<p>但如果今天發生了爭搶，例如三個class都想要使用，那麼就會優先按照保證帶寬分配，所以每個class都會分到rate設定的值，現在剩餘帶寬還剩10-2-2-1=5Mbit，優先滿足高優先級，因此class 1:1可以使用3Mbit，此時還剩4Mbit的帶寬，由於class 1:2和1:3有相同優先級，因此會按照rate的比例來分配，class 1:2分到2+2.6Mbit，class 1:3分到1+1.4Mbit。</p>
+<p>如果爭搶時連rate都無法滿足，就是優先滿足高優先級，相同優先級按照rate比例分配。</p>
 <h1 id="設定">設定</h1>
-<h2 id="Wireguard">Wireguard</h2>
-<p>首先在兩端分別產生公、私鑰</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">wg genkey | <span class="hljs-built_in">tee</span> private.key | wg pubkey &gt; public.key</span><br></code></pre></td></tr></table></figure>
-<p>也可以多產生一個PresharedKey，這個只要在其中一邊產生就好，兩邊都是相同的</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">wg genpsk</span><br></code></pre></td></tr></table></figure>
-<p>編輯<code>/etc/wireguard/&lt;wg-interface&gt;.conf</code>，<code>&lt;wg-interface&gt;</code>就是待會interface的名字，我一般會設定成<code>wg-&lt;toLocation&gt;</code></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs conf">[Interface]<br>PrivateKey = xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>ListenPort = xxxxx<br><br>[Peer]<br>PublicKey = xxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>Endpoint = x.x.x.x:xxxxx<br>PresharedKey = xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>AllowedIPs = 0.0.0.0/0<br>PersistentKeepalive = 25<br></code></pre></td></tr></table></figure>
+<p>我設定流量控制的目標是區分出少數需求帶寬少但高優先級的流量，以及設定對子網內每個IP的限速。</p>
+<p>因此結構如下</p>
 <ul>
-<li>PrivateKey填自己的私鑰</li>
-<li>PublicKey填另一個端點的公鑰</li>
-<li>PresharedKey都是一樣的值(可選)</li>
-<li>AllowedIPs填0.0.0.0/0才可以讓所有路由通過，如果有IPv6要過，也可多加::/0
+<li>dev wan
 <ul>
-<li>如果使用wg-quick或其他工具啟動wireguard，會使用AllowedIPs來設定路由，不過這個設定使用<code>ip</code>和<code>wg</code>指令來建立通道，AllowedIPs就只會限制可以通過這個Tunnel的封包IP，所以全開</li>
+<li>root qdisc HTB rate 10Mbit 1:0 default 0x100
+<ul>
+<li>class 1:1 htb rate 10Mbit
+<ul>
+<li>class 1:10 rate 2Mbit</li>
+<li>class 1:20 rate 2Mbit ceil 9Mbit prio 3</li>
+<li>class 1:90 rate 2Mbit ceil 9Mbit prio 6
+<ul>
+<li>other IP class</li>
 </ul>
 </li>
-<li>Endpoint填對方的IP和ListenPort
-<ul>
-<li>也可以只有一邊有ListenPort，不設定Endpoint，另一端設定Endpoint，不設定ListenPort，讓另一端來連接有ListenPort的這一端</li>
+<li>class 1:100 rate 2Mbit ceil 8Mbit prio 7</li>
 </ul>
 </li>
 </ul>
-<p>在兩邊都完成wireguard的config</p>
-<h2 id="ifupdown">ifupdown</h2>
-<p>編輯<code>/etc/network/interfaces</code>，增加這段，<code>&lt;wg-interface&gt;</code>就是剛才設定的</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs conf">auto &lt;wg-interface&gt;<br>iface &lt;wg-interface&gt; inet static<br>    address 10.10.10.1/32<br>    pointopoint 10.10.10.2<br>    pre-up ip link add $IFACE type wireguard<br>    pre-up wg setconf $IFACE /etc/wireguard/$IFACE.conf<br>    post-down ip link del $IFACE<br></code></pre></td></tr></table></figure>
-<p>另一端的interface設定</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs conf">auto &lt;wg-interface&gt;<br>iface &lt;wg-interface&gt; inet static<br>    address 10.10.10.2/32<br>    pointopoint 10.10.10.1<br>    pre-up ip link add $IFACE type wireguard<br>    pre-up wg setconf $IFACE /etc/wireguard/$IFACE.conf<br>    post-down ip link del $IFACE<br></code></pre></td></tr></table></figure>
-<p>其實就是<code>address</code>和<code>pointopoint</code>互換，使用<code>/32的address</code>和<code>pointopoint</code>可以節省IP，這會設定一個/32的路由到對方</p>
-<p>如果想要設定路由可以跑OSPF之類的動態路由協議，或是直接設定static route，如下</p>
-<p>假設<code>10.10.10.2</code>這一邊一邊有<code>10.0.0.0/24</code>的路由，可以在<code>10.10.10.1</code>的這邊在&lt;wg-interface&gt;這邊設定這些</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs conf">up ip route add 10.0.0.0/24 dev $IFACE via 10.10.10.2<br>down ip route del 10.0.0.0/24<br></code></pre></td></tr></table></figure>
-<p>這樣static route就會隨著wireguard interface的啟動和關閉被設定</p>
-
+</li>
+</ul>
+</li>
+</ul>
+<p>rate代表保證帶寬，ceil則是最高帶寬，prio代表優先級，0最高7最低。</p>
+<p>class 1:10和1:20就是高優先級的class，未來可以再細分。</p>
+<p>class 1:90就是用來對每個IP進行限速的class，每個IP都會被創立一個在1:90底下的class進行限速。</p>
+<p>class 1:100就是沒有match到任何一個class的流量最後會到的地方，root qdisc指定的default 0x100。</p>
+<h2 id="腳本">腳本</h2>
+<p>因為tc的規則在重新啟動後會歸零，所以要使用腳本讓他在開機的時候可以重新生效。</p>
+<h3 id="初始設定">初始設定</h3>
+<p>隨便找個地方放初始設定的腳本，像是<code>/opt/traffic-control/tc-setting.sh</code>，假設對外的網路設備是<code>wan</code>，上傳帶寬最大是10Mbit，如果環境不同，要自己修改適合自己的數值。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/bash</span><br><br><span class="hljs-comment"># clear qdisc</span><br>/sbin/tc qdisc delete dev wan root<br><br>/sbin/tc qdisc add dev wan root handle 1:0 htb default 100<br>/sbin/tc class replace dev wan parent 1: classid 1:1 htb rate 10mbit<br>tc_class=<span class="hljs-string">&#x27;/sbin/tc class replace dev wan parent 1:1 classid&#x27;</span><br><span class="hljs-variable">$tc_class</span> 1:10 htb rate 2mbit ceil 2mbit<br><span class="hljs-variable">$tc_class</span> 1:20 htb rate 2mbit ceil 9mbit prio 3<br><span class="hljs-variable">$tc_class</span> 1:90 htb rate 8mbit ceil 9mbit prio 6<br><span class="hljs-variable">$tc_class</span> 1:100 htb rate 2mbit ceil 8mbit prio 7<br></code></pre></td></tr></table></figure>
+<p>腳本功能就是設定剛剛說的結構，腳本內只有設定qdisc和class，因為filter的部分會直接在nft做</p>
+<p>將腳本加上執行權限<code>chmod +x /opt/traffic-control/tc-setting.sh</code></p>
+<p>編輯<code>/etc/systemd/system/tc.service</code>建立自動啟動服務，並啟用<code>systemdctl daemon-reload ; systemdctl enable --now tc.service</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs service">[Unit]<br>Description=traffic control<br>After=nftables.service<br>After=network.target<br><br>[Service]<br>Type=oneshot<br>RemainAfterExit=yes<br>ExecStart=/opt/traffic-control/tc-setting.sh<br><br>[Install]<br>WantedBy=multi-user.target<br></code></pre></td></tr></table></figure>
+<hr>
+<p>接著要調整nftables的設定，編輯<code>/etc/nftables.conf</code>(<s>不要問我為什麼是在filter做流量的分類，nftables的wiki也這樣做</s>)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs conf">table inet filter &#123;<br>        map tc_classid &#123;<br>                type ipv4_addr : classid<br>                counter<br>                flags interval<br>        &#125;<br>        chain FORWARD &#123;<br>                type filter hook forward priority filter; policy accept;<br>                meta priority none meta mark 0 meta priority set ip saddr map @tc_classid counter<br>        &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>在forward鏈的這個規則，會匹配沒有被分類和沒有被打上fwmark的流量並幫他們打上分類，按照<code>tc_classid</code>裡的鍵值映射來幫對應的來源IP分類</p>
+<p>這樣基礎的設定就完成了，不過分IP限速還沒生效，因為<code>map tc_classid</code>裡面沒有任何東西，所有的流量都會被歸類到1:100，按照他的規則限速，所以接下來要用自動執行的腳本自動新增IP和對應的class</p>
+<h3 id="自動限制">自動限制</h3>
+<p>編輯<code>/opt/traffic-control/arp-limit.sh</code>，並加上執行權限<code>chmod +x /opt/traffic-control/arp-limit.sh</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/bash</span><br><br>grep lan /proc/net/arp | grep 0x2 | grep 10.0.0 | awk -F <span class="hljs-string">&#x27; &#x27;</span> <span class="hljs-string">&#x27;&#123;print $1&#125;&#x27;</span> | <span class="hljs-keyword">while</span> <span class="hljs-built_in">read</span> ipaddr<br><span class="hljs-keyword">do</span><br>classid_upload=<span class="hljs-string">&quot;1:f<span class="hljs-variable">$&#123;ipaddr##*.&#125;</span>&quot;</span><br>/sbin/nft add element inet filter tc_classid &#123;<span class="hljs-variable">$ipaddr</span>\:<span class="hljs-variable">$classid_upload</span>&#125;<br>/sbin/tc class replace dev wan parent 1:90 classid <span class="hljs-variable">$classid_upload</span> htb rate 2mbit ceil 9mbit<br>/sbin/tc qdisc replace dev wan parent <span class="hljs-variable">$classid_upload</span> handle f<span class="hljs-variable">$&#123;ipaddr##*.&#125;</span>: fq_codel<br><span class="hljs-keyword">done</span><br></code></pre></td></tr></table></figure>
+<p>這個腳本會根據<code>/proc/net/arp</code>的arp記錄獲取lan底下的設備IP，並過濾Flags為<code>0x2</code>的值，這代表對應的IP在線</p>
+<p>接著會幫每個IP建立在1:90底下的一個class，並加上限速和qdisc，id為1:fxxx，xxx是IP的最後一位，不會重複，並將IP和classid的對應加到nftables中</p>
+<p>把這個腳本加到crontab的定期執行，要用root的，或是具有免密執行<code>sudo tc和nft</code>權限的user裡，<code>/proc/net/arp</code>30秒更新一次，因此每分鐘都執行檢查有沒有新設備</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cron">* * * * * /opt/traffic-control/arp-limit.sh<br></code></pre></td></tr></table></figure>
+<p>有了新增規則的部分，也要有定期刪除規則的腳本</p>
+<p>編輯<code>/opt/traffic-control/delete-arp-limit.sh</code>，並加上執行權限<code>chmod +x /opt/traffic-control/delete-arp-limit.sh</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/bash</span><br><br>grep lan /proc/net/arp | grep 0x0 | grep 10.0.0 | awk -F <span class="hljs-string">&#x27; &#x27;</span> <span class="hljs-string">&#x27;&#123;print $1&#125;&#x27;</span> | <span class="hljs-keyword">while</span> <span class="hljs-built_in">read</span> ipaddr<br><span class="hljs-keyword">do</span><br>classid_upload=<span class="hljs-string">&quot;1:f<span class="hljs-variable">$&#123;ipaddr##*.&#125;</span>&quot;</span><br>/sbin/nft delete element inet filter tc_classid &#123;<span class="hljs-variable">$ipaddr</span>\:<span class="hljs-variable">$classid_upload</span>&#125; &gt; /dev/null 2&gt;&amp;1 || <span class="hljs-built_in">continue</span><br>/sbin/tc class delete dev wan parent 1:90 classid <span class="hljs-variable">$classid_upload</span><br>/sbin/tc qdisc delete dev wan parent <span class="hljs-variable">$classid_upload</span> handle f<span class="hljs-variable">$&#123;ipaddr##*.&#125;</span>:<br><span class="hljs-keyword">done</span><br></code></pre></td></tr></table></figure>
+<p>這個腳本會檢查有沒有Flags為<code>0x0</code>的記錄，代表設備下線，就將nftables、tc對應的記錄刪掉</p>
+<p>這個腳本不需要執行的很頻繁，定期檢查即可</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cron">0 * * * * /opt/traffic-control/delete-arp-limit.sh<br></code></pre></td></tr></table></figure>
+<p>這樣就完成限速的設定了</p>
+<h2 id="參考">參考</h2>
+<section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_44577070/article/details/123967699">Linux TC 流量控制与排队规则 qdisc 树型结构详解（以HTB和RED为例）-CSDN博客</a>
+<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/Advanced_traffic_control">Advanced traffic control - ArchWiki</a>
+<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:3" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://wiki.nftables.org/wiki-nftables/index.php/Classification_to_tc_structure_example">Classification to tc structure example - nftables wiki</a>
+<a href="#fnref:3" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:4" class="footnote-text"><span><a target="_blank" rel="noopener" href="http://linux-ip.net/gl/tc-filters/tc-filters.html">QoS in Linux with TC and Filters</a>
+<a href="#fnref:4" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:5" class="footnote-text"><span>[学习nftables和tc](<a target="_blank" rel="noopener" href="https://www.bilibili.com/read/cv21089529/?jump_opus=1">https://www.bilibili.com/read/cv21089529/?jump_opus=1</a>
+<a href="#fnref:5" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
                 
               </div>
             
@@ -633,9 +738,9 @@
       
         <a href="/tags/network/" class="print-no-link">#network</a>
       
-        <a href="/tags/router/" class="print-no-link">#router</a>
+        <a href="/tags/server/" class="print-no-link">#server</a>
       
-        <a href="/tags/wireguard/" class="print-no-link">#wireguard</a>
+        <a href="/tags/router/" class="print-no-link">#router</a>
       
         <a href="/tags/linux/" class="print-no-link">#linux</a>
       
@@ -649,8 +754,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>使用Wireguard建立Site to Site Tunnel</div>
-      <div>https://www.zenwen.eu.org/create-wireguard-site-to-site-tunnel/</div>
+      <div>使用nftables和tc在linux上實現QoS</div>
+      <div>https://www.zenwen.eu.org/linux-qos-with-tc-and-nft/</div>
     </div>
     <div class="license-meta">
       
@@ -662,7 +767,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>發布於</div>
-          <div>2024年8月18日</div>
+          <div>2024年9月8日</div>
         </div>
       
       
@@ -700,18 +805,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/using-openssl-to-create-ca-on-linux/" title="使用openssl在linux上建立CA">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">使用openssl在linux上建立CA</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/wordpress-with-LNMP-environment/" title="使用LNMP環境搭建WordPress網站">
-                        <span class="hidden-mobile">使用LNMP環境搭建WordPress網站</span>
+                      <a href="/using-openssl-to-create-ca-on-linux/" title="使用openssl在linux上建立CA">
+                        <span class="hidden-mobile">使用openssl在linux上建立CA</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

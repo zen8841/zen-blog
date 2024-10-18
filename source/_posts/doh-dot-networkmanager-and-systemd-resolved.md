@@ -36,12 +36,12 @@ tags:
 這個算是最簡單的一項了，基本只要照著ArchWiki的操作執行就好
 
 ```shell
-# 確認沒有端口使用localhost:53
-$ ss -lp 'sport = :domain'
-# 安裝dns-over-https
-$ sudo pacman -S dns-over-https
-# 啟動dns-over-https服務
-$ sudo systemctl enable --now doh-client.service
+# # 確認沒有端口使用localhost:53
+# ss -lp 'sport = :domain'
+# # 安裝dns-over-https
+# pacman -S dns-over-https
+# # 啟動dns-over-https服務
+# systemctl enable --now doh-client.service
 ```
 
 設定檔在`/etc/dns-over-https/doh-client.conf`但是基本不用更改，預設的DoH server就是Cloudflare的
@@ -49,7 +49,7 @@ $ sudo systemctl enable --now doh-client.service
 接著只要將DNS server改成`127.0.0.1`就完成DNS over HTTPS的設定了
 
 ```shell
-$ echo 'nameserver 127.0.0.1' > /etc/resolv.conf
+# echo 'nameserver 127.0.0.1' > /etc/resolv.conf
 ```
 
 ## Network manager
@@ -63,8 +63,8 @@ $ echo 'nameserver 127.0.0.1' > /etc/resolv.conf
 讀到這裡，其實就可以知道怎麼解決問題了
 
 ```shell
-$ echo 'nameserver 127.0.0.1' > /etc/resolv-manual.conf
-$ ln -sf /etc/resolv-manual.conf /etc/resolv.conf
+# echo 'nameserver 127.0.0.1' > /etc/resolv-manual.conf
+# ln -sf /etc/resolv-manual.conf /etc/resolv.conf
 ```
 
 ~~當然你也可以用`chattr`給`/etc/resolv.conf`指定不可寫入的屬性，不過這樣設定就有點僵硬了~~
@@ -82,8 +82,8 @@ $ ln -sf /etc/resolv-manual.conf /etc/resolv.conf
 不過這樣設定的話就會造成一個問題，雖然連接的網路是什麼不會影響DNS server的選擇了，但也永遠釘死在`127.0.0.1`的DNS over HTTPS上，除非手動修改，但是需求之一就是Network manager在切換連接時可以自動修改DNS，而非每次都要手動修改。
 
 ```shell
-# 開啟systemd-resolved，會與resolvconf衝突
-$ systemctl enable --now systemd-resolved
+# # 開啟systemd-resolved，會與resolvconf衝突
+# systemctl enable --now systemd-resolved
 ```
 
 systemd-resolved會提供部分`resolvconf`的功能，同時，啟用後會提供`resolvectl`。
@@ -107,8 +107,8 @@ systemd-resolved有四種模式stub、static、uplink、foreign，這取決於`/
 {% endfold %}
 
 ```shell
-# 使用stub模式
-$ ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+# # 使用stub模式
+# ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 ```
 
 這個時候使用`resolvectl status`就可以看到在stub模式了

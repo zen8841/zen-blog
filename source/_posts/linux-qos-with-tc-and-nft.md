@@ -65,7 +65,7 @@ tc由三個部分組成
   - sfq： 隨機公平隊列
   - pfifo： 先進先出
   - pfifo_fast： 先進先出，但有分三個通道，直到高優先級的通道沒有封包，才會輪到低優先級的通道
-  - tbf： 令牌桶過濾，限速的好選擇
+  - tbf： 令牌桶過濾，限速的好選擇[^3]
 - Classful Qdisc
   - htb： 分層令牌桶，基本上要分區流量控制都是用這個
   - cbq： Class Based Queueing
@@ -252,6 +252,7 @@ done
 
 [^1]: [Linux TC 流量控制与排队规则 qdisc 树型结构详解（以HTB和RED为例）-CSDN博客](https://blog.csdn.net/qq_44577070/article/details/123967699)
 [^2]: [Advanced traffic control - ArchWiki](https://wiki.archlinux.org/title/Advanced_traffic_control)
-[^3]: [Classification to tc structure example - nftables wiki](https://wiki.nftables.org/wiki-nftables/index.php/Classification_to_tc_structure_example)
-[^4]: [QoS in Linux with TC and Filters](http://linux-ip.net/gl/tc-filters/tc-filters.html)
-[^5]: [学习nftables和tc](https://www.bilibili.com/read/cv21089529/?jump_opus=1
+[^3]: [Bandwidth Management 頻寬管理 - Jan Ho 的網絡世界](https://www.jannet.hk/bandwidth-management-zh-hant/)
+[^4]: [Classification to tc structure example - nftables wiki](https://wiki.nftables.org/wiki-nftables/index.php/Classification_to_tc_structure_example)
+[^5]: [QoS in Linux with TC and Filters](http://linux-ip.net/gl/tc-filters/tc-filters.html)
+[^6]: [学习nftables和tc](https://www.bilibili.com/read/cv21089529/?jump_opus=1)

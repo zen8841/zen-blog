@@ -1,4 +1,5 @@
 https://www.zenwen.eu.org/about/index.html
+https://www.zenwen.eu.org/pci-passthrough-with-proxmox/
 https://www.zenwen.eu.org/turning-linux-into-a-router/
 https://www.zenwen.eu.org/linux-qos-with-tc-and-nft/
 https://www.zenwen.eu.org/gre-over-ipsec-between-edgeos-and-routeros/
@@ -37,6 +38,9 @@ https://www.zenwen.eu.org/tags/GRE-over-IPsec/
 https://www.zenwen.eu.org/tags/IPsec/
 https://www.zenwen.eu.org/tags/blog/
 https://www.zenwen.eu.org/tags/hexo/
+https://www.zenwen.eu.org/tags/Proxmox/
+https://www.zenwen.eu.org/tags/pci-passthrough/
+https://www.zenwen.eu.org/tags/virtual-machine/
 https://www.zenwen.eu.org/tags/nginx/
 https://www.zenwen.eu.org/tags/wordpress/
 https://www.zenwen.eu.org/tags/xz/

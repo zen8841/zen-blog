@@ -15,8 +15,35 @@
     <atom:link href="https://www.zenwen.eu.org/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>簡單記錄一下折騰的內容，可能還會發發感想？</description>
-    <pubDate>Sun, 08 Sep 2024 12:43:12 GMT</pubDate>
+    <pubDate>Mon, 04 Nov 2024 15:39:33 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>在Proxmox上進行PCI-E直通</title>
+      <link>https://www.zenwen.eu.org/pci-passthrough-with-proxmox/</link>
+      <guid>https://www.zenwen.eu.org/pci-passthrough-with-proxmox/</guid>
+      <pubDate>Mon, 04 Nov 2024 15:39:33 GMT</pubDate>
+      
+      <description>分享有關直通GTX650的時候遇到的問題，和一些看到其他疑難雜症的整理</description>
+      
+      
+      
+      
+      <category domain="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/">教程</category>
+      
+      
+      <category domain="https://www.zenwen.eu.org/tags/linux/">linux</category>
+      
+      <category domain="https://www.zenwen.eu.org/tags/Proxmox/">Proxmox</category>
+      
+      <category domain="https://www.zenwen.eu.org/tags/pci-passthrough/">pci passthrough</category>
+      
+      <category domain="https://www.zenwen.eu.org/tags/virtual-machine/">virtual machine</category>
+      
+      
+      <comments>https://www.zenwen.eu.org/pci-passthrough-with-proxmox/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>使用nftables和tc在linux上實現QoS</title>

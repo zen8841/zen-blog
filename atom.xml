@@ -6,7 +6,7 @@
   <link href="https://www.zenwen.eu.org/atom.xml" rel="self"/>
   
   <link href="https://www.zenwen.eu.org/"/>
-  <updated>2024-11-12T17:56:50.000Z</updated>
+  <updated>2024-11-18T20:08:21.000Z</updated>
   <id>https://www.zenwen.eu.org/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>如何透過網路列印和掃描</title>
+    <link href="https://www.zenwen.eu.org/how-to-print-and-scan-over-network/"/>
+    <id>https://www.zenwen.eu.org/how-to-print-and-scan-over-network/</id>
+    <published>2024-11-18T20:08:21.000Z</published>
+    <updated>2024-11-18T20:08:21.000Z</updated>
+    
+    
+    <summary type="html">介紹如何建立print server用來遠端列印和掃描</summary>
+    
+    
+    
+    <category term="教程" scheme="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/"/>
+    
+    
+    <category term="server" scheme="https://www.zenwen.eu.org/tags/server/"/>
+    
+    <category term="linux" scheme="https://www.zenwen.eu.org/tags/linux/"/>
+    
+  </entry>
   
   <entry>
     <title>如何打開jnlp格式的kvm console</title>

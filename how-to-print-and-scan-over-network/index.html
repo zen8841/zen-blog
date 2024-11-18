@@ -21,33 +21,25 @@
   <meta name="author" content="Zen Wen">
   <meta name="keywords" content="linux network computer">
   
-    <meta name="description" content="記錄使用nginx架設WordPress的過程">
+    <meta name="description" content="介紹如何建立print server用來遠端列印和掃描">
 <meta property="og:type" content="article">
-<meta property="og:title" content="使用LNMP環境搭建WordPress網站">
-<meta property="og:url" content="https://www.zenwen.eu.org/wordpress-with-LNMP-environment/index.html">
+<meta property="og:title" content="如何透過網路列印和掃描">
+<meta property="og:url" content="https://www.zenwen.eu.org/how-to-print-and-scan-over-network/index.html">
 <meta property="og:site_name" content="Zen&#39;s Blog">
-<meta property="og:description" content="記錄使用nginx架設WordPress的過程">
+<meta property="og:description" content="介紹如何建立print server用來遠端列印和掃描">
 <meta property="og:locale" content="zh_TW">
-<meta property="og:image" content="https://www.zenwen.eu.org/wordpress-with-LNMP-environment/wordpress1.png">
-<meta property="og:image" content="https://www.zenwen.eu.org/wordpress-with-LNMP-environment/wordpress2.png">
-<meta property="og:image" content="https://www.zenwen.eu.org/wordpress-with-LNMP-environment/wordpress3.png">
-<meta property="og:image" content="https://www.zenwen.eu.org/wordpress-with-LNMP-environment/wordpress4.png">
-<meta property="og:image" content="https://www.zenwen.eu.org/wordpress-with-LNMP-environment/wordpress5.png">
-<meta property="og:image" content="https://www.zenwen.eu.org/wordpress-with-LNMP-environment/wordpress6.png">
-<meta property="og:image" content="https://www.zenwen.eu.org/wordpress-with-LNMP-environment/wordpress7.png">
-<meta property="article:published_time" content="2024-08-05T15:41:48.000Z">
-<meta property="article:modified_time" content="2024-08-05T15:41:48.000Z">
+<meta property="og:image" content="https://www.zenwen.eu.org/how-to-print-and-scan-over-network/cups_config.png">
+<meta property="article:published_time" content="2024-11-18T20:08:21.000Z">
+<meta property="article:modified_time" content="2024-11-18T20:08:21.000Z">
 <meta property="article:author" content="Zen Wen">
 <meta property="article:tag" content="server">
 <meta property="article:tag" content="linux">
-<meta property="article:tag" content="nginx">
-<meta property="article:tag" content="wordpress">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://www.zenwen.eu.org/wordpress-with-LNMP-environment/wordpress1.png">
+<meta name="twitter:image" content="https://www.zenwen.eu.org/how-to-print-and-scan-over-network/cups_config.png">
   
   
   
-  <title>使用LNMP環境搭建WordPress網站 - Zen&#39;s Blog</title>
+  <title>如何透過網路列印和掃描 - Zen&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" />
 
@@ -294,7 +286,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="使用LNMP環境搭建WordPress網站"></span>
+            <span id="subtitle" data-typed-text="如何透過網路列印和掃描"></span>
           
         </div>
 
@@ -305,8 +297,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-08-05 23:41" pubdate>
-          2024年8月5日 晚上
+        <time datetime="2024-11-19 04:08" pubdate>
+          2024年11月19日 凌晨
         </time>
       </span>
     
@@ -317,7 +309,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          929 字
+          1k 字
         
       </span>
     
@@ -328,7 +320,7 @@
         
         
         
-          8 分鐘
+          9 分鐘
         
       </span>
     
@@ -449,7 +441,7 @@
       
         <a href="/wordpress-with-LNMP-environment/" title="使用LNMP環境搭建WordPress網站"
            class="list-group-item list-group-item-action
-           active">
+           ">
           <span class="category-post">使用LNMP環境搭建WordPress網站</span>
         </a>
       
@@ -503,7 +495,7 @@
       
         <a href="/how-to-print-and-scan-over-network/" title="如何透過網路列印和掃描"
            class="list-group-item list-group-item-action
-           ">
+           active">
           <span class="category-post">如何透過網路列印和掃描</span>
         </a>
       
@@ -592,64 +584,78 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">使用LNMP環境搭建WordPress網站</h1>
+            <h1 id="seo-header">如何透過網路列印和掃描</h1>
             
             
               <div class="markdown-body">
                 
                 <h1 id="前言">前言</h1>
-<p>這算是之前搭建部落格時考慮過的方案，不過後來還是選擇了hexo這種靜態框架，所以就記錄一下查詢資料和架設的歷程。</p>
-<h1 id="架設">架設</h1>
-<h2 id="安裝">安裝</h2>
-<p>先下載安裝必要的組件</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash">sudo apt install nginx nginx-extras</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-comment"># 我使用的database是mariadb，也可使用mysql或postgresql</span></span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">sudo apt install mariadb-server</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-comment"># 安裝需要的php軟體包，可視情況減少或增加</span></span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">sudo apt install php php-fpm php-cli php-mysql php-mbstring php-xml php-gd php-curl php-ssh2 php-imagick php-json php-tokenizer php-zip php-intl</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-comment"># 下載wordpress</span></span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">wget https://tw.wordpress.org/latest-zh_TW.tar.gz</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-comment"># 解壓縮</span></span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">tar -zxvf latest-zh_TW.tar.gz</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-comment"># 新建網站的根目錄，sitename可以是網站的網址或任何你喜歡的名字，後面按需替換</span></span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">sudo <span class="hljs-built_in">mkdir</span> -p /var/www/sitename</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">sudo <span class="hljs-built_in">mv</span> wordpress/* /var/www/sitename/</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-comment"># 更改權限</span></span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">chown</span> -R www-data:www-data /var/www/sitename</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">chmod</span> -R 755 /var/www/sitename</span><br></code></pre></td></tr></table></figure>
-<h2 id="Database配置">Database配置</h2>
-<p>使用root執行<code>mysql_secure_installation</code></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">mysql_secure_installation</span><br></code></pre></td></tr></table></figure>
-<p>跟著引導安裝即可，說明很完全</p>
-<hr>
-<p>執行<code>mysql</code>，進入Database</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs sql"># 可以使用其他的名稱來命名Database，這裡以wordpress作為範例，如果改名後面也要更改<br>MariaDB [(<span class="hljs-keyword">none</span>)]<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">CREATE</span> DATABASE wordpress;<br>Query OK, <span class="hljs-number">1</span> <span class="hljs-type">row</span> affected (<span class="hljs-number">0.002</span> sec)<br><br># 新建wpuser的帳戶，密碼為passwd，可以存取wordpress的所有權限，可以用其他用戶名和密碼，待會會使用到<br>MariaDB [(<span class="hljs-keyword">none</span>)]<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">GRANT</span> <span class="hljs-keyword">ALL</span> PRIVILEGES <span class="hljs-keyword">ON</span> wordpress.<span class="hljs-operator">*</span> <span class="hljs-keyword">TO</span> &quot;wpuser&quot;@&quot;localhost&quot; IDENTIFIED <span class="hljs-keyword">BY</span> &quot;passwd&quot;;<br>Query OK, <span class="hljs-number">0</span> <span class="hljs-keyword">rows</span> affected (<span class="hljs-number">0.008</span> sec)<br><br># 應用<br>MariaDB [(<span class="hljs-keyword">none</span>)]<span class="hljs-operator">&gt;</span> FLUSH PRIVILEGES;<br>Query OK, <span class="hljs-number">0</span> <span class="hljs-keyword">rows</span> affected (<span class="hljs-number">0.003</span> sec)<br><br>MariaDB [(<span class="hljs-keyword">none</span>)]<span class="hljs-operator">&gt;</span> exit<br>Bye<br></code></pre></td></tr></table></figure>
-<h2 id="網頁設定">網頁設定</h2>
-<h3 id="php">php</h3>
-<p>編輯<code>/etc/php/8.2/fpm/php.ini</code>，搜尋這三個設定並更改，如果php版本較高，記得更改對應的位置</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">cgi.fix_pathinfo</span>=<span class="hljs-number">0</span><br><span class="hljs-attr">upload_max_filesize</span> = <span class="hljs-number">256</span>M<br><span class="hljs-attr">post_max_size</span> = <span class="hljs-number">256</span>M<br></code></pre></td></tr></table></figure>
-<p>編輯<code>/etc/php/8.2/fpm/pool.d/www.conf</code>，這些應該是預設值，確認一樣即可</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs conf">listen = /run/php/php8.2-fpm.sock<br>user = www-data<br>group = www-data<br></code></pre></td></tr></table></figure>
-<p>重啟<code>php-fpm</code></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">systemctl <span class="hljs-built_in">enable</span> --now php8.2-fpm</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">systemctl restart php8.2-fpm</span><br></code></pre></td></tr></table></figure>
-<h3 id="nginx">nginx</h3>
-<p>編輯<code>/etc/nginx/nginx.conf</code>，修改對應的部分</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs conf">event&#123;<br>    worker_connections 1024;<br>    use epoll;<br>    multi_accept on;<br>&#125;<br>http&#123;<br>    server_tokens off;<br>    client_max_body_size 256M;<br>&#125;<br></code></pre></td></tr></table></figure>
-<p>編輯<code>/etc/nginx/fastcgi_params</code>，在最後加上設定</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs conf">fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;<br></code></pre></td></tr></table></figure>
-<p>新增<code>/etc/nginx/sites-available/wordpress</code>，編輯virtual server設定，這個設定為http站點，且設定為default_server，可依照自己需求進行更改。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><code class="hljs conf">server &#123;<br>        listen 80 default_server;<br>        ## Your website name goes here.<br>        # server_name example.com;<br>        ## Your only path reference.<br>        root /var/www/sitename;<br>        ## This should be in your http block and if it is, it&#x27;s not needed here.<br>        index index.php;<br><br>        client_max_body_size 512M;<br><br>        # log<br>        access_log /var/log/nginx/wordpress/access.log;<br>        error_log /var/log/nginx/wordpress/error.log;<br><br>        location = /favicon.ico &#123;<br>                log_not_found off;<br>                access_log off;<br>        &#125;<br><br>        location = /robots.txt &#123;<br>                allow all;<br>                log_not_found off;<br>                access_log off;<br>        &#125;<br><br>        location / &#123;<br>                # This is cool because no php is touched for static content.<br>                # include the &quot;?$args&quot; part so non-default permalinks doesn&#x27;t break when using query string<br>                try_files $uri $uri/ /index.php?$args;<br>        &#125;<br><br>        location ~ \.php$ &#123;<br>                #NOTE: You should have &quot;cgi.fix_pathinfo = 0;&quot; in php.ini<br>                include fastcgi_params;<br>                fastcgi_intercept_errors on;<br>                fastcgi_pass unix:/run/php/php-fpm.sock;<br>                #The following parameter can be also included in fastcgi_params file<br>                fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;<br>        &#125;<br><br>        location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ &#123;<br>                expires max;<br>                log_not_found off;<br>        &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-<p>最後將站點啟用並重啟nginx</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-comment"># 創建設定檔中log的放置資料夾</span></span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">sudo <span class="hljs-built_in">mkdir</span> -p /var/log/nginx/wordpress/</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-comment"># 啟用站點</span></span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">sudo <span class="hljs-built_in">ln</span> -s /etc/nginx/sites-available/wordpress /etc/nginx/sites-enabled/wordpress</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-comment"># 刪除預設站點</span></span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">sudo <span class="hljs-built_in">rm</span> /etc/nginx/sites-enabled/default</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-comment"># 測試設定檔是否正確，應該是不會報錯</span></span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">sudo nginx -t</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-comment"># 啟用服務</span></span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">sudo systemctl <span class="hljs-built_in">enable</span> --now nginx.service</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-comment"># 重啟nginx</span></span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">sudo nginx -s reload</span><br><br></code></pre></td></tr></table></figure>
-<h2 id="WordPress安裝">WordPress安裝</h2>
-<p>在完成前面的設定後使用瀏覽器打開你架設WordPress服務器的IP，應該會看到這個頁面</p>
-<p><img src="wordpress1.png" srcset="/img/loading.gif" lazyload alt=""></p>
-<p>接下來就跟著導引安裝即可</p>
-<p>資料庫名稱使用剛剛Database設定部分資料庫的名字，帳號和密碼同樣也是按照設定的填</p>
-<p><img src="wordpress2.png" srcset="/img/loading.gif" lazyload alt=""></p>
-<p>如果都沒填錯，那麼應該就會看到這個畫面，執行安裝即可</p>
-<p><img src="wordpress3.png" srcset="/img/loading.gif" lazyload alt=""></p>
-<p>接下來就是WordPress站點的設定，同樣也是自己按需填寫即可，這邊填的都是範例資料</p>
-<p><img src="wordpress4.png" srcset="/img/loading.gif" lazyload alt=""></p>
-<p>這樣就完成WordPress的安裝了，登入即可開始Wordpress網站的設定</p>
-<p><img src="wordpress5.png" srcset="/img/loading.gif" lazyload alt=""></p>
-<p><img src="wordpress6.png" srcset="/img/loading.gif" lazyload alt=""></p>
-<p><img src="wordpress7.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<p>簡單來說就是因為家中的印表機和掃描器放置的位置距離電腦有段距離，又不希望每次需要使用時都需要搬動電腦來連接，因此起了架設伺服器來分享的想法。</p>
+<h1 id="設置">設置</h1>
+<h2 id="Print-Server">Print Server</h2>
+<div class="note note-info">
+            <p>建議不要使用性能太差的單片機來架設Print Server，之前我使用過orange pi zero，因為性能太差，導致解碼Ghostscript需要花很多時間，印一頁需要超過一分鐘來渲染。</p>
+          </div>
+<ol>
+<li>安裝cups</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">apt install cups</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-comment"># 底下這些是選擇性安裝，printer-driver-splix是三星舊印表機的驅動，需要安裝對應印表機的驅動，如果預設裡沒有</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">apt install cups-bsd cups-tea4cups cups-x2go cups-backend-bjnp printer-driver-splix</span><br></code></pre></td></tr></table></figure>
+<ol start="2">
+<li>編輯cups設定檔(<code>/etc/cups/cupsd.conf</code>)</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs conf"># 加上Port 631，並把Listen localhost:631註解，允許被所有IP訪問<br>Port 631<br># 開啟webinterface<br>WebInterface Yes<br><br># 在admin的路徑底下都加上Allow @LOCAL，這樣可以使用本機的帳號登入<br>&lt;Location /admin&gt;<br>  Order allow,deny<br>  Allow @LOCAL<br>&lt;/Location&gt;<br>&lt;Location /admin/conf&gt;<br>  AuthType Default<br>  Require user @SYSTEM<br>  Order allow,deny<br>  Allow @LOCAL<br>&lt;/Location&gt;<br>&lt;Location /admin/log&gt;<br>  AuthType Default<br>  Require user @SYSTEM<br>  Order allow,deny<br>  Allow @LOCAL<br>&lt;/Location&gt;<br></code></pre></td></tr></table></figure>
+<ol start="3">
+<li>將自己的帳號加入lpadmin群組，才能使用帳號登入</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">usermod -aG lpadmin account_name</span><br></code></pre></td></tr></table></figure>
+<ol start="4">
+<li>重啟cups服務即完成架設，<code>systemctl restart cups.service</code></li>
+<li>插上印表機，並在網頁中設定印表機</li>
+</ol>
+<p><img src="cups_config.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<p>選擇Add Printer，接著按照指示設定即可，需在最後一步將Share Printer勾起，之後就可以直接使用對應的位置直接進行影印了，不過windows應該可以在同一個Lan底下直接偵測到。</p>
+<p>如：<a target="_blank" rel="noopener" href="http://x.x.x.x:631/printers/Samsung_ML-1710">http://x.x.x.x:631/printers/Samsung_ML-1710</a> (使用http因為https的證書沒有簽名，windows預設會拒絕，linux就沒差了)</p>
+<h2 id="Remote-scan">Remote scan</h2>
+<p>在遠端掃描這方面使用的是SANE(Scanner Access Now Easy)，它支援透過網路進行遠端掃描</p>
+<h3 id="服務端">服務端</h3>
+<ol>
+<li>安裝必要的軟體</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-comment"># libpam-systemd會提供有關掃描器的udev rules，不過應該都已經有裝了</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">apt install sane-utils libpam-systemd</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-comment"># 選擇性安裝</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-comment"># sane-airscan可以連線遠端的掃描器，如果是直接連線可以不管</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-comment"># libsane-hpaio可以驅動一些HP的一體機的掃描器(印表機+掃描器)</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-comment"># hplip同理，是HP的驅動，如果libsane-hpaio無效可以嘗試，或直接都裝</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">apt install libsane-hpaio hplip sane-airscan</span><br></code></pre></td></tr></table></figure>
+<ol start="2">
+<li>設定允許使用掃描的IP，編輯設定檔(<code>/etc/sane.d/saned.conf</code>)</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs conf"># 範例，直接將IP或CIDR直接加進去即可<br>10.0.0.0/8<br></code></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-comment"># 重啟服務</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">systemctl restart saned.socket</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-comment"># 如果服務沒有enable，記得打開</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">systemctl <span class="hljs-built_in">enable</span> saned.socket</span><br></code></pre></td></tr></table></figure>
+<ol start="3">
+<li>插上掃描器，確認掃描器的權限正確</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-built_in">ls</span> -l /dev/bus/usb/*/*</span><br>crw-rw-r--  1 root root 189,   0 Nov 16 21:37 /dev/bus/usb/001/001<br>crw-rw-r--  1 root root 189,   1 Nov 16 21:37 /dev/bus/usb/001/002<br>crw-rw-r--  1 root root 189, 128 Nov 16 21:51 /dev/bus/usb/002/001<br>crw-rw-r--  1 root lp   189, 147 Nov 17 02:10 /dev/bus/usb/002/020<br>crw-rw-r--+ 1 root lp   189, 148 Nov 17 03:11 /dev/bus/usb/002/021<br>crw-rw-r--  1 root root 189, 256 Nov 16 21:51 /dev/bus/usb/003/001<br></code></pre></td></tr></table></figure>
+<p>應該可以看到掃描器對應的usb設備的權限後面有一個+，udev rule會在設備插入的時候加上權限</p>
+<ol start="4">
+<li>檢查掃描器是否被sane偵測到</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-comment"># 應該要可以看到有一個設備是插上的掃描器</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">sudo -u saned sane-find-scanner</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-comment"># 應該要可以看到掃描器被偵測到</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">sudo -u saned scanimage -L</span><br>device `hpaio:/usb/Deskjet_F4100_series?serial=XXXXXXXX&#x27; is a Hewlett-Packard Deskjet_F4100_series all-in-one<br></code></pre></td></tr></table></figure>
+<ol start="5">
+<li>如果上面的正常被檢查到，那SANE的服務端大概就配置成功了</li>
+</ol>
+<h3 id="客戶端-Linux">客戶端( Linux )</h3>
+<ol>
+<li>按照對應的distro安裝sane，(例：<code>sudo pacman -S sane</code>)</li>
+<li>編輯<code>/etc/sane.d/dll.conf</code>，將net的註解取消</li>
+<li>編輯<code>/etc/sane.d/net.conf</code>，將SANE伺服器的IP加入，<code>echo x.x.x.x &gt;&gt; /etc/sane.d/net.conf</code></li>
+<li>使用<code>scanimage -L</code>，確認是否成功連線遠端掃描器</li>
+</ol>
+<h3 id="客戶端-Windows">客戶端( Windows )</h3>
+<p>Windows上有兩種方案可以使用</p>
+<ul>
+<li>使用<a target="_blank" rel="noopener" href="https://github.com/mback2k/wiasane">wiasane</a>，他是一個驅動，可以把SANE的遠端掃描器變成Windows下的WIA設備，但是需要自己編譯，目前我沒找到編譯好的執行檔</li>
+<li>使用<a target="_blank" rel="noopener" href="https://sanetwain.ozuzo.net/">SaneTwain</a>，這個掃描軟體可以直接連線遠端的SANE伺服器，直接填入IP即可開始掃描</li>
+</ul>
 <h2 id="參考">參考</h2>
-<section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://www.digitalocean.com/community/tutorials/install-wordpress-nginx-ubuntu">Install WordPress with Nginx on Ubuntu 18.04 | DigitalOcean</a>
-<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://developer.wordpress.org/advanced-administration/before-install/creating-database/">Creating Database for WordPress – Advanced Administration Handbook | Developer.WordPress.org</a>
-<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:3" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://developer.wordpress.org/advanced-administration/wordpress/wp-config/">Editing wp-config.php – Advanced Administration Handbook | Developer.WordPress.org</a>
-<a href="#fnref:3" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:4" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://footmark.com.tw/news/web-design/wordpress/nginx-php-fpm-wordpress-centos8/">NGINX 搭配 PHP-FPM 配置 WordPress 多站點網站 for CentOS 8 - 腳印網頁資訊設計</a>
-<a href="#fnref:4" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:5" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://shazi.info/%E7%94%A8-nginx-%E4%BE%86%E5%AE%89%E8%A3%9D-wordpress-%E6%94%B9%E7%94%A8-lnmp-%E5%8F%96%E4%BB%A3-apache-%E5%90%A7/">用 Nginx 取代 Apache 吧 – WordPress 實務操作 Round1 – Mr. 沙先生</a>
-<a href="#fnref:5" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:6" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://tec.xenby.com/20-nginx-%E8%88%87-php-fpm-%E9%81%8B%E4%BD%9C%E4%BB%8B%E7%B4%B9%E8%88%87%E8%A8%AD%E5%AE%9A%E8%AC%9B%E8%A7%A3">[講解] nginx 與 php-fpm 運作介紹與設定 | 辛比記</a>
-<a href="#fnref:6" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:7" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://medium.com/dean-lin/%E8%AA%BF%E6%95%B4-php-fpm-nginx-%E5%8F%83%E6%95%B8%E4%BE%86%E5%B0%8D%E6%8A%97%E5%A4%A7%E6%B5%81%E9%87%8F%E6%83%85%E5%A2%83-b465a913ee07">調整 php-fpm &amp; nginx 參數，讓 Server 可以承受更大的流量 | by 林鼎淵 | Dean Lin | Medium</a>
-<a href="#fnref:7" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
+<section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://wiki.debian.org/SaneOverNetwork">SaneOverNetwork - Debian Wiki</a>
+<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://sspai.com/post/91396">终于可以愉快地扫描了：Linux 扫描仪配置与使用攻略 - 少数派</a>
+<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
                 
               </div>
             
@@ -686,10 +692,6 @@
       
         <a href="/tags/linux/" class="print-no-link">#linux</a>
       
-        <a href="/tags/nginx/" class="print-no-link">#nginx</a>
-      
-        <a href="/tags/wordpress/" class="print-no-link">#wordpress</a>
-      
     </div>
   
 </div>
@@ -700,8 +702,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>使用LNMP環境搭建WordPress網站</div>
-      <div>https://www.zenwen.eu.org/wordpress-with-LNMP-environment/</div>
+      <div>如何透過網路列印和掃描</div>
+      <div>https://www.zenwen.eu.org/how-to-print-and-scan-over-network/</div>
     </div>
     <div class="license-meta">
       
@@ -713,7 +715,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>發布於</div>
-          <div>2024年8月5日</div>
+          <div>2024年11月19日</div>
         </div>
       
       
@@ -751,18 +753,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/create-wireguard-site-to-site-tunnel/" title="使用Wireguard建立Site to Site Tunnel">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">使用Wireguard建立Site to Site Tunnel</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/turning-linux-into-a-router/" title="配置linux做為router">
-                        <span class="hidden-mobile">配置linux做為router</span>
+                      <a href="/how-to-use-jnlp-kvm/" title="如何打開jnlp格式的kvm console">
+                        <span class="hidden-mobile">如何打開jnlp格式的kvm console</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

@@ -15,8 +15,29 @@
     <atom:link href="https://www.zenwen.eu.org/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>簡單記錄一下折騰的內容，可能還會發發感想？</description>
-    <pubDate>Mon, 04 Nov 2024 15:39:33 GMT</pubDate>
+    <pubDate>Tue, 12 Nov 2024 17:56:50 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>如何打開jnlp格式的kvm console</title>
+      <link>https://www.zenwen.eu.org/how-to-use-jnlp-kvm/</link>
+      <guid>https://www.zenwen.eu.org/how-to-use-jnlp-kvm/</guid>
+      <pubDate>Tue, 12 Nov 2024 17:56:50 GMT</pubDate>
+      
+      <description>分享如何使用jnlp格式的kvm/IPMI</description>
+      
+      
+      
+      
+      <category domain="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/">教程</category>
+      
+      
+      <category domain="https://www.zenwen.eu.org/tags/server/">server</category>
+      
+      
+      <comments>https://www.zenwen.eu.org/how-to-use-jnlp-kvm/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>在Proxmox上進行PCI-E直通</title>
@@ -103,7 +124,7 @@
       <guid>https://www.zenwen.eu.org/create-wireguard-site-to-site-tunnel/</guid>
       <pubDate>Sun, 18 Aug 2024 10:30:54 GMT</pubDate>
       
-      <description>在router上建立site to site tunnel，並讓路由通過</description>
+      <description>介紹如何在router上建立site to site tunnel，並讓路由通過</description>
       
       
       

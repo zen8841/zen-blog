@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>如何打開jnlp格式的kvm console</title>
+      <link href="/how-to-use-jnlp-kvm/"/>
+      <url>/how-to-use-jnlp-kvm/</url>
+      
+        <content type="html"><![CDATA[<h1 id="前言">前言</h1><p>有些老舊的伺服器內的IPMI給的kvm console是一個jnlp檔，而不是直接給html5來用，本文將介紹如何使用jnlp檔來連上IPMI開啟kvm。</p><h1 id="設定">設定</h1><ol><li>安裝<code>icedtea-web</code>和<code>jre8</code></li></ol><div class="note note-info">            <p>也可以使用<code>jdk8</code>( <code>java8</code>的環境就可 )，之前我使用<code>jre8-adoptopenjdk</code>，後來變成<code>jdk8-temurin</code>，不過前陣子更新後出<a href="https://github.com/AdoptOpenJDK/IcedTea-Web/issues/915">問題</a>了<sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span class="hint--top hint--rounded" aria-label="[Fatal: Initialization Error (unsigned jars?) · Issue #915 · AdoptOpenJDK/IcedTea-Web](https://github.com/AdoptOpenJDK/IcedTea-Web/issues/915)">[1]</span></a></sup>，所以改回<code>jre8</code></p>          </div><ol start="2"><li>修改<code>java.security</code>( linux上全域的設定在<code>/etc/java-jre8/security/java.security</code> )，找到這三段內容，全部註解掉</li></ol><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">jdk</span>.certpath.disabledAlgorithms=MD2, MD5, SHA1 jdkCA &amp; usage TLSServer, \<br>    <span class="hljs-attribute">RSA</span> keySize &lt; <span class="hljs-number">1024</span>, DSA keySize &lt; <span class="hljs-number">1024</span>, EC keySize &lt; <span class="hljs-number">224</span>, \<br>    <span class="hljs-attribute">SHA1</span> usage SignedJAR &amp; denyAfter <span class="hljs-number">2019</span>-<span class="hljs-number">01</span>-<span class="hljs-number">01</span><br></code></pre></td></tr></table></figure><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">jdk</span>.jar.disabledAlgorithms=MD2, MD5, RSA keySize &lt; <span class="hljs-number">1024</span>, \<br>      <span class="hljs-attribute">DSA</span> keySize &lt; <span class="hljs-number">1024</span>, SHA1 denyAfter <span class="hljs-number">2019</span>-<span class="hljs-number">01</span>-<span class="hljs-number">01</span><br></code></pre></td></tr></table></figure><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">jdk</span>.tls.disabledAlgorithms=SSLv3, TLSv1, TLSv1.<span class="hljs-number">1</span>, RC4, DES, MD5withRSA, \<br>    <span class="hljs-attribute">DH</span> keySize &lt; <span class="hljs-number">1024</span>, EC keySize &lt; <span class="hljs-number">224</span>, <span class="hljs-number">3</span>DES_EDE_CBC, anon, NULL<br></code></pre></td></tr></table></figure><ol start="3"><li>打開Java Control Panel，修改security分頁的設定，將安全等級下降為high，並把IPMI的域名/IP加進白名單來允許Self-signed certificate</li></ol><p><img src="java_security.png" alt=""></p><ol start="4"><li>把<code>icedtea-web</code>設成用來開啟jnlp檔，並把使用的java切成jre8即可( 例如在Arch上是這樣設定<code>sudo archlinux-java set java-8-jre/jre</code> )</li></ol><h1 id="同場加映">同場加映</h1><ol><li>如果使用的是DELL的伺服器，而且IPMI為iDRAC6，那麼可以直接使用docker來開啟kvm( <a href="https://github.com/DomiStyle/docker-idrac6">DomiStyle/docker-idrac6</a> )</li><li>如果使用的是很舊的IPMI，有可能連設定的網頁部分都需要flash( 例如Cisco UCS C240 )，不想配置flash環境的話也可以直接用docker來開( <a href="https://github.com/jchprj/Play-Adobe-Flash-After-EOL">jchprj/Play-Adobe-Flash-After-EOL</a> )</li></ol><h2 id="參考">參考</h2><section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a href="https://github.com/AdoptOpenJDK/IcedTea-Web/issues/915">Fatal: Initialization Error (unsigned jars?) · Issue #915 · AdoptOpenJDK/IcedTea-Web</a><a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>]]></content>
+      
+      
+      <categories>
+          
+          <category> 教程 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> server </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>在Proxmox上進行PCI-E直通</title>
       <link href="/pci-passthrough-with-proxmox/"/>
       <url>/pci-passthrough-with-proxmox/</url>

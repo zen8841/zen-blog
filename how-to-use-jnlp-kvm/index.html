@@ -21,23 +21,24 @@
   <meta name="author" content="Zen Wen">
   <meta name="keywords" content="linux network computer">
   
-    <meta name="description" content="使用compose.yml來限制資源使用">
+    <meta name="description" content="分享如何使用jnlp格式的kvm&#x2F;IPMI">
 <meta property="og:type" content="article">
-<meta property="og:title" content="如何在docker compose file中限制系統資源的使用">
-<meta property="og:url" content="https://www.zenwen.eu.org/docker-compose-file-limit-resource/index.html">
+<meta property="og:title" content="如何打開jnlp格式的kvm console">
+<meta property="og:url" content="https://www.zenwen.eu.org/how-to-use-jnlp-kvm/index.html">
 <meta property="og:site_name" content="Zen&#39;s Blog">
-<meta property="og:description" content="使用compose.yml來限制資源使用">
+<meta property="og:description" content="分享如何使用jnlp格式的kvm&#x2F;IPMI">
 <meta property="og:locale" content="zh_TW">
-<meta property="article:published_time" content="2024-06-06T19:34:01.000Z">
-<meta property="article:modified_time" content="2024-06-06T19:34:01.000Z">
+<meta property="og:image" content="https://www.zenwen.eu.org/how-to-use-jnlp-kvm/java_security.png">
+<meta property="article:published_time" content="2024-11-12T17:56:50.000Z">
+<meta property="article:modified_time" content="2024-11-12T17:56:50.000Z">
 <meta property="article:author" content="Zen Wen">
 <meta property="article:tag" content="server">
-<meta property="article:tag" content="docker">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.zenwen.eu.org/how-to-use-jnlp-kvm/java_security.png">
   
   
   
-  <title>如何在docker compose file中限制系統資源的使用 - Zen&#39;s Blog</title>
+  <title>如何打開jnlp格式的kvm console - Zen&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" />
 
@@ -284,7 +285,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="如何在docker compose file中限制系統資源的使用"></span>
+            <span id="subtitle" data-typed-text="如何打開jnlp格式的kvm console"></span>
           
         </div>
 
@@ -295,8 +296,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-06-07 03:34" pubdate>
-          2024年6月7日 凌晨
+        <time datetime="2024-11-13 01:56" pubdate>
+          2024年11月13日 凌晨
         </time>
       </span>
     
@@ -307,7 +308,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          706 字
+          338 字
         
       </span>
     
@@ -318,7 +319,7 @@
         
         
         
-          6 分鐘
+          3 分鐘
         
       </span>
     
@@ -403,7 +404,7 @@
       
         <a href="/docker-compose-file-limit-resource/" title="如何在docker compose file中限制系統資源的使用"
            class="list-group-item list-group-item-action
-           active">
+           ">
           <span class="category-post">如何在docker compose file中限制系統資源的使用</span>
         </a>
       
@@ -484,7 +485,7 @@
       
         <a href="/how-to-use-jnlp-kvm/" title="如何打開jnlp格式的kvm console"
            class="list-group-item list-group-item-action
-           ">
+           active">
           <span class="category-post">如何打開jnlp格式的kvm console</span>
         </a>
       
@@ -573,39 +574,41 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">如何在docker compose file中限制系統資源的使用</h1>
+            <h1 id="seo-header">如何打開jnlp格式的kvm console</h1>
             
             
               <div class="markdown-body">
                 
                 <h1 id="前言">前言</h1>
-<p>這也算是在舉辦 TSCCTF 中整理的一些資訊，因為題目都是放在docker container中跑，為了避免題目被打穿佔用資源影響到其他題目的正常運作，所以當時幫出題人員整理了一下在docker compose  file中限制系統資源使用的方式。</p>
-<p>不過現在docker中已經包含了compose組件，而compose組件吃的格式和<code>docker-compose</code>指令吃的格式有點不一樣，所以重新整理了這一篇文章。</p>
-<h1 id="格式">格式</h1>
-
-    <div class="fold">
-      <div class="fold-title fold-default collapsed" data-toggle="collapse" href="#collapse-631c5d3e" role="button" aria-expanded="false" aria-controls="collapse-631c5d3e">
-        <div class="fold-arrow">▶</div>docker-compose version 2、3中限制的方法
-      </div>
-      <div class="fold-collapse collapse" id="collapse-631c5d3e">
-        <div class="fold-content">
-          <p>這兩種格式已經被棄用<sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span class="hint--top hint--rounded" aria-label="[Legacy versions | Docker Docs](https://docs.docker.com/compose/compose-file/legacy-versions)">[1]</span></a></sup></p><h2 id="version-2">version 2</h2><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">version:</span> <span class="hljs-string">&quot;2&quot;</span><br><span class="hljs-attr">services:</span><br>  <span class="hljs-attr">service_name:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">image_name</span><br>    <br>    <span class="hljs-comment">## 若沒有寫入的需求請一律使用read_only，volume也請使用ro掛載</span><br>    <span class="hljs-attr">read_only:</span> <span class="hljs-literal">true</span><br>    <br>    <span class="hljs-comment">## 若有寫入需求請註解掉read_only，改用以下兩行限制rootfs size</span><br>    <span class="hljs-comment">## 此選項只支援部分storage driver，在overlay2中只支援xfs</span><br>    <span class="hljs-comment">## https://docs.docker.com/reference/cli/docker/container/run/#storage-opt</span><br>    <span class="hljs-comment"># storage_opt:</span><br>      <span class="hljs-comment"># size: 1G</span><br>      <br>    <span class="hljs-comment">## 可使用的cpu數</span><br>    <span class="hljs-attr">cpus:</span> <span class="hljs-number">1</span><br>    <br>    <span class="hljs-comment">## 優先級，可不設定</span><br>    <span class="hljs-comment">## 可以理解為在資源不足時，容器搶資源的能力，按照cpu_share的比例來分資源，預設為1024</span><br>    <span class="hljs-comment"># cpu_shares: 1024</span><br>    <br>    <span class="hljs-comment">## 限制memory大小，視個別情況決定限制的大小</span><br>    <span class="hljs-attr">mem_limit:</span> <span class="hljs-string">1G</span><br>    <br>    <span class="hljs-comment">## 資源不足時啟用的限制，可不設定</span><br>    <span class="hljs-comment"># mem_reservation: 128M</span><br></code></pre></td></tr></table></figure><h2 id="version3">version3</h2><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment">## 請使用3.7以上</span><br><span class="hljs-attr">version:</span> <span class="hljs-string">&quot;3.7&quot;</span><br><span class="hljs-attr">services:</span><br>  <span class="hljs-attr">service_name:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">image_name</span><br>    <br>    <span class="hljs-comment">## 若沒有寫入的需求請一律使用read_only，volume也請使用ro掛載</span><br>    <span class="hljs-attr">read_only:</span> <span class="hljs-literal">true</span><br>    <br>    <span class="hljs-comment">## 若有寫入需求請註解掉read_only，改用以下兩行限制rootfs size</span><br>    <span class="hljs-comment">## 此選項只支援部分storage driver，在overlay2中只支援xfs</span><br>    <span class="hljs-comment">## https://docs.docker.com/reference/cli/docker/container/run/#storage-opt</span><br>    <span class="hljs-comment"># storage_opt:</span><br>      <span class="hljs-comment"># size: 1G</span><br>      <br>    <span class="hljs-attr">deploy:</span><br>      <span class="hljs-attr">resources:</span><br>        <span class="hljs-attr">limits:</span><br>          <span class="hljs-comment">## 可使用的cpu數，可以設定為小數</span><br>          <span class="hljs-attr">cpus:</span> <span class="hljs-string">&#x27;1&#x27;</span><br>          <span class="hljs-comment">## 限制memory大小，視個別情況決定限制的大小</span><br>          <span class="hljs-attr">memory:</span> <span class="hljs-string">1G</span><br><br>        <span class="hljs-comment">## 資源不足時啟用的限制，可不設定</span><br>        <span class="hljs-comment"># reservations:</span><br>          <span class="hljs-comment"># cpus: &#x27;0.5&#x27;</span><br>          <span class="hljs-comment"># memory: 128M</span><br></code></pre></td></tr></table></figure><p>docker-compose v3下必須在<code>docker-compose</code>後加上參數啟動</p><p><code>docker-compose --compatibility up -d</code></p><p>其實也可以用<code>docker stack deploy --compose-file docker-compose.yml stack_name</code>來deploy，但是必須先初始化docker stack</p>
-        </div>
-      </div>
-    </div>
-<h2 id="compose組件">compose組件</h2>
-<p>這個版本的compose格式應該會是現行的版本，這部份參考自docker官網的文檔<sup id="fnref:2" class="footnote-ref"><a href="#fn:2" rel="footnote"><span class="hint--top hint--rounded" aria-label="[Services top-level elements | Docker Docs](https://docs.docker.com/compose/compose-file/05-services)">[2]</span></a></sup></p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">services:</span><br>  <span class="hljs-attr">service_name:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">image_name</span><br>    <br>    <span class="hljs-comment">## 若沒有寫入的需求請一律使用read_only，volume也請使用ro掛載</span><br>    <span class="hljs-attr">read_only:</span> <span class="hljs-literal">true</span><br>    <br>    <span class="hljs-comment">## 若有寫入需求請註解掉read_only，改用以下兩行限制rootfs size</span><br>    <span class="hljs-comment">#storage_opt:</span><br>      <span class="hljs-comment">#size: 1G</span><br>      <br>    <span class="hljs-comment">## 可使用的cpu數(還有很多其他的限制種類，可以在參考中查看)</span><br>    <span class="hljs-attr">cpus:</span> <span class="hljs-number">1</span><br>    <br>    <span class="hljs-comment">## 優先級，可不設定</span><br>    <span class="hljs-comment">#cpu_shares: 1024</span><br>    <br>    <span class="hljs-comment">## 限制memory大小，視個別情況決定限制的大小</span><br>    <span class="hljs-attr">mem_limit:</span> <span class="hljs-string">1G</span><br>    <br>    <span class="hljs-comment">## 資源不足時啟用的限制，可不設定</span><br>    <span class="hljs-comment">#mem_reservation: 128M</span><br></code></pre></td></tr></table></figure>
-<p>這個版本的格式不再需要指定<code>version</code>，使用<code>docker compose -f compose.yml up -d</code>啟動(如果在<code>compose.yml</code>的目錄可以不加<code>-f</code>)</p>
+<p>有些老舊的伺服器內的IPMI給的kvm console是一個jnlp檔，而不是直接給html5來用，本文將介紹如何使用jnlp檔來連上IPMI開啟kvm。</p>
+<h1 id="設定">設定</h1>
+<ol>
+<li>安裝<code>icedtea-web</code>和<code>jre8</code></li>
+</ol>
+<div class="note note-info">
+            <p>也可以使用<code>jdk8</code>( <code>java8</code>的環境就可 )，之前我使用<code>jre8-adoptopenjdk</code>，後來變成<code>jdk8-temurin</code>，不過前陣子更新後出<a target="_blank" rel="noopener" href="https://github.com/AdoptOpenJDK/IcedTea-Web/issues/915">問題</a>了<sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span class="hint--top hint--rounded" aria-label="[Fatal: Initialization Error (unsigned jars?) · Issue #915 · AdoptOpenJDK/IcedTea-Web](https://github.com/AdoptOpenJDK/IcedTea-Web/issues/915)">[1]</span></a></sup>，所以改回<code>jre8</code></p>
+          </div>
+<ol start="2">
+<li>修改<code>java.security</code>( linux上全域的設定在<code>/etc/java-jre8/security/java.security</code> )，找到這三段內容，全部註解掉</li>
+</ol>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">jdk</span>.certpath.disabledAlgorithms=MD2, MD5, SHA1 jdkCA &amp; usage TLSServer, \<br>    <span class="hljs-attribute">RSA</span> keySize &lt; <span class="hljs-number">1024</span>, DSA keySize &lt; <span class="hljs-number">1024</span>, EC keySize &lt; <span class="hljs-number">224</span>, \<br>    <span class="hljs-attribute">SHA1</span> usage SignedJAR &amp; denyAfter <span class="hljs-number">2019</span>-<span class="hljs-number">01</span>-<span class="hljs-number">01</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">jdk</span>.jar.disabledAlgorithms=MD2, MD5, RSA keySize &lt; <span class="hljs-number">1024</span>, \<br>      <span class="hljs-attribute">DSA</span> keySize &lt; <span class="hljs-number">1024</span>, SHA1 denyAfter <span class="hljs-number">2019</span>-<span class="hljs-number">01</span>-<span class="hljs-number">01</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">jdk</span>.tls.disabledAlgorithms=SSLv3, TLSv1, TLSv1.<span class="hljs-number">1</span>, RC4, DES, MD5withRSA, \<br>    <span class="hljs-attribute">DH</span> keySize &lt; <span class="hljs-number">1024</span>, EC keySize &lt; <span class="hljs-number">224</span>, <span class="hljs-number">3</span>DES_EDE_CBC, anon, NULL<br></code></pre></td></tr></table></figure>
+<ol start="3">
+<li>打開Java Control Panel，修改security分頁的設定，將安全等級下降為high，並把IPMI的域名/IP加進白名單來允許Self-signed certificate</li>
+</ol>
+<p><img src="java_security.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<ol start="4">
+<li>把<code>icedtea-web</code>設成用來開啟jnlp檔，並把使用的java切成jre8即可( 例如在Arch上是這樣設定<code>sudo archlinux-java set java-8-jre/jre</code> )</li>
+</ol>
+<h1 id="同場加映">同場加映</h1>
+<ol>
+<li>如果使用的是DELL的伺服器，而且IPMI為iDRAC6，那麼可以直接使用docker來開啟kvm( <a target="_blank" rel="noopener" href="https://github.com/DomiStyle/docker-idrac6">DomiStyle/docker-idrac6</a> )</li>
+<li>如果使用的是很舊的IPMI，有可能連設定的網頁部分都需要flash( 例如Cisco UCS C240 )，不想配置flash環境的話也可以直接用docker來開( <a target="_blank" rel="noopener" href="https://github.com/jchprj/Play-Adobe-Flash-After-EOL">jchprj/Play-Adobe-Flash-After-EOL</a> )</li>
+</ol>
 <h2 id="參考">參考</h2>
-<section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://docs.docker.com/compose/compose-file/legacy-versions">Legacy versions | Docker Docs</a>
-<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://docs.docker.com/compose/compose-file/05-services">Services top-level elements | Docker Docs</a>
-<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:3" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://www.baeldung.com/ops/docker-memory-limit">Setting Memory And CPU Limits In Docker | Baeldung on Ops</a>
-<a href="#fnref:3" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:4" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://blog.yowko.com/docker-compose-3-cpu-memory-limit/">在 Docker Compose file 3 下限制 CPU 與 Memory - Yowko’s Notes</a>
-<a href="#fnref:4" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:5" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/42345235/how-to-specify-memory-cpu-limit-in-docker-compose-version-3">How to specify Memory &amp; CPU limit in docker compose version 3 - Stack Overflow</a>
-<a href="#fnref:5" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:6" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/36145817/how-to-limit-io-speed-in-docker-and-share-file-with-system-in-the-same-time">How to limit IO speed in docker and share file with system in the same time? - Stack Overflow</a>
-<a href="#fnref:6" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:7" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/19158810/docker-mount-volumes-as-readonly">Docker, mount volumes as readonly - Stack Overflow</a>
-<a href="#fnref:7" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
+<section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://github.com/AdoptOpenJDK/IcedTea-Web/issues/915">Fatal: Initialization Error (unsigned jars?) · Issue #915 · AdoptOpenJDK/IcedTea-Web</a>
+<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
                 
               </div>
             
@@ -640,8 +643,6 @@
       
         <a href="/tags/server/" class="print-no-link">#server</a>
       
-        <a href="/tags/docker/" class="print-no-link">#docker</a>
-      
     </div>
   
 </div>
@@ -652,8 +653,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>如何在docker compose file中限制系統資源的使用</div>
-      <div>https://www.zenwen.eu.org/docker-compose-file-limit-resource/</div>
+      <div>如何打開jnlp格式的kvm console</div>
+      <div>https://www.zenwen.eu.org/how-to-use-jnlp-kvm/</div>
     </div>
     <div class="license-meta">
       
@@ -665,7 +666,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>發布於</div>
-          <div>2024年6月7日</div>
+          <div>2024年11月13日</div>
         </div>
       
       
@@ -703,18 +704,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/e1000e-detected-hardware-unit-hang/" title="I218-V、I219-V系列網卡在Linux下突然關閉的解法">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">I218-V、I219-V系列網卡在Linux下突然關閉的解法</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/cloudflare-infinite-301-redirection/" title="Cloudflare Proxy 無限301轉址">
-                        <span class="hidden-mobile">Cloudflare Proxy 無限301轉址</span>
+                      <a href="/pci-passthrough-with-proxmox/" title="在Proxmox上進行PCI-E直通">
+                        <span class="hidden-mobile">在Proxmox上進行PCI-E直通</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

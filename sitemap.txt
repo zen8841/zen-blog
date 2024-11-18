@@ -1,4 +1,5 @@
 https://www.zenwen.eu.org/about/index.html
+https://www.zenwen.eu.org/how-to-use-jnlp-kvm/
 https://www.zenwen.eu.org/pci-passthrough-with-proxmox/
 https://www.zenwen.eu.org/turning-linux-into-a-router/
 https://www.zenwen.eu.org/linux-qos-with-tc-and-nft/

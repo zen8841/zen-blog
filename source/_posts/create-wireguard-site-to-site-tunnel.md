@@ -3,7 +3,7 @@ title: 使用Wireguard建立Site to Site Tunnel
 katex: false
 mathjax: false
 mermaid: false
-excerpt: 在router上建立site to site tunnel，並讓路由通過
+excerpt: 介紹如何在router上建立site to site tunnel，並讓路由通過
 date: 2024-08-18 18:30:54
 updated: 2024-08-18 18:30:54
 index_img:

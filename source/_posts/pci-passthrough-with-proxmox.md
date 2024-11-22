@@ -52,10 +52,10 @@ AMD CPU則不需要加參數，只要檢測到支持就會開啟IOMMU
 
 - systemd-boot
 
-編輯`/etc/kernel/cmdline`
+編輯`/etc/kernel/cmdline`，前面會有一些其他參數，要加的參數直接放在後面，如下
 
 ```cmdline
-...前面會有一些其他參數 要加的參數直接放在後面
+quiet intel_iommu=on
 ```
 
 編輯完後使用`pve-efiboot-tool refresh`來更新bootloader
@@ -64,11 +64,11 @@ AMD CPU則不需要加參數，只要檢測到支持就會開啟IOMMU
 
 編輯`/etc/default/grub`
 
-找到`GRUB_CMDLINE_LINUX`或是`GRUB_CMDLINE_LINUX_DEFAULT`
+找到`GRUB_CMDLINE_LINUX`或是`GRUB_CMDLINE_LINUX_DEFAULT`，可以將參數加在雙引號之間，只要選擇其中一個加即可
 
 ```grub
-GRUB_CMDLINE_LINUX_DEFAULT="quiet 要加的參數"
-GRUB_CMDLINE_LINUX="或是放在這裡"
+GRUB_CMDLINE_LINUX_DEFAULT="quiet intel_iommu=on"
+GRUB_CMDLINE_LINUX="intel_iommu=on"
 ```
 
 編輯完後使用`update-grub`來更新bootloader
@@ -77,13 +77,13 @@ GRUB_CMDLINE_LINUX="或是放在這裡"
 
 修改完後重新開機，可以使用以下指令來確認是否成功開啟IOMMU(可以等到後面設定完再一起重新開機)
 
-```bash
+```shell
 # dmesg | grep -e DMAR -e IOMMU
 ```
 
 應該要出現包含一行`DMAR: IOMMU enabled`的內容
 
-```bash
+```shell
 # dmesg | grep 'remapping'
 ```
 
@@ -114,7 +114,7 @@ vfio_pci
 
 有些主板的南橋分配會不同，導致插在南橋引出的PCIE上會和其他設備分在同一組，解決方式就是換個插槽，或是插到直連CPU的PCIE上
 
-```bash
+```shell
 # pvesh get /nodes/{nodename}/hardware/pci --pci-class-blacklist ""
 ```
 
@@ -202,7 +202,7 @@ blacklist nvidia*
 
 由於顯卡直通會需要顯卡有支援UEFI的vBIOS，可以使用這些指令來把目前顯卡的vBIOS dump出來
 
-```bash
+```shell
 # # 0000:02:00.0是pci device的位置
 # cd /sys/bus/pci/devices/0000:01:00.0/
 # echo 1 > rom
@@ -213,7 +213,7 @@ blacklist nvidia*
 
 然後使用rom-parser來驗證
 
-```bash
+```shell
 # git clone https://github.com/awilliam/rom-parser
 # cd rom-parser
 # make
@@ -241,7 +241,7 @@ Valid ROM signature found @fc00h, PCIR offset 1ch
 
 將剛剛的vBIOS移到`/usr/share/kvm/`底下
 
-```bash
+```shell
 # mv /tmp/image.rom /usr/share/kvm/vbios.rom
 ```
 

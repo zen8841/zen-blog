@@ -96,7 +96,7 @@ iface lan inet static
 ```
 重啟`networking.service`應用設定，或是直接重開機(改介面名稱可能導致重啟`networking.service`失敗，可以用重開機解決)
 
-```bash
+```shell
 # systemctl restart networking.service
 ```
 
@@ -280,7 +280,7 @@ table mangle則是設定了MSS Clamping的規則，同前面的iptables
 
 應用設定直接執行`/etc/nftables.conf`即可，啟動nftables服務可以在開機時回復防火牆
 
-```
+```shell
 # /etc/nftables.conf
 # systemctl enable nftables.service
 ```

@@ -111,7 +111,7 @@ WebInterface Yes
 # systemctl enable saned.socket
 ```
 
-3. 插上掃描器，確認掃描器的權限正確
+3. 插上掃描器，確認掃描器的權限正確( 如果之前已經插上掃描器，這一步沒看到+號，可以嘗試重新插拔掃描器，讓udev rule偵測到硬體變化 )
 
 ```shell
 # ls -l /dev/bus/usb/*/*

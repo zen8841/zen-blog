@@ -1,4 +1,5 @@
 https://www.zenwen.eu.org/about/index.html
+https://www.zenwen.eu.org/how-to-create-proxmox-package-repository-mirror/
 https://www.zenwen.eu.org/how-to-print-and-scan-over-network/
 https://www.zenwen.eu.org/how-to-use-jnlp-kvm/
 https://www.zenwen.eu.org/pci-passthrough-with-proxmox/

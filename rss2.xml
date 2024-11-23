@@ -15,8 +15,33 @@
     <atom:link href="https://www.zenwen.eu.org/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>簡單記錄一下折騰的內容，可能還會發發感想？</description>
-    <pubDate>Mon, 18 Nov 2024 20:08:21 GMT</pubDate>
+    <pubDate>Sat, 23 Nov 2024 19:47:10 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>如何建立Proxmox的鏡像站</title>
+      <link>https://www.zenwen.eu.org/how-to-create-proxmox-package-repository-mirror/</link>
+      <guid>https://www.zenwen.eu.org/how-to-create-proxmox-package-repository-mirror/</guid>
+      <pubDate>Sat, 23 Nov 2024 19:47:10 GMT</pubDate>
+      
+      <description>記錄一下CCNS的Proxmox鏡像站是如何建立的</description>
+      
+      
+      
+      
+      <category domain="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/">教程</category>
+      
+      
+      <category domain="https://www.zenwen.eu.org/tags/server/">server</category>
+      
+      <category domain="https://www.zenwen.eu.org/tags/linux/">linux</category>
+      
+      <category domain="https://www.zenwen.eu.org/tags/Proxmox/">Proxmox</category>
+      
+      
+      <comments>https://www.zenwen.eu.org/how-to-create-proxmox-package-repository-mirror/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>如何透過網路列印和掃描</title>

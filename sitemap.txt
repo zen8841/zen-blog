@@ -32,6 +32,8 @@ https://www.zenwen.eu.org/tags/wireguard/
 https://www.zenwen.eu.org/tags/linux/
 https://www.zenwen.eu.org/tags/docker/
 https://www.zenwen.eu.org/tags/dns/
+https://www.zenwen.eu.org/tags/blog/
+https://www.zenwen.eu.org/tags/hexo/
 https://www.zenwen.eu.org/tags/UBNT/
 https://www.zenwen.eu.org/tags/Ubiquiti/
 https://www.zenwen.eu.org/tags/EdgeOS/
@@ -39,8 +41,6 @@ https://www.zenwen.eu.org/tags/Mikrotik/
 https://www.zenwen.eu.org/tags/RouterOS/
 https://www.zenwen.eu.org/tags/GRE-over-IPsec/
 https://www.zenwen.eu.org/tags/IPsec/
-https://www.zenwen.eu.org/tags/blog/
-https://www.zenwen.eu.org/tags/hexo/
 https://www.zenwen.eu.org/tags/Proxmox/
 https://www.zenwen.eu.org/tags/pci-passthrough/
 https://www.zenwen.eu.org/tags/virtual-machine/

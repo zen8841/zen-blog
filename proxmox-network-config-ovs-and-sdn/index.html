@@ -1,0 +1,1089 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-TW" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/icon.png">
+  <link rel="icon" href="/assets/icon.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Zen Wen">
+  <meta name="keywords" content="linux network computer">
+  
+    <meta name="description" content="分享設定OVS和SDN的過程中的理解">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Proxmox Network： OVS 與 SDN">
+<meta property="og:url" content="https://www.zenwen.eu.org/proxmox-network-config-ovs-and-sdn/index.html">
+<meta property="og:site_name" content="Zen&#39;s Blog">
+<meta property="og:description" content="分享設定OVS和SDN的過程中的理解">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://www.zenwen.eu.org/proxmox-network-config-ovs-and-sdn/ovs_interface.png">
+<meta property="og:image" content="https://www.zenwen.eu.org/proxmox-network-config-ovs-and-sdn/ovs_bridge.png">
+<meta property="og:image" content="https://www.zenwen.eu.org/proxmox-network-config-ovs-and-sdn/ovs_port_1.png">
+<meta property="og:image" content="https://www.zenwen.eu.org/proxmox-network-config-ovs-and-sdn/ovs_port_2.png">
+<meta property="og:image" content="https://www.zenwen.eu.org/proxmox-network-config-ovs-and-sdn/ovs_port_3.png">
+<meta property="og:image" content="https://www.zenwen.eu.org/proxmox-network-config-ovs-and-sdn/ovs_vlan.png">
+<meta property="og:image" content="https://www.zenwen.eu.org/proxmox-network-config-ovs-and-sdn/ovs_bond_structure.png">
+<meta property="og:image" content="https://www.zenwen.eu.org/proxmox-network-config-ovs-and-sdn/ovs_bond_interface.png">
+<meta property="og:image" content="https://www.zenwen.eu.org/proxmox-network-config-ovs-and-sdn/ovs_bond_bridge.png">
+<meta property="og:image" content="https://www.zenwen.eu.org/proxmox-network-config-ovs-and-sdn/ovs_bond.png">
+<meta property="og:image" content="https://www.zenwen.eu.org/proxmox-network-config-ovs-and-sdn/sdn_type.png">
+<meta property="og:image" content="https://www.zenwen.eu.org/proxmox-network-config-ovs-and-sdn/sdn_vlan_zone.png">
+<meta property="og:image" content="https://www.zenwen.eu.org/proxmox-network-config-ovs-and-sdn/sdn_vnets.png">
+<meta property="og:image" content="https://www.zenwen.eu.org/proxmox-network-config-ovs-and-sdn/sdn_vnet.png">
+<meta property="og:image" content="https://www.zenwen.eu.org/proxmox-network-config-ovs-and-sdn/sdn_vm.png">
+<meta property="article:published_time" content="2024-12-16T13:36:51.000Z">
+<meta property="article:modified_time" content="2024-12-16T13:36:51.000Z">
+<meta property="article:author" content="Zen Wen">
+<meta property="article:tag" content="network">
+<meta property="article:tag" content="server">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="Proxmox">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.zenwen.eu.org/proxmox-network-config-ovs-and-sdn/ovs_interface.png">
+  
+  
+  
+  <title>Proxmox Network： OVS 與 SDN - Zen&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.zenwen.eu.org","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"|","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+  <script>
+    var titleTime;
+    var OriginTitile = document.title;
+    document.addEventListener('visibilitychange', function() {
+      if (document.hidden) {
+        document.title = '|ω·) 喵~快回來呀！';
+        clearTimeout(titleTime);
+      } else {
+        document.title = '(/≧▽≦)/ Meow！';
+        titleTime = setTimeout(function() {
+          document.title = OriginTitile;
+        }, 800);
+      }
+    });
+  </script>
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "nvapckx4pu");
+  </script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7CFKVVXFVL"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-7CFKVVXFVL');
+  </script>
+  <script defer src="https://vercount.one/js"></script>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Zen's Blog" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="Zen's Blog" type="application/rss+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Zen&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首頁</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>歸檔</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分類</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>標籤</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>關於</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>連結</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-rss"></i>
+                <span>RSS</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/atom.xml" target="_self">
+                    
+                    <span>Atom</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/rss2.xml" target="_self">
+                    
+                    <span>RSS2</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/assets/banner.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Proxmox Network： OVS 與 SDN"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-12-16 21:36" pubdate>
+          2024年12月16日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          856 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          8 分鐘
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-right: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="教程"
+        id="heading-b7824d5cd41d06de995a661879fefd3d" role="tab" data-toggle="collapse" href="#collapse-b7824d5cd41d06de995a661879fefd3d"
+        aria-expanded="true"
+      >
+        教程
+        <span class="list-group-count">(19)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-b7824d5cd41d06de995a661879fefd3d"
+           role="tabpanel" aria-labelledby="heading-b7824d5cd41d06de995a661879fefd3d">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/gre-over-ipsec-between-edgeos-and-routeros/" title="在EdgeOS和RouterOS之間建立GRE over IPsec tunnel"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">在EdgeOS和RouterOS之間建立GRE over IPsec tunnel</span>
+        </a>
+      
+    
+      
+      
+        <a href="/doh-dot-networkmanager-and-systemd-resolved/" title="DoH、DoT、Networkmanager與systemd-resolved的設定"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">DoH、DoT、Networkmanager與systemd-resolved的設定</span>
+        </a>
+      
+    
+      
+      
+        <a href="/docker-compose-file-limit-resource/" title="如何在docker compose file中限制系統資源的使用"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">如何在docker compose file中限制系統資源的使用</span>
+        </a>
+      
+    
+      
+      
+        <a href="/hexo-customization/" title="Hexo的個人化設定"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Hexo的個人化設定</span>
+        </a>
+      
+    
+      
+      
+        <a href="/vyos-quick-setup/" title="VyOS快速設定"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">VyOS快速設定</span>
+        </a>
+      
+    
+      
+      
+        <a href="/turning-linux-into-a-router/" title="配置linux做為router"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">配置linux做為router</span>
+        </a>
+      
+    
+      
+      
+        <a href="/wordpress-with-LNMP-environment/" title="使用LNMP環境搭建WordPress網站"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">使用LNMP環境搭建WordPress網站</span>
+        </a>
+      
+    
+      
+      
+        <a href="/create-wireguard-site-to-site-tunnel/" title="使用Wireguard建立Site to Site Tunnel"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">使用Wireguard建立Site to Site Tunnel</span>
+        </a>
+      
+    
+      
+      
+        <a href="/using-openssl-to-create-ca-on-linux/" title="使用openssl在linux上建立CA"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">使用openssl在linux上建立CA</span>
+        </a>
+      
+    
+      
+      
+        <a href="/linux-qos-with-tc-and-nft/" title="使用nftables和tc在linux上實現QoS"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">使用nftables和tc在linux上實現QoS</span>
+        </a>
+      
+    
+      
+      
+        <a href="/pci-passthrough-with-proxmox/" title="在Proxmox上進行PCI-E直通"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">在Proxmox上進行PCI-E直通</span>
+        </a>
+      
+    
+      
+      
+        <a href="/how-to-use-jnlp-kvm/" title="如何打開jnlp格式的kvm console"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">如何打開jnlp格式的kvm console</span>
+        </a>
+      
+    
+      
+      
+        <a href="/how-to-print-and-scan-over-network/" title="如何透過網路列印和掃描"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">如何透過網路列印和掃描</span>
+        </a>
+      
+    
+      
+      
+        <a href="/how-to-create-proxmox-package-repository-mirror/" title="如何建立Proxmox的鏡像站"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">如何建立Proxmox的鏡像站</span>
+        </a>
+      
+    
+      
+      
+        <a href="/proxmox-network-config-ovs-and-sdn/" title="Proxmox Network： OVS 與 SDN"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">Proxmox Network： OVS 與 SDN</span>
+        </a>
+      
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="疑難雜症"
+        id="heading-e2411166d77f023169f0978db441925c" role="tab" data-toggle="collapse" href="#collapse-e2411166d77f023169f0978db441925c"
+        aria-expanded="false"
+      >
+        疑難雜症
+        <span class="list-group-count">(4)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse " id="collapse-e2411166d77f023169f0978db441925c"
+           role="tabpanel" aria-labelledby="heading-e2411166d77f023169f0978db441925c">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/asus-x99-code-00/" title="Asus X99 通病"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Asus X99 通病</span>
+        </a>
+      
+    
+      
+      
+        <a href="/cloudflare-infinite-301-redirection/" title="Cloudflare Proxy 無限301轉址"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Cloudflare Proxy 無限301轉址</span>
+        </a>
+      
+    
+      
+      
+        <a href="/e1000e-detected-hardware-unit-hang/" title="I218-V、I219-V系列網卡在Linux下突然關閉的解法"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">I218-V、I219-V系列網卡在Linux下突然關閉的解法</span>
+        </a>
+      
+    
+      
+      
+        <a href="/wireguard-persistent-keepalive/" title="Wireguard的keepalive設定"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Wireguard的keepalive設定</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Proxmox Network： OVS 與 SDN</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="前言">前言</h1>
+<p>這篇算是整理我設定CCNS的PVE集群的一些經驗，還有對於OVS與SDN的理解</p>
+<h1 id="OVS">OVS</h1>
+<p>Open vSwitch我記得是在PVE v6還是v7的時候加入的，如果對於vmbr的需求只有傻瓜交換機的功能，那麼使用OVS和Linux Bridge體驗是相同的，不過如果有使用到vlan的功能，那麼我覺得OVS的設定比較容易理解，架構類似於一台交換機，不需要去處理Linux Bridge的vlan-aware之類的選項。</p>
+<p>有關OVS的概念，我是從這篇文章中參考的，有興趣可以查看( <a target="_blank" rel="noopener" href="https://www.cnblogs.com/varden/p/15206928.html">Proxmox VE + Ceph 超融合项目实战（第五部分：虚拟网络） - Varden - 博客园</a><sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span class="hint--top hint--rounded" aria-label="[Proxmox VE + Ceph 超融合项目实战（第五部分：虚拟网络） - Varden - 博客园](https://www.cnblogs.com/varden/p/15206928.html)">[1]</span></a></sup> )</p>
+<p>OVS創建一個vmbr可以理解為建立一個交換機，將一個網口加入OVS Bridge中相當於給這個交換機加上一個網路接口，而原本的接口變為OVS Port。</p>
+<div class="group-image-container"><div class="group-image-row"><div class="group-image-wrap"><img src="ovs_interface.png" srcset="/img/loading.gif" lazyload alt=""></div><div class="group-image-wrap"><img src="ovs_bridge.png" srcset="/img/loading.gif" lazyload alt=""></div></div></div>
+<p>如果OVS Port沒有設定vlan，則這個接口相當於以下的設定，在OVS Bridge沒有vlan，作為傻瓜交換機時，就是一個Port，當OVS Bridge內有vlan時，OVS Port則是相當於trunk port，可以直接和其他交換機的trunk互連互通，也可設定trunk vlan filter，只允許特定vlan。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs CISCO">!<br>interface GigabitEthernet1/0/1<br> switchport trunk native vlan 1<br> switchport trunk encapsulation dot1q<br> switchport mode trunk<br>!<br></code></pre></td></tr></table></figure>
+<div class="group-image-container"><div class="group-image-row"><div class="group-image-wrap"><img src="ovs_port_1.png" srcset="/img/loading.gif" lazyload alt=""></div><div class="group-image-wrap"><img src="ovs_port_2.png" srcset="/img/loading.gif" lazyload alt=""></div></div></div>
+<p>如果OVS Port設定了vlan tag，則接口相當於以下的設定，作為交換機的access port，也可直接接入其他無vlan的交換機。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs CISCO">!<br>interface GigabitEthernet1/0/1<br> switchport access vlan 100<br> switchport mode access<br>!<br></code></pre></td></tr></table></figure>
+<p><img src="ovs_port_3.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<p>除了實體的OVS Port，還可以建立虛擬的OVS IntPort，相當於在主機上建立了一個虛擬的網卡，並且連接到OVS Bridge上，以下就是相當於連接到OVS Bridge vlan 100的access port。</p>
+<p><img src="ovs_vlan.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<p>以上就是OVS Bridge的基本設定</p>
+<h2 id="OVS-Bond">OVS Bond</h2>
+<p>OVS 同樣也可以使用Bond，但是不能與Linux Bond混用，需要使用OVS Bond建立，結構類似於這樣，OVS Bond類似於OVS Port</p>
+<p><img src="ovs_bond_structure.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<p>機器有的網路介面如下，目標是將四個網路介面聚合</p>
+<p><img src="ovs_bond_interface.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<p>首先需要先建立一個空的OVS Bridge</p>
+<p><img src="ovs_bond_bridge.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<p>接著建立OVS Bond，選擇剛建立的OVS Bridge，可以在OVS options的地方加上<code>other_config:lacp-time=fast</code></p>
+<p><img src="ovs_bond.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<p>剩下的建立OVS IntPort與前面方法相同</p>
+<hr>
+<p>另一側連接的交換機可以這樣設定來達成鏈路聚合，假設eno1~4分別連接到GigabitEthernet1/0/1 - 4</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs CISCO">!<br>interface Port-channel1<br> switchport trunk encapsulation dot1q<br> switchport mode trunk<br>!<br>interface GigabitEthernet1/0/1<br> switchport trunk encapsulation dot1q<br> switchport mode trunk<br> channel-group 1 mode active<br> lacp rate fast<br>!<br>interface GigabitEthernet1/0/2<br> switchport trunk encapsulation dot1q<br> switchport mode trunk<br> channel-group 1 mode active<br> lacp rate fast<br>!<br>interface GigabitEthernet1/0/3<br> switchport trunk encapsulation dot1q<br> switchport mode trunk<br> channel-group 1 mode active<br> lacp rate fast<br>!<br>interface GigabitEthernet1/0/4<br> switchport trunk encapsulation dot1q<br> switchport mode trunk<br> channel-group 1 mode active<br> lacp rate fast<br>!<br></code></pre></td></tr></table></figure>
+<p>這樣就可以成功的與OVS Bond達成LACP的鏈路聚合</p>
+<h1 id="SDN">SDN</h1>
+<p>SDN (Software-Defined Networkin)，中文為軟體定義網路，我使用他最大的原因是方便在PVE中對網路進行權限管理，可以細分每個vlan誰能使用，也能將vlan變為VNet，用戶就不用記憶vlan的數字是哪個，只要從VNet的名字判斷就可以了<br>
+可以在Datacenter的選單下找到SDN，首先需要建立Zone<br>
+Proxmox的SDN Zone type有這幾種，一般的使用者應該都是使用VLAN即可，設定如下，Bridge為每個節點上使用vmbr的名字</p>
+<div class="group-image-container"><div class="group-image-row"><div class="group-image-wrap"><img src="sdn_type.png" srcset="/img/loading.gif" lazyload alt=""></div><div class="group-image-wrap"><img src="sdn_vlan_zone.png" srcset="/img/loading.gif" lazyload alt=""></div></div></div>
+<p>接著新增VNet，這些VNet就是可以被虛擬機選擇的網路，設定好vlan tag後，機器直接選擇VNet就相當於直接接入Bridge的access port，不用再次填寫vlan tag，注意名字最長只能有8個字元</p>
+<div class="group-image-container"><div class="group-image-row"><div class="group-image-wrap"><img src="sdn_vnets.png" srcset="/img/loading.gif" lazyload alt=""></div><div class="group-image-wrap"><img src="sdn_vnet.png" srcset="/img/loading.gif" lazyload alt=""></div></div></div>
+<p>接著就可以直接在vm中使用這個VNet了，還可以針對每個VNet設定權限，像是目前就只看得到General，因為其他VNet的權限對此用戶關閉了</p>
+<p><img src="sdn_vm.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<h2 id="參考">參考</h2>
+<section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://www.cnblogs.com/varden/p/15206928.html">Proxmox VE + Ceph 超融合项目实战（第五部分：虚拟网络） - Varden - 博客园</a>
+<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://pve.proxmox.com/wiki/Open_vSwitch">Open vSwitch - Proxmox VE</a>
+<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:3" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://syslynx.net/proxmox-open-vswitch-lacp-vlans/">Configuring Proxmox VE 8 with an Open vSwitch LACP Bond and VLAN-aware Bridge for easy VLAN assignment</a>
+<a href="#fnref:3" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:4" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://www.jannet.hk/etherchannel-pagp-lacp-zh-hant/">EtherChannel PAgP LACP 以太通道 - Jan Ho 的網絡世界</a>
+<a href="#fnref:4" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:5" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://www.hwchiu.com/docs/2015/openvswitch-bonding">Understanding the OpenvSwitch Bonding | hwchiu learning note</a>
+<a href="#fnref:5" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%95%99%E7%A8%8B/" class="category-chain-item">教程</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/network/" class="print-no-link">#network</a>
+      
+        <a href="/tags/server/" class="print-no-link">#server</a>
+      
+        <a href="/tags/linux/" class="print-no-link">#linux</a>
+      
+        <a href="/tags/Proxmox/" class="print-no-link">#Proxmox</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Proxmox Network： OVS 與 SDN</div>
+      <div>https://www.zenwen.eu.org/proxmox-network-config-ovs-and-sdn/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Zen Wen</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>發布於</div>
+          <div>2024年12月16日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>許可協議</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="SA - 相同方式共享">
+                    <i class="iconfont icon-cc-sa"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/how-to-create-proxmox-package-repository-mirror/" title="如何建立Proxmox的鏡像站">
+                        <span class="hidden-mobile">如何建立Proxmox的鏡像站</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+    <div id="giscus" class="giscus"></div>
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#giscus', function() {
+        var options = {"repo":"zen8841/zen-blog","repo-id":"R_kgDOLf1xXw","category":"Announcements","category-id":"DIC_kwDOLf1xX84CkjqQ","theme-light":"light","theme-dark":"dark","mapping":"pathname","reactions-enabled":1,"emit-metadata":1,"input-position":"top","lang":"zh-TW"};
+        var attributes = {};
+        for (let option in options) {
+          if (!option.startsWith('theme-')) {
+            var key = option.startsWith('data-') ? option : 'data-' + option;
+            attributes[key] = options[option];
+          }
+        }
+        var light = 'light';
+        var dark = 'dark';
+        window.GiscusThemeLight = light;
+        window.GiscusThemeDark = dark;
+        attributes['data-theme'] = document.documentElement.getAttribute('data-user-color-scheme') === 'dark' ? dark : light;
+        for (let attribute in attributes) {
+          var value = attributes[attribute];
+          if (value === undefined || value === null || value === '') {
+            delete attributes[attribute];
+          }
+        }
+        var s = document.createElement('script');
+        s.setAttribute('src', 'https://giscus.app/client.js');
+        s.setAttribute('crossorigin', 'anonymous');
+        for (let attribute in attributes) {
+          s.setAttribute(attribute, attributes[attribute]);
+        }
+        var ss = document.getElementsByTagName('script');
+        var e = ss.length > 0 ? ss[ss.length - 1] : document.head || document.documentElement;
+        e.parentNode.insertBefore(s, e.nextSibling);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目錄</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜尋</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">關鍵字</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Power By Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Theme：Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允許 JavaScript 運行的環境下瀏覽效果更佳</div>
+  </noscript>
+</body>
+</html>

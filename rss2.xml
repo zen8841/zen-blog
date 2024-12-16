@@ -15,8 +15,35 @@
     <atom:link href="https://www.zenwen.eu.org/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>簡單記錄一下折騰的內容，可能還會發發感想？</description>
-    <pubDate>Sat, 23 Nov 2024 19:47:10 GMT</pubDate>
+    <pubDate>Mon, 16 Dec 2024 13:36:51 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>Proxmox Network： OVS 與 SDN</title>
+      <link>https://www.zenwen.eu.org/proxmox-network-config-ovs-and-sdn/</link>
+      <guid>https://www.zenwen.eu.org/proxmox-network-config-ovs-and-sdn/</guid>
+      <pubDate>Mon, 16 Dec 2024 13:36:51 GMT</pubDate>
+      
+      <description>分享設定OVS和SDN的過程中的理解</description>
+      
+      
+      
+      
+      <category domain="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/">教程</category>
+      
+      
+      <category domain="https://www.zenwen.eu.org/tags/network/">network</category>
+      
+      <category domain="https://www.zenwen.eu.org/tags/server/">server</category>
+      
+      <category domain="https://www.zenwen.eu.org/tags/linux/">linux</category>
+      
+      <category domain="https://www.zenwen.eu.org/tags/Proxmox/">Proxmox</category>
+      
+      
+      <comments>https://www.zenwen.eu.org/proxmox-network-config-ovs-and-sdn/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>如何建立Proxmox的鏡像站</title>

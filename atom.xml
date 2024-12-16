@@ -6,7 +6,7 @@
   <link href="https://www.zenwen.eu.org/atom.xml" rel="self"/>
   
   <link href="https://www.zenwen.eu.org/"/>
-  <updated>2024-11-23T19:47:10.000Z</updated>
+  <updated>2024-12-16T13:36:51.000Z</updated>
   <id>https://www.zenwen.eu.org/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Proxmox Network： OVS 與 SDN</title>
+    <link href="https://www.zenwen.eu.org/proxmox-network-config-ovs-and-sdn/"/>
+    <id>https://www.zenwen.eu.org/proxmox-network-config-ovs-and-sdn/</id>
+    <published>2024-12-16T13:36:51.000Z</published>
+    <updated>2024-12-16T13:36:51.000Z</updated>
+    
+    
+    <summary type="html">分享設定OVS和SDN的過程中的理解</summary>
+    
+    
+    
+    <category term="教程" scheme="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/"/>
+    
+    
+    <category term="network" scheme="https://www.zenwen.eu.org/tags/network/"/>
+    
+    <category term="server" scheme="https://www.zenwen.eu.org/tags/server/"/>
+    
+    <category term="linux" scheme="https://www.zenwen.eu.org/tags/linux/"/>
+    
+    <category term="Proxmox" scheme="https://www.zenwen.eu.org/tags/Proxmox/"/>
+    
+  </entry>
   
   <entry>
     <title>如何建立Proxmox的鏡像站</title>

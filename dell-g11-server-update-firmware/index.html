@@ -21,26 +21,23 @@
   <meta name="author" content="Zen Wen">
   <meta name="keywords" content="linux network computer">
   
-    <meta name="description" content="分享有關最近調整DNS設定的一些經驗">
+    <meta name="description" content="記錄更新R710韌體的採坑過程">
 <meta property="og:type" content="article">
-<meta property="og:title" content="DoH、DoT、Networkmanager與systemd-resolved的設定">
-<meta property="og:url" content="https://www.zenwen.eu.org/doh-dot-networkmanager-and-systemd-resolved/index.html">
+<meta property="og:title" content="DELL 11代伺服器韌體更新採坑記錄">
+<meta property="og:url" content="https://www.zenwen.eu.org/dell-g11-server-update-firmware/index.html">
 <meta property="og:site_name" content="Zen&#39;s Blog">
-<meta property="og:description" content="分享有關最近調整DNS設定的一些經驗">
+<meta property="og:description" content="記錄更新R710韌體的採坑過程">
 <meta property="og:locale" content="zh_TW">
-<meta property="og:image" content="https://www.zenwen.eu.org/doh-dot-networkmanager-and-systemd-resolved/networkmanager_ipv4_setting.png">
-<meta property="article:published_time" content="2024-05-17T03:47:27.000Z">
-<meta property="article:modified_time" content="2024-06-09T14:24:00.000Z">
+<meta property="article:published_time" content="2024-12-17T15:59:54.000Z">
+<meta property="article:modified_time" content="2024-12-17T15:59:54.000Z">
 <meta property="article:author" content="Zen Wen">
-<meta property="article:tag" content="network">
-<meta property="article:tag" content="linux">
-<meta property="article:tag" content="dns">
+<meta property="article:tag" content="server">
+<meta property="article:tag" content="3C硬體">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://www.zenwen.eu.org/doh-dot-networkmanager-and-systemd-resolved/networkmanager_ipv4_setting.png">
   
   
   
-  <title>DoH、DoT、Networkmanager與systemd-resolved的設定 - Zen&#39;s Blog</title>
+  <title>DELL 11代伺服器韌體更新採坑記錄 - Zen&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" />
 
@@ -287,7 +284,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="DoH、DoT、Networkmanager與systemd-resolved的設定"></span>
+            <span id="subtitle" data-typed-text="DELL 11代伺服器韌體更新採坑記錄"></span>
           
         </div>
 
@@ -298,8 +295,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-05-17 11:47" pubdate>
-          2024年5月17日 中午
+        <time datetime="2024-12-17 23:59" pubdate>
+          2024年12月17日 晚上
         </time>
       </span>
     
@@ -310,7 +307,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.8k 字
+          519 字
         
       </span>
     
@@ -321,7 +318,7 @@
         
         
         
-          16 分鐘
+          5 分鐘
         
       </span>
     
@@ -397,7 +394,7 @@
       
         <a href="/doh-dot-networkmanager-and-systemd-resolved/" title="DoH、DoT、Networkmanager與systemd-resolved的設定"
            class="list-group-item list-group-item-action
-           active">
+           ">
           <span class="category-post">DoH、DoT、Networkmanager與systemd-resolved的設定</span>
         </a>
       
@@ -527,17 +524,17 @@
     
     
     <div class="category-sub row nomargin-x">
-      <a class="category-subitem collapsed
+      <a class="category-subitem 
           list-group-item category-item-action col-10 col-md-11 col-xm-11" title="疑難雜症"
         id="heading-e2411166d77f023169f0978db441925c" role="tab" data-toggle="collapse" href="#collapse-e2411166d77f023169f0978db441925c"
-        aria-expanded="false"
+        aria-expanded="true"
       >
         疑難雜症
         <span class="list-group-count">(5)</span>
         <i class="iconfont icon-arrowright"></i>
       </a>
       
-      <div class="category-collapse collapse " id="collapse-e2411166d77f023169f0978db441925c"
+      <div class="category-collapse collapse show" id="collapse-e2411166d77f023169f0978db441925c"
            role="tabpanel" aria-labelledby="heading-e2411166d77f023169f0978db441925c">
         
         
@@ -585,7 +582,7 @@
       
         <a href="/dell-g11-server-update-firmware/" title="DELL 11代伺服器韌體更新採坑記錄"
            class="list-group-item list-group-item-action
-           ">
+           active">
           <span class="category-post">DELL 11代伺服器韌體更新採坑記錄</span>
         </a>
       
@@ -612,98 +609,22 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">DoH、DoT、Networkmanager與systemd-resolved的設定</h1>
-            
-              <p id="updated-time" class="note note-info" style="">
-                
-                  
-                    本文最後更新於：2024年6月9日 晚上
-                  
-                
-              </p>
+            <h1 id="seo-header">DELL 11代伺服器韌體更新採坑記錄</h1>
             
             
               <div class="markdown-body">
                 
-                <div class="note note-info">
-            <p>2024/6/9更新： 有關Networkmanager的自動化腳本</p>
-          </div>
-<h1 id="前言">前言</h1>
-<p>一開始只是想給在用的筆電加上DNS over HTTPS或是DNS over Tls而已，後來又逐漸冒出很多奇怪(?)的需求，因此稍微研究了一下linux 上的DNS管理機制。</p>
-<h1 id="需求">需求</h1>
-<p>首先是DNS使用DNS over HTTPS/DNS over Tls，但是在特定的網路連接下會自動切換成對應的DNS，忽略不信任網路下DHCP提供的DNS。</p>
-<h1 id="實現">實現</h1>
-<h2 id="DNS-over-HTTPS-sup-id-fnref-1-class-footnote-ref-a-href-fn-1-rel-footnote-span-class-hint-top-hint-rounded-aria-label-DNS-over-HTTPS-ArchWiki-https-wiki-archlinux-org-title-DNS-over-HTTPS-1-span-a-sup">DNS over HTTPS<sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span class="hint--top hint--rounded" aria-label="[DNS-over-HTTPS - ArchWiki](https://wiki.archlinux.org/title/DNS-over-HTTPS)">[1]</span></a></sup></h2>
-<p>這個算是最簡單的一項了，基本只要照著ArchWiki的操作執行就好</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-comment"># 確認沒有端口使用localhost:53</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">ss -lp <span class="hljs-string">&#x27;sport = :domain&#x27;</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-comment"># 安裝dns-over-https</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">pacman -S dns-over-https</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-comment"># 啟動dns-over-https服務</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">systemctl <span class="hljs-built_in">enable</span> --now doh-client.service</span><br></code></pre></td></tr></table></figure>
-<p>設定檔在<code>/etc/dns-over-https/doh-client.conf</code>但是基本不用更改，預設的DoH server就是Cloudflare的</p>
-<p>接著只要將DNS server改成<code>127.0.0.1</code>就完成DNS over HTTPS的設定了</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&#x27;nameserver 127.0.0.1&#x27;</span> &gt; /etc/resolv.conf</span><br></code></pre></td></tr></table></figure>
-<h2 id="Network-manager">Network manager</h2>
-<p>但是這樣就會出現一個問題，Network manager在連上一個新的網路時，如果IP是設定使用DHCP，而非DHCP(Address only)或是其他選項的話，啟動連接時將會將新的nameserver寫入<code>/etc/resolv.conf</code>覆蓋。</p>
-<p><img src="networkmanager_ipv4_setting.png" srcset="/img/loading.gif" lazyload alt=""></p>
-<p>不過在查看<code>NetworkManager.conf(5)</code>後可以發現，Network manager只會在<code>/etc/NetworkManager/NetworkManager.conf</code>中沒有設定<code>dns</code>這個選項或是設定成<code>dns=default</code>時且<code>/etc/resolv.conf</code>為一般的文件而非連結檔，才會修改<code>/etc/resolv.conf</code>。</p>
-<p>讀到這裡，其實就可以知道怎麼解決問題了</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&#x27;nameserver 127.0.0.1&#x27;</span> &gt; /etc/resolv-manual.conf</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-built_in">ln</span> -sf /etc/resolv-manual.conf /etc/resolv.conf</span><br></code></pre></td></tr></table></figure>
-<p><s>當然你也可以用<code>chattr</code>給<code>/etc/resolv.conf</code>指定不可寫入的屬性，不過這樣設定就有點僵硬了</s></p>
-
-    <div class="fold">
-      <div class="fold-title fold-default collapsed" data-toggle="collapse" href="#collapse-9fb3859f" role="button" aria-expanded="false" aria-controls="collapse-9fb3859f">
-        <div class="fold-arrow">▶</div>Network manager的一些其他行為
-      </div>
-      <div class="fold-collapse collapse" id="collapse-9fb3859f">
-        <div class="fold-content">
-          <p>如果<code>dns</code>選項沒有指定值的話，那麼預設是會使用<code>default</code>，除非<code>/etc/resolv.conf</code>是個連結到</p><p><code>/run/systemd/resolve/stub-resolv.conf, /run/systemd/resolve/resolv.conf, /lib/systemd/resolv.conf, /usr/lib/systemd/resolv.conf</code>的連結檔，這時<code>dns</code>選項會使用<code>systemd-resolved</code>，如果<code>/etc/resolv.conf</code>是個連結到其他地方的連接檔，那麼則是會使用<code>dns=none</code></p>
-        </div>
-      </div>
-    </div>
-<h2 id="systemd-resolved-sup-id-fnref-2-class-footnote-ref-a-href-fn-2-rel-footnote-span-class-hint-top-hint-rounded-aria-label-systemd-resolved-ArchWiki-https-wiki-archlinux-org-title-Systemd-resolved-DNS-over-TLS-2-span-a-sup">systemd-resolved<sup id="fnref:2" class="footnote-ref"><a href="#fn:2" rel="footnote"><span class="hint--top hint--rounded" aria-label="[systemd-resolved - ArchWiki](https://wiki.archlinux.org/title/Systemd-resolved#DNS_over_TLS)">[2]</span></a></sup></h2>
-<p>不過這樣設定的話就會造成一個問題，雖然連接的網路是什麼不會影響DNS server的選擇了，但也永遠釘死在<code>127.0.0.1</code>的DNS over HTTPS上，除非手動修改，但是需求之一就是Network manager在切換連接時可以自動修改DNS，而非每次都要手動修改。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-comment"># 開啟systemd-resolved，會與resolvconf衝突</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">systemctl <span class="hljs-built_in">enable</span> --now systemd-resolved</span><br></code></pre></td></tr></table></figure>
-<p>systemd-resolved會提供部分<code>resolvconf</code>的功能，同時，啟用後會提供<code>resolvectl</code>。</p>
-<p>在啟用服務後會在<code>127.0.0.53</code>和<code>127.0.0.54</code>上開啟DNS服務，當訪問systemd-resolved的DNS server時，則是會使用在<code>/etc/systemd/resolved.conf</code>設定的DNS服務器和自身緩存做解析。</p>
-
-    <div class="fold">
-      <div class="fold-title fold-default collapsed" data-toggle="collapse" href="#collapse-dc5be6dc" role="button" aria-expanded="false" aria-controls="collapse-dc5be6dc">
-        <div class="fold-arrow">▶</div>systemd-resolved的四種模式
-      </div>
-      <div class="fold-collapse collapse" id="collapse-dc5be6dc">
-        <div class="fold-content">
-          <p>systemd-resolved有四種模式stub、static、uplink、foreign，這取決於<code>/etc/resolv.conf</code>的狀態</p><p>如果<code>/etc/resolv.conf</code>是連結到<code>/run/systemd/resolve/stub-resolv.conf</code>，那麼systemd-resolved就會是stub模式</p><p>如果<code>/etc/resolv.conf</code>是連結到<code>/lib/systemd/resolv.conf, /usr/lib/systemd/resolv.conf</code>，那麼systemd-resolved就會是static模式</p><p>如果<code>/etc/resolv.conf</code>是連結到<code>/run/systemd/resolve/stub-resolv.conf</code>，那麼systemd-resolved就會是uplink模式</p><p>如果<code>/etc/resolv.conf</code>是一般檔案或是連接到其他地方，那麼systemd-resolved就會是foreign模式</p><p>這些檔案的內容有興趣可以去翻翻看，不過推薦是使用stub模式</p>
-        </div>
-      </div>
-    </div>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-comment"># 使用stub模式</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-built_in">ln</span> -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf</span><br></code></pre></td></tr></table></figure>
-<p>這個時候使用<code>resolvectl status</code>就可以看到在stub模式了</p>
-<p>這樣目前的設定就是<code>/etc/resolv.conf</code> -&gt; <code>/run/systemd/resolve/stub-resolv.conf</code>，內容應該是<code>nameserver 127.0.0.53</code>然後底下有一些其他選項。</p>
-<p>systemd-resolved會根據DNS Domain決定DNS request要往哪個DNS server詢問，如果沒有設定DNS Domain則是使用預設，也就是<code>/etc/systemd/resolved.conf</code>裡設定的</p>
-<p>這樣只要在Network Manager設定DNS Domain為<code>~.</code>或是想要解析的內部域名，在連上網路時會反映到systemd-resolved上，就可以使用特定的DNS了</p>
-<h3 id="設定">設定</h3>
-<p>修改<code>/etc/systemd/resolved.conf</code>設定檔</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs conf">[Resolve]<br># 上游使用前面設定的DoH server<br>DNS=127.0.0.1<br></code></pre></td></tr></table></figure>
-<p>目前系統訪問DNS的實際流程就會是 <code>/etc/resolv.conf</code> -&gt; <code>127.0.0.53:53</code> -&gt; <code>127.0.0.1:53</code> -&gt; <code>https://cloudflare-dns.com/dns-query</code>，但是這樣感覺有點太複雜了，如果只是想要加密DNS，那麼DoT也可達成，而且systemd-resolved支援DoT。</p>
-<h2 id="DNS-over-Tls-sup-id-fnref-2-class-footnote-ref-a-href-fn-2-rel-footnote-span-class-hint-top-hint-rounded-aria-label-systemd-resolved-ArchWiki-https-wiki-archlinux-org-title-Systemd-resolved-DNS-over-TLS-2-span-a-sup">DNS over Tls<sup id="fnref:2" class="footnote-ref"><a href="#fn:2" rel="footnote"><span class="hint--top hint--rounded" aria-label="[systemd-resolved - ArchWiki](https://wiki.archlinux.org/title/Systemd-resolved#DNS_over_TLS)">[2]</span></a></sup></h2>
-<p>只需要修改<code>/etc/systemd/resolved.conf</code>即可完成</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs conf">[Resolve]<br># 使用Cloudflare的DNS<br>DNS=1.1.1.1<br># 如果DNSOverTLS設定為on的話，如果你想使用的其他DNS不支援DoT，那麼systemd-resolved將不會發出詢問<br># 使用opportunistic則是會在上游支援時使用，如果不支援則使用原本模式<br>DNSOverTLS=opportunistic<br></code></pre></td></tr></table></figure>
-<p>那麼系統訪問DNS的實際流程就會變為 <code>/etc/resolv.conf</code> -&gt; <code>127.0.0.53:53</code> -&gt; <code>1.1.1.1:853</code>，減少了一個流程，結構變得簡單不少</p>
-<h2 id="Networkmanager-的自動化腳本">Networkmanager 的自動化腳本</h2>
-<p>前面有提到設定DNS domain為<code>~.</code>可以讓網路介面的DNS server成為全域DNS，但是在接上VPN時，不知道為什麼systemd-resolve會不吃DNS domain設定為<code>~.</code>的網路介面的資訊，<code>resolvectl</code>直接顯示這個介面沒有DNS資訊。</p>
-<p>於是我就換了一種方法來實現，介面的DNS domain可以設定為其他值，或不設定，而是在啟動任何介面時檢查我想要更改DNS domain的介面是否開啟，如果開啟就直接調用<code>resolvectl</code>來更改設定。</p>
-<p>設定只需要編輯一個檔案<code>/etc/NetworkManager/dispatcher.d/set_&lt;interface&gt;_dns_domain.sh</code>，並給他加上執行權限<code>chmod +x /etc/NetworkManager/dispatcher.d/set_&lt;interface&gt;_dns_domain.sh</code></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/sh</span><br><br><span class="hljs-keyword">if</span> nmcli connection show <span class="hljs-string">&quot;&lt;connection name&gt;&quot;</span> | grep <span class="hljs-string">&#x27;GENERAL.STATE&#x27;</span>; <span class="hljs-keyword">then</span><br>    <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;change &lt;interface name&gt; dns domain&quot;</span><br>    resolvectl domain &lt;interface name&gt; <span class="hljs-string">&#x27;~.&#x27;</span><br><span class="hljs-keyword">fi</span><br></code></pre></td></tr></table></figure>
-<p><code>&lt;connection name&gt;</code>為Networkmanager中連線的名字，<code>&lt;interface name&gt;</code>則是網路介面的名字。</p>
-<p>Networkmanager的自動化腳本也可以做更多其他的事，像是偵測到物理連接斷開後自動開啟無線網路<sup id="fnref:3" class="footnote-ref"><a href="#fn:3" rel="footnote"><span class="hint--top hint--rounded" aria-label="[用 NM-dispatcher 实现 WiFi 开关的自动控制 - sbw Blog](https://blog.sbw.so/u/nm-dispatcher-auto-switch-between-wifi-ethernet.html)">[3]</span></a></sup>。</p>
-<h2 id="總結">總結</h2>
-<p>其實這樣做還是會有一個漏洞，如果你不信任的DHCP server有設定DNS domain，那麼systemd-resolved一樣會吃到這個設定，解決的方法就是把Network Manager的那個網路連接設定為使用DHCP(Address only)，但是這樣就要手動設定，有點不爽。</p>
-<p>最後總結：如果你真的在一個不信任的網路環境中，那麼我還是推薦你使用VPN吧，這篇的DNS設定其實幫不了你多少忙。</p>
-<h2 id="同場加映-–-nsswitch">同場加映 – nsswitch</h2>
-<p>全名是name service switch configuration，簡單來說就是配置系統在查詢各項東西的時候要去哪裡查，像是passwd就是用戶驗證，設定為使用檔案(也就是/etc/passwd)，或者是使用systemd驗證，如果想要串LDAP之類的身分驗證，那麼就要在後面加上對應的Plugin</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs conf">passwd: files systemd<br>group: files [SUCCESS=merge] systemd<br>shadow: files systemd<br>gshadow: files systemd<br><br>publickey: files<br><br>hosts: mymachines resolve [!UNAVAIL=return] files myhostname dns<br>networks: files<br><br>protocols: files<br>services: files<br>ethers: files<br>rpc: files<br><br>netgroup: files<br></code></pre></td></tr></table></figure>
-<p>其中的<code>hosts</code>選項就是要怎麼解析domain的設定，<code>mymachines</code>是檢查內部容器或虛擬機有沒有對應的域名，resolve是systemd-resolved，除非systemd-resolved無法使用才會進入下一個選項(<code>[!UNAVAIL=return]</code>，有四種狀態，有興趣可以去看<code>nsswitch.conf(5)</code>)，files是<code>/etc/hosts</code>，myhostname是本機的hostname，最後dns就是按照<code>/etc/resolv.conf</code>的設定去查詢。</p>
+                <h1 id="前情提要">前情提要</h1>
+<p>簡單來說，前陣子在整理機房中的R710，準備重新拿來用，看到很多韌體的版本沒有更新到支援停止時的最新版本，所以就打算更新它的韌體。</p>
+<h1 id="採坑過程">採坑過程</h1>
+<p>最初是在某篇Reddit貼文底下發現了這個網站：<a target="_blank" rel="noopener" href="https://updateyodell.net/">updateyodell.net</a><sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span class="hint--top hint--rounded" aria-label="[Update Yo Dell, foo! | An FTP server with life cycle repos for G11-G14 Dell PowerEdge Servers](https://updateyodell.net/)">[1]</span></a></sup>，他備份了DELL給LifeCycle Controller使用來進行更新的Repository，DELL已經把<code>ftp.dell.com</code>上的11代伺服器更新的檔案刪除了。</p>
+<p>我直接在開機時按F10進入LifeCycle Controller，並且連接他提供的FTP準備開始進行更新，LifeCycle Controller成功讀到了檔案，並且準備好更新，但當我更新時，等它重開機完發現Raid卡的韌體更新失敗，不更新Raid卡的韌體後變成網卡的韌體更新失敗，如果不更新這兩者，只更新其他內容，雖然不報錯了，但韌體的版本也沒有成功升級。</p>
+<p>後來又在另一篇<a target="_blank" rel="noopener" href="https://www.reddit.com/r/homelab/comments/k839sb/r210ii_update_bios_and_firmware_through_lifecycle/">Reddit貼文</a><sup id="fnref:2" class="footnote-ref"><a href="#fn:2" rel="footnote"><span class="hint--top hint--rounded" aria-label="[r210ii update bios and firmware through Lifecycle Controller - Pulling my hair out : r/homelab](https://www.reddit.com/r/homelab/comments/k839sb/r210ii_update_bios_and_firmware_through_lifecycle/)">[2]</span></a></sup>中看到貼主提供他用來更新R210韌體的方法，並且他說在11代伺服器上都有用，我嘗試按照他的方式進行，使用Dell EMC Repository Manger來下載更新檔案並製作成升級的ISO，使用此ISO開機後，有看到在進行升級的進度條，但是執行完重開機後，回到LifeCycle Controller，版本還是沒有更新。</p>
+<p>最後，我找到另一個網站<a target="_blank" rel="noopener" href="https://dellupdate.t-vault.se/">dellupdate.t-vault.se</a><sup id="fnref:3" class="footnote-ref"><a href="#fn:3" rel="footnote"><span class="hint--top hint--rounded" aria-label="[T-Vault Dell Legacy – Escape the Matrix](https://dellupdate.t-vault.se/)">[3]</span></a></sup>，他一樣是使用updateyodell.net提供的FTP來進行更新，但是在更新前先將BIOS和LifeCycle Controller升級到最新，由於我的R710 BIOS已經是最新的，我直接使用他提供的SUU( Server Update Utility ) ISO進行開機，在更新完成後，LifeCycle Controller從1.3.0版本變為最新的1.7.4版本，再重新使用updateyodell.net提供的檔案進行更新，就成功了，也不再報錯，韌體在更新幾次後都來到了最新的版本，可能是舊版的LifeCycle Controller不能去執行這些太新的更新吧。</p>
 <h2 id="參考">參考</h2>
-<section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/DNS-over-HTTPS">DNS-over-HTTPS - ArchWiki</a>
-<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/Systemd-resolved#DNS_over_TLS">systemd-resolved - ArchWiki</a>
-<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:3" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://blog.sbw.so/u/nm-dispatcher-auto-switch-between-wifi-ethernet.html">用 NM-dispatcher 实现 WiFi 开关的自动控制 - sbw Blog</a>
+<section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://updateyodell.net/">Update Yo Dell, foo! | An FTP server with life cycle repos for G11-G14 Dell PowerEdge Servers</a>
+<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://www.reddit.com/r/homelab/comments/k839sb/r210ii_update_bios_and_firmware_through_lifecycle/">r210ii update bios and firmware through Lifecycle Controller - Pulling my hair out : r/homelab</a>
+<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:3" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://dellupdate.t-vault.se/">T-Vault Dell Legacy – Escape the Matrix</a>
 <a href="#fnref:3" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
                 
               </div>
@@ -725,6 +646,13 @@
   <a href="/categories/%E6%95%99%E7%A8%8B/" class="category-chain-item">教程</a>
   
   
+    <span>></span>
+    
+  <a href="/categories/%E6%95%99%E7%A8%8B/%E7%96%91%E9%9B%A3%E9%9B%9C%E7%97%87/" class="category-chain-item">疑難雜症</a>
+  
+  
+
+  
 
       </span>
     
@@ -737,11 +665,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/network/" class="print-no-link">#network</a>
+        <a href="/tags/server/" class="print-no-link">#server</a>
       
-        <a href="/tags/linux/" class="print-no-link">#linux</a>
-      
-        <a href="/tags/dns/" class="print-no-link">#dns</a>
+        <a href="/tags/3C%E7%A1%AC%E9%AB%94/" class="print-no-link">#3C硬體</a>
       
     </div>
   
@@ -753,8 +679,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>DoH、DoT、Networkmanager與systemd-resolved的設定</div>
-      <div>https://www.zenwen.eu.org/doh-dot-networkmanager-and-systemd-resolved/</div>
+      <div>DELL 11代伺服器韌體更新採坑記錄</div>
+      <div>https://www.zenwen.eu.org/dell-g11-server-update-firmware/</div>
     </div>
     <div class="license-meta">
       
@@ -766,14 +692,9 @@
       
         <div class="license-meta-item license-meta-date">
           <div>發布於</div>
-          <div>2024年5月17日</div>
+          <div>2024年12月17日</div>
         </div>
       
-      
-        <div class="license-meta-item license-meta-date">
-          <div>更新於</div>
-          <div>2024年6月9日</div>
-        </div>
       
       
         <div class="license-meta-item">
@@ -809,18 +730,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/cloudflare-infinite-301-redirection/" title="Cloudflare Proxy 無限301轉址">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Cloudflare Proxy 無限301轉址</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/asus-x99-code-00/" title="Asus X99 通病">
-                        <span class="hidden-mobile">Asus X99 通病</span>
+                      <a href="/proxmox-network-config-ovs-and-sdn/" title="Proxmox Network： OVS 與 SDN">
+                        <span class="hidden-mobile">Proxmox Network： OVS 與 SDN</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

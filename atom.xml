@@ -6,7 +6,7 @@
   <link href="https://www.zenwen.eu.org/atom.xml" rel="self"/>
   
   <link href="https://www.zenwen.eu.org/"/>
-  <updated>2024-12-16T13:36:51.000Z</updated>
+  <updated>2024-12-17T15:59:54.000Z</updated>
   <id>https://www.zenwen.eu.org/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>DELL 11代伺服器韌體更新採坑記錄</title>
+    <link href="https://www.zenwen.eu.org/dell-g11-server-update-firmware/"/>
+    <id>https://www.zenwen.eu.org/dell-g11-server-update-firmware/</id>
+    <published>2024-12-17T15:59:54.000Z</published>
+    <updated>2024-12-17T15:59:54.000Z</updated>
+    
+    
+    <summary type="html">記錄更新R710韌體的採坑過程</summary>
+    
+    
+    
+    <category term="教程" scheme="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/"/>
+    
+    <category term="疑難雜症" scheme="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/%E7%96%91%E9%9B%A3%E9%9B%9C%E7%97%87/"/>
+    
+    
+    <category term="server" scheme="https://www.zenwen.eu.org/tags/server/"/>
+    
+    <category term="3C硬體" scheme="https://www.zenwen.eu.org/tags/3C%E7%A1%AC%E9%AB%94/"/>
+    
+  </entry>
   
   <entry>
     <title>Proxmox Network： OVS 與 SDN</title>

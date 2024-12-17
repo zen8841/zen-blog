@@ -1,4 +1,5 @@
 https://www.zenwen.eu.org/about/index.html
+https://www.zenwen.eu.org/dell-g11-server-update-firmware/
 https://www.zenwen.eu.org/proxmox-network-config-ovs-and-sdn/
 https://www.zenwen.eu.org/how-to-create-proxmox-package-repository-mirror/
 https://www.zenwen.eu.org/how-to-print-and-scan-over-network/
@@ -22,9 +23,9 @@ https://www.zenwen.eu.org/asus-x99-code-00/
 https://www.zenwen.eu.org/xz-CVE-2024-3094/
 https://www.zenwen.eu.org/54th-skills39-south-area/
 https://www.zenwen.eu.org/
-https://www.zenwen.eu.org/tags/3C%E7%A1%AC%E9%AB%94/
 https://www.zenwen.eu.org/tags/network/
 https://www.zenwen.eu.org/tags/server/
+https://www.zenwen.eu.org/tags/3C%E7%A1%AC%E9%AB%94/
 https://www.zenwen.eu.org/tags/cloudflare/
 https://www.zenwen.eu.org/tags/https/
 https://www.zenwen.eu.org/tags/301-redirection/
@@ -49,7 +50,7 @@ https://www.zenwen.eu.org/tags/nginx/
 https://www.zenwen.eu.org/tags/wordpress/
 https://www.zenwen.eu.org/tags/xz/
 https://www.zenwen.eu.org/tags/CVE-2024-3094/
-https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/
 https://www.zenwen.eu.org/categories/%E6%AF%94%E8%B3%BD/
+https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/
 https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/%E7%96%91%E9%9B%A3%E9%9B%9C%E7%97%87/
 https://www.zenwen.eu.org/categories/%E8%B3%87%E5%AE%89/

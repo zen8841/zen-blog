@@ -15,8 +15,33 @@
     <atom:link href="https://www.zenwen.eu.org/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>簡單記錄一下折騰的內容，可能還會發發感想？</description>
-    <pubDate>Mon, 16 Dec 2024 13:36:51 GMT</pubDate>
+    <pubDate>Tue, 17 Dec 2024 15:59:54 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>DELL 11代伺服器韌體更新採坑記錄</title>
+      <link>https://www.zenwen.eu.org/dell-g11-server-update-firmware/</link>
+      <guid>https://www.zenwen.eu.org/dell-g11-server-update-firmware/</guid>
+      <pubDate>Tue, 17 Dec 2024 15:59:54 GMT</pubDate>
+      
+      <description>記錄更新R710韌體的採坑過程</description>
+      
+      
+      
+      
+      <category domain="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/">教程</category>
+      
+      <category domain="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/%E7%96%91%E9%9B%A3%E9%9B%9C%E7%97%87/">疑難雜症</category>
+      
+      
+      <category domain="https://www.zenwen.eu.org/tags/server/">server</category>
+      
+      <category domain="https://www.zenwen.eu.org/tags/3C%E7%A1%AC%E9%AB%94/">3C硬體</category>
+      
+      
+      <comments>https://www.zenwen.eu.org/dell-g11-server-update-firmware/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>Proxmox Network： OVS 與 SDN</title>

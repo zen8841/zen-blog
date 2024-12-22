@@ -1,0 +1,1159 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-TW" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/icon.png">
+  <link rel="icon" href="/assets/icon.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Zen Wen">
+  <meta name="keywords" content="linux network computer">
+  
+    <meta name="description" content="FreeIPA伺服器端的架設與細部設定及客戶端的安裝與連線">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FreeIPA設定與客戶端安裝過程">
+<meta property="og:url" content="https://www.zenwen.eu.org/freeipa-install-and-client-setup/index.html">
+<meta property="og:site_name" content="Zen&#39;s Blog">
+<meta property="og:description" content="FreeIPA伺服器端的架設與細部設定及客戶端的安裝與連線">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://www.zenwen.eu.org/freeipa-install-and-client-setup/login.png">
+<meta property="article:published_time" content="2024-12-22T17:40:00.000Z">
+<meta property="article:modified_time" content="2024-12-22T17:40:00.000Z">
+<meta property="article:author" content="Zen Wen">
+<meta property="article:tag" content="server">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="FreeIPA">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.zenwen.eu.org/freeipa-install-and-client-setup/login.png">
+  
+  
+  
+  <title>FreeIPA設定與客戶端安裝過程 - Zen&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.zenwen.eu.org","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"|","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+  <script>
+    var titleTime;
+    var OriginTitile = document.title;
+    document.addEventListener('visibilitychange', function() {
+      if (document.hidden) {
+        document.title = '|ω·) 喵~快回來呀！';
+        clearTimeout(titleTime);
+      } else {
+        document.title = '(/≧▽≦)/ Meow！';
+        titleTime = setTimeout(function() {
+          document.title = OriginTitile;
+        }, 800);
+      }
+    });
+  </script>
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "nvapckx4pu");
+  </script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7CFKVVXFVL"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-7CFKVVXFVL');
+  </script>
+  <script defer src="https://vercount.one/js"></script>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Zen's Blog" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="Zen's Blog" type="application/rss+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Zen&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首頁</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>歸檔</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分類</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>標籤</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>關於</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>連結</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-rss"></i>
+                <span>RSS</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/atom.xml" target="_self">
+                    
+                    <span>Atom</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/rss2.xml" target="_self">
+                    
+                    <span>RSS2</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/assets/banner.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="FreeIPA設定與客戶端安裝過程"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-12-23 01:40" pubdate>
+          2024年12月23日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          21 分鐘
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-right: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="教程"
+        id="heading-b7824d5cd41d06de995a661879fefd3d" role="tab" data-toggle="collapse" href="#collapse-b7824d5cd41d06de995a661879fefd3d"
+        aria-expanded="true"
+      >
+        教程
+        <span class="list-group-count">(21)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-b7824d5cd41d06de995a661879fefd3d"
+           role="tabpanel" aria-labelledby="heading-b7824d5cd41d06de995a661879fefd3d">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/gre-over-ipsec-between-edgeos-and-routeros/" title="在EdgeOS和RouterOS之間建立GRE over IPsec tunnel"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">在EdgeOS和RouterOS之間建立GRE over IPsec tunnel</span>
+        </a>
+      
+    
+      
+      
+        <a href="/doh-dot-networkmanager-and-systemd-resolved/" title="DoH、DoT、Networkmanager與systemd-resolved的設定"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">DoH、DoT、Networkmanager與systemd-resolved的設定</span>
+        </a>
+      
+    
+      
+      
+        <a href="/docker-compose-file-limit-resource/" title="如何在docker compose file中限制系統資源的使用"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">如何在docker compose file中限制系統資源的使用</span>
+        </a>
+      
+    
+      
+      
+        <a href="/hexo-customization/" title="Hexo的個人化設定"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Hexo的個人化設定</span>
+        </a>
+      
+    
+      
+      
+        <a href="/vyos-quick-setup/" title="VyOS快速設定"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">VyOS快速設定</span>
+        </a>
+      
+    
+      
+      
+        <a href="/turning-linux-into-a-router/" title="配置linux做為router"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">配置linux做為router</span>
+        </a>
+      
+    
+      
+      
+        <a href="/wordpress-with-LNMP-environment/" title="使用LNMP環境搭建WordPress網站"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">使用LNMP環境搭建WordPress網站</span>
+        </a>
+      
+    
+      
+      
+        <a href="/create-wireguard-site-to-site-tunnel/" title="使用Wireguard建立Site to Site Tunnel"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">使用Wireguard建立Site to Site Tunnel</span>
+        </a>
+      
+    
+      
+      
+        <a href="/using-openssl-to-create-ca-on-linux/" title="使用openssl在linux上建立CA"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">使用openssl在linux上建立CA</span>
+        </a>
+      
+    
+      
+      
+        <a href="/linux-qos-with-tc-and-nft/" title="使用nftables和tc在linux上實現QoS"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">使用nftables和tc在linux上實現QoS</span>
+        </a>
+      
+    
+      
+      
+        <a href="/pci-passthrough-with-proxmox/" title="在Proxmox上進行PCI-E直通"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">在Proxmox上進行PCI-E直通</span>
+        </a>
+      
+    
+      
+      
+        <a href="/how-to-use-jnlp-kvm/" title="如何打開jnlp格式的kvm console"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">如何打開jnlp格式的kvm console</span>
+        </a>
+      
+    
+      
+      
+        <a href="/how-to-print-and-scan-over-network/" title="如何透過網路列印和掃描"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">如何透過網路列印和掃描</span>
+        </a>
+      
+    
+      
+      
+        <a href="/how-to-create-proxmox-package-repository-mirror/" title="如何建立Proxmox的鏡像站"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">如何建立Proxmox的鏡像站</span>
+        </a>
+      
+    
+      
+      
+        <a href="/proxmox-network-config-ovs-and-sdn/" title="Proxmox Network： OVS 與 SDN"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Proxmox Network： OVS 與 SDN</span>
+        </a>
+      
+    
+      
+      
+        <a href="/freeipa-install-and-client-setup/" title="FreeIPA設定與客戶端安裝過程"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">FreeIPA設定與客戶端安裝過程</span>
+        </a>
+      
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="疑難雜症"
+        id="heading-e2411166d77f023169f0978db441925c" role="tab" data-toggle="collapse" href="#collapse-e2411166d77f023169f0978db441925c"
+        aria-expanded="false"
+      >
+        疑難雜症
+        <span class="list-group-count">(5)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse " id="collapse-e2411166d77f023169f0978db441925c"
+           role="tabpanel" aria-labelledby="heading-e2411166d77f023169f0978db441925c">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/asus-x99-code-00/" title="Asus X99 通病"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Asus X99 通病</span>
+        </a>
+      
+    
+      
+      
+        <a href="/cloudflare-infinite-301-redirection/" title="Cloudflare Proxy 無限301轉址"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Cloudflare Proxy 無限301轉址</span>
+        </a>
+      
+    
+      
+      
+        <a href="/e1000e-detected-hardware-unit-hang/" title="I218-V、I219-V系列網卡在Linux下突然關閉的解法"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">I218-V、I219-V系列網卡在Linux下突然關閉的解法</span>
+        </a>
+      
+    
+      
+      
+        <a href="/wireguard-persistent-keepalive/" title="Wireguard的keepalive設定"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Wireguard的keepalive設定</span>
+        </a>
+      
+    
+      
+      
+        <a href="/dell-g11-server-update-firmware/" title="DELL 11代伺服器韌體更新採坑記錄"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">DELL 11代伺服器韌體更新採坑記錄</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">FreeIPA設定與客戶端安裝過程</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="前言">前言</h1>
+<p>社團原本使用的帳號系統是搭在一個黑群輝虛擬機上的LDAP服務，只是之前機房搬遷後虛擬機的黑群輝直接無法開機了，後來是靠其他位置的LDAP備份恢復。所以就不太想把這個重要的服務放在黑群輝上，才開始了帳號系統的遷移，FreeIPA提供了類似於Linux中AD的功能；而這篇文章主要記錄FreeIPA的安裝過程和客戶端該如何設定。</p>
+<h1 id="服務端安裝">服務端安裝</h1>
+<p>在服務端系統的選擇上我使用Fedora，主要是FreeIPA在Fedora上有最新的版本，支援也比較全面，畢竟是RedHat支持的專案。</p>
+<p>首先需要設定FreeIPA Server使用的hostname與domain，例如<code>freeipa.example.com</code>，網域為<code>example.com</code>，將<code>freeipa.example.com</code>寫入<code>/etc/hostname</code>，並在<code>/etc/hosts</code>中將<code>freeipa.example.com</code>解析到自己的IP，假設Server的IP為10.0.0.1則加上最後一行來進行解析</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs hosts"># Loopback entries; do not change.<br># For historical reasons, localhost precedes localhost.localdomain:<br>127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4<br>::1         localhost localhost.localdomain localhost6 localhost6.localdomain6<br># See hosts(5) for proper format and other examples:<br># 192.168.1.10 foo.example.org foo<br># 192.168.1.13 bar.example.org bar<br>10.0.0.1        freeipa.example.com freeipa<br></code></pre></td></tr></table></figure>
+<p>接著安裝Freeipa，網域名稱按照自己的需求更改，我安裝時同時安裝了bind9，同時安裝DNS未來配置kerberos會較為方便<sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span class="hint--top hint--rounded" aria-label="[DNS — FreeIPA  documentation](https://www.freeipa.org/page/DNS)">[1]</span></a></sup><sup id="fnref:2" class="footnote-ref"><a href="#fn:2" rel="footnote"><span class="hint--top hint--rounded" aria-label="[Deployment_Recommendations — FreeIPA  documentation](https://www.freeipa.org/page/Deployment_Recommendations)">[2]</span></a></sup>，不過如果使用存在的域名，安裝腳本會檢查NS記錄有沒有指到機器上的IP，所以如果沒辦法這樣設定可以使用<code>.internal</code>域名，將不會檢查NS記錄</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">dnf install freeipa-server freeipa-server-dns</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">ipa-server-install --mkhomedir</span><br>The log file for this installation can be found in /var/log/ipaserver-install.log<br>==============================================================================<br>This program will set up the IPA Server.<br>Version 4.12.1<br><br>This includes:<br>  * Configure a stand-alone CA (dogtag) for certificate management<br>  * Configure the NTP client (chronyd)<br>  * Create and configure an instance of Directory Server<br>  * Create and configure a Kerberos Key Distribution Center (KDC)<br>  * Configure Apache (httpd)<br>  * Configure SID generation<br>  * Configure the KDC to enable PKINIT<br><br>To accept the default shown in brackets, press the Enter key.<br><br>Do you want to configure integrated DNS (BIND)? [no]: yes<br><br>Enter the fully qualified domain name of the computer<br>on which you&#x27;re setting up server software. Using the form<br>&lt;hostname&gt;.&lt;domainname&gt;<br>Example: master.example.com<br><br><br>Server host name [freeipa.example.com]:<br><br><br>Warning: skipping DNS resolution of host freeipa.example.com<br>The domain name has been determined based on the host name.<br><br>Please confirm the domain name [example.com]:<br><br>The kerberos protocol requires a Realm name to be defined.<br>This is typically the domain name converted to uppercase.<br><br>Please provide a realm name [EXAMPLE.COM]:<br>Certain directory server operations require an administrative user.<br>This user is referred to as the Directory Manager and has full access<br>to the Directory for system management tasks and will be added to the<br>instance of directory server created for IPA.<br>The password must be at least 8 characters long.<br><br>Directory Manager password:<br>Password (confirm):<br><br>The IPA server requires an administrative user, named &#x27;admin&#x27;.<br>This user is a regular system account used for IPA server administration.<br><br>IPA admin password:<br>Password (confirm):<br><br>Checking DNS domain example.com., please wait ...<br>Invalid IP address fe80::be24:11ff:fe69:8783 for freeipa.example.com: cannot use link-local IP address fe80::be24:11ff:fe69:8783<br>Do you want to configure DNS forwarders? [yes]:<br>The following DNS servers are configured in systemd-resolved: 1.1.1.1<br>Do you want to configure these servers as DNS forwarders? [yes]:<br>All detected DNS servers were added. You can enter additional addresses now:<br>Enter an IP address for a DNS forwarder, or press Enter to skip:<br>DNS forwarders: 1.1.1.1<br>Checking DNS forwarders, please wait ...<br>Do you want to search for missing reverse zones? [yes]:<br>Reverse record for IP address x.x.x.x lready exists<br>Trust is configured but no NetBIOS domain name found, setting it now.<br>Enter the NetBIOS name for the IPA domain.<br>Only up to 15 uppercase ASCII letters, digits and dashes are allowed.<br>Example: EXAMPLE.<br><br><br>NetBIOS domain name [EXAMPLE]:<br><br>Do you want to configure chrony with NTP server or pool address? [no]:<br><br>The IPA Master Server will be configured with:<br>Hostname:       freeipa.example.com<br>IP address(es): x.x.x.x<br>Domain name:    example.com<br>Realm name:     EXAMPLE.COM<br><br>The CA will be configured with:<br>Subject DN:   CN=Certificate Authority,O=EXAMPLE.COM<br>Subject base: O=EXAMPLE.COM<br>Chaining:     self-signed<br><br>BIND DNS server will be configured to serve IPA domain with:<br>Forwarders:       1.1.1.1<br>Forward policy:   only<br>Reverse zone(s):  No reverse zone<br><br>Continue to configure the system with these values? [no]: yes<br>The following operations may take some minutes to complete.<br>Please wait until the prompt is returned.<br><br>Adding [x.x.x.x freeipa.example.com] to your /etc/hosts file<br>Disabled p11-kit-proxy<br>Synchronizing time<br>No SRV records of NTP servers found and no NTP server or pool address was provided.<br>Using default chrony configuration.<br>Attempting to sync time with chronyc.<br>Time synchronization was successful.<br>Configuring directory server (dirsrv). Estimated time: 30 seconds<br>  [1/42]: creating directory server instance<br>Validate installation settings ...<br>Create file system structures ...<br>Perform SELinux labeling ...<br>Create database backend: dc=example,dc=com ...<br>Perform post-installation tasks ...<br>  [2/42]: adding default schema<br>  [3/42]: enabling memberof plugin<br>  [4/42]: enabling winsync plugin<br>  [5/42]: configure password logging<br>  [6/42]: configuring replication version plugin<br>  [7/42]: enabling IPA enrollment plugin<br>  [8/42]: configuring uniqueness plugin<br>  [9/42]: configuring uuid plugin<br>  [10/42]: configuring modrdn plugin<br>  [11/42]: configuring DNS plugin<br>  [12/42]: enabling entryUSN plugin<br>  [13/42]: configuring lockout plugin<br>  [14/42]: configuring graceperiod plugin<br>  [15/42]: configuring topology plugin<br>  [16/42]: creating indices<br>  [17/42]: enabling referential integrity plugin<br>  [18/42]: configuring certmap.conf<br>  [19/42]: configure new location for managed entries<br>  [20/42]: configure dirsrv ccache and keytab<br>  [21/42]: enabling SASL mapping fallback<br>  [22/42]: restarting directory server<br>  [23/42]: adding sasl mappings to the directory<br>  [24/42]: adding default layout<br>  [25/42]: adding delegation layout<br>  [26/42]: creating container for managed entries<br>  [27/42]: configuring user private groups<br>  [28/42]: configuring netgroups from hostgroups<br>  [29/42]: creating default Sudo bind user<br>  [30/42]: creating default Auto Member layout<br>  [31/42]: adding range check plugin<br>  [32/42]: creating default HBAC rule allow_all<br>  [33/42]: adding entries for topology management<br>  [34/42]: initializing group membership<br>  [35/42]: adding master entry<br>  [36/42]: initializing domain level<br>  [37/42]: configuring Posix uid/gid generation<br>  [38/42]: adding replication acis<br>  [39/42]: activating sidgen plugin<br>  [40/42]: activating extdom plugin<br>  [41/42]: configuring directory to start on boot<br>  [42/42]: restarting directory server<br>Done configuring directory server (dirsrv).<br>Configuring Kerberos KDC (krb5kdc)<br>  [1/11]: adding kerberos container to the directory<br>  [2/11]: configuring KDC<br>  [3/11]: initialize kerberos container<br>  [4/11]: adding default ACIs<br>  [5/11]: creating a keytab for the directory<br>  [6/11]: creating a keytab for the machine<br>  [7/11]: adding the password extension to the directory<br>  [8/11]: creating anonymous principal<br>  [9/11]: starting the KDC<br>  [10/11]: configuring KDC to start on boot<br>  [11/11]: enable PAC ticket signature support<br>Done configuring Kerberos KDC (krb5kdc).<br>Configuring kadmin<br>  [1/2]: starting kadmin<br>  [2/2]: configuring kadmin to start on boot<br>Done configuring kadmin.<br>Configuring ipa-custodia<br>  [1/5]: Making sure custodia container exists<br>  [2/5]: Generating ipa-custodia config file<br>  [3/5]: Generating ipa-custodia keys<br>  [4/5]: starting ipa-custodia<br>  [5/5]: configuring ipa-custodia to start on boot<br>Done configuring ipa-custodia.<br>Configuring certificate server (pki-tomcatd). Estimated time: 3 minutes<br>  [1/32]: configuring certificate server instance<br>  [2/32]: stopping certificate server instance to update CS.cfg<br>  [3/32]: backing up CS.cfg<br>  [4/32]: Add ipa-pki-wait-running<br>  [5/32]: secure AJP connector<br>  [6/32]: reindex attributes<br>  [7/32]: exporting Dogtag certificate store pin<br>  [8/32]: disabling nonces<br>  [9/32]: set up CRL publishing<br>  [10/32]: enable PKIX certificate path discovery and validation<br>  [11/32]: authorizing RA to modify profiles<br>  [12/32]: authorizing RA to manage lightweight CAs<br>  [13/32]: Ensure lightweight CAs container exists<br>  [14/32]: Enable lightweight CA monitor<br>  [15/32]: Ensuring backward compatibility<br>  [16/32]: startin  [17/32]: configure certmonger for renewals<br>  [18/32]: requesting RA certificate from CA<br>  [19/32]: publishing the CA certificate<br>  [20/32]: adding RA agent as a trusted user<br>  [21/32]: configure certificate renewals<br>  [22/32]: Configure HTTP to proxy connections<br>  [23/32]: updating IPA configuration<br>  [24/32]: enabling CA instance<br>  [25/32]: importing IPA certificate profiles<br>  [26/32]: migrating certificate profiles to LDAP<br>  [27/32]: adding default CA ACL<br>  [28/32]: adding &#x27;ipa&#x27; CA entry<br>  [29/32]: Recording random serial number state<br>  [30/32]: Recording HSM configuration state<br>  [31/32]: configuring certmonger renewal for lightweight CAs<br>  [32/32]: deploying ACME service<br>Done configuring certificate server (pki-tomcatd).<br>Configuring directory server (dirsrv)<br>  [1/3]: configuring TLS for DS instance<br>  [2/3]: adding CA certificate entry<br>  [3/3]: restarting directory server<br>Done configuring directory server (dirsrv).<br>Configuring ipa-otpd<br>  [1/2]: starting ipa-otpd<br>  [2/2]: configuring ipa-otpd to start on boot<br>Done configuring ipa-otpd.<br>Configuring the web interface (httpd)<br>  [1/22]: stopping httpd<br>  [2/22]: backing up ssl.conf<br>  [3/22]: disabling nss.conf<br>  [4/22]: configuring mod_ssl certificate paths<br>  [5/22]: setting mod_ssl protocol list<br>  [6/22]: configuring mod_ssl log directory<br>  [7/22]: disabling mod_ssl OCSP<br>  [8/22]: adding URL rewriting rules<br>  [9/22]: configuring httpd<br>  [10/22]: setting up httpd keytab<br>  [11/22]: configuring Gssproxy<br>  [12/22]: setting up ssl<br>  [13/22]: configure certmonger for renewals<br>  [14/22]: publish CA cert<br>  [15/22]: clean up any existing httpd ccaches<br>  [16/22]: enable ccache sweep<br>  [17/22]: configuring SELinux for httpd<br>  [18/22]: create KDC proxy config<br>  [19/22]: enable KDC proxy<br>  [20/22]: starting httpd<br>  [21/22]: configuring httpd to start on boot<br>  [22/22]: enabling oddjobd<br>Done configuring the web interface (httpd).<br>Configuring Kerberos KDC (krb5kdc)<br>  [1/1]: installing X509 Certificate for PKINIT<br>Done configuring Kerberos KDC (krb5kdc).<br>Applying LDAP updates<br>Upgrading IPA:. Estimated time: 1 minute 30 seconds<br>  [1/10]: stopping directory server<br>  [2/10]: saving configuration<br>  [3/10]: disabling listeners<br>  [4/10]: enabling DS global lock<br>  [5/10]: disabling Schema Compat<br>  [6/10]: starting directory server<br>  [7/10]: upgrading server<br>  [8/10]: stopping directory server<br>  [9/10]: restoring configuration<br>  [10/10]: starting directory server<br>Done.<br>Restarting the KDC<br>dnssec-validation yes<br>Configuring DNS (named)<br>  [1/12]: generating rndc key file<br>  [2/12]: adding DNS container<br>  [3/12]: setting up our zone<br>  [4/12]: setting up our own record<br>  [5/12]: setting up records for other masters<br>  [6/12]: adding NS record to the zones<br>  [7/12]: setting up kerberos principal<br>  [8/12]: setting up LDAPI autobind<br>  [9/12]: setting up named.conf<br>created new /etc/named.conf<br>created named user config &#x27;/etc/named/ipa-ext.conf&#x27;<br>created named user config &#x27;/etc/named/ipa-options-ext.conf&#x27;<br>created named user config &#x27;/etc/named/ipa-logging-ext.conf&#x27;<br>  [10/12]: setting up server configuration<br>  [11/12]: configuring named to start on boot<br>  [12/12]: changing resolv.conf to point to ourselves<br>Done configuring DNS (named).<br>Restarting the web server to pick up resolv.conf changes<br>Configuring DNS key synchronization service (ipa-dnskeysyncd)<br>  [1/7]: checking status<br>  [2/7]: setting up bind-dyndb-ldap working directory<br>  [3/7]: setting up kerberos principal<br>  [4/7]: setting up SoftHSM<br>  [5/7]: adding DNSSEC containers<br>  [6/7]: creating replica keys<br>  [7/7]: configuring ipa-dnskeysyncd to start on boot<br>Done configuring DNS key synchronization service (ipa-dnskeysyncd).<br>Restarting ipa-dnskeysyncd<br>Restarting named<br>Updating DNS system records<br>Configuring SID generation<br>  [1/8]: adding RID bases<br>  [2/8]: creating samba domain object<br>  [3/8]: adding admin(group) SIDs<br>  [4/8]: updating Kerberos config<br>&#x27;dns_lookup_kdc&#x27; already set to &#x27;true&#x27;, nothing to do.<br>  [5/8]: activating sidgen task<br>  [6/8]: restarting Directory Server to take MS PAC and LDAP plugins changes into account<br>  [7/8]: adding fallback group<br>  [8/8]: adding SIDs to existing users and groups<br>This step may take considerable amount of time, please wait..<br>Done.<br>Configuring client side components<br>This program will set up IPA client.<br>Version 4.12.1<br><br>Using existing certificate &#x27;/etc/ipa/ca.crt&#x27;.<br>Client hostname: freeipa.example.com<br>Realm: EXAMPLE.COM<br>DNS Domain: example.com<br>IPA Server: freeipa.example.com<br>BaseDN: dc=example,dc=com<br><br>Configured /etc/sssd/sssd.conf<br>Systemwide CA database updated.<br>Adding SSH public key from /etc/ssh/ssh_host_ed25519_key.pub<br>Adding SSH public key from /etc/ssh/ssh_host_ecdsa_key.pub<br>Adding SSH public key from /etc/ssh/ssh_host_rsa_key.pub<br>SSSD enabled<br>Configured /etc/openldap/ldap.conf<br>Configured /etc/ssh/ssh_config<br>Configured /etc/ssh/sshd_config.d/04-ipa.conf<br>Configuring example.com as NIS domain.<br>Client configuration complete.<br>The ipa-client-install command was successful<br><br>==============================================================================<br>Setup complete<br><br>Next steps:<br>        1. You must make sure these network ports are open:<br>                TCP Ports:<br>                  * 80, 443: HTTP/HTTPS<br>                  * 389, 636: LDAP/LDAPS<br>                  * 88, 464: kerberos<br>                  * 53: bind<br>                UDP Ports:<br>                  * 88, 464: kerberos<br>                  * 53: bind<br>                  * 123: ntp<br><br>        2. You can now obtain a kerberos ticket using the command: &#x27;kinit admin&#x27;<br>           This ticket will allow you to use the IPA tools (e.g., ipa user-add)<br>           and the web user interface.<br><br>Be sure to back up the CA certificates stored in /root/cacert.p12<br>These files are required to create replicas. The password for these<br>files is the Directory Manager password<br>The ipa-server-install command was successful<br></code></pre></td></tr></table></figure>
+<p>Fedora預設有開啟防火牆，所以需要開啟對應的端口，<code>freeipa-4</code>服務已經包括所有FreeIPA使用的端口了，如果前面沒有設定dns也可以不用開啟dns服務</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">firewall-cmd --add-service=freeipa-4</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">firewall-cmd --add-service=freeipa-4 --permanent</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">firewall-cmd --add-service=dns</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">firewall-cmd --add-service=dns --permanent</span><br></code></pre></td></tr></table></figure>
+<h2 id="DNS">DNS</h2>
+<p>若要使用FreeIPA的DNS作為整個網路的DNS則需要允許讓網路內的客戶端可以進行遞回查詢(recursion)</p>
+<p>編輯<code>/etc/named/ipa-ext.conf</code>，加入這段來定義允許的客戶端，我設定為允許所有的private IP，視情況可以進行收縮</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs conf">acl &quot;trusted_network&quot; &#123;<br>    localnets;<br>    localhost;<br>    192.168.0.0/16;<br>    172.16.0.0/12;<br>    10.0.0.0/8;<br>&#125;;<br></code></pre></td></tr></table></figure>
+<p>接著編輯<code>/etc/named/ipa-options-ext.conf</code>來允許定義的客戶端查詢</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs conf">allow-recursion &#123; trusted_network; &#125;;<br>allow-query-cache &#123; trusted_network; &#125;;<br></code></pre></td></tr></table></figure>
+<p>最後重新載入<code>named</code>即可</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">systemctl reload named</span><br></code></pre></td></tr></table></figure>
+<h2 id="拒絕匿名查詢">拒絕匿名查詢</h2>
+<p>FreeIPA安裝完後，它的LDAP預設是可以被沒有驗證的用戶查詢到部分資訊，可以將其設定為<code>rootdse</code>，而非<code>off</code>拒絕所有匿名查詢，因為當客戶端要加入網域時，需要知道<code>rootdse</code>的資訊<sup id="fnref:3" class="footnote-ref"><a href="#fn:3" rel="footnote"><span class="hint--top hint--rounded" aria-label="[在 Oracle Linux 上安裝 FreeIPA 伺服器](https://docs.oracle.com/zh-tw/learn/ol-freeipa/index.html#disable-anonymous-binds)">[3]</span></a></sup></p>
+<p>首先編輯更改用的ldif</p>
+<figure class="highlight ldif"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs ldif"><span class="hljs-attribute">dn</span>: cn=config<br><span class="hljs-attribute">changetype</span>: modify<br><span class="hljs-attribute">replace</span>: nsslapd-allow-anonymous-access<br>nsslapd-allow-anonymous-access: rootdse<br></code></pre></td></tr></table></figure>
+<p>接著將使用ldif檔案修改LDAP Server的設定，ldif的檔名為<code>disable_anon_bind.ldif</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">ldapmodify -x -D <span class="hljs-string">&quot;cn=Directory Manager&quot;</span> -W -H ldap:// -ZZ -f disable_anon_bind.ldif</span><br></code></pre></td></tr></table></figure>
+<h2 id="一些自定義的設定">一些自定義的設定</h2>
+<p>在使用<code>ipa</code>指令前需要先取得kerberos的ticket，輸入設定的admin密碼，即可獲得</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">kinit admin</span><br></code></pre></td></tr></table></figure>
+<p>使用<code>config-mod</code>可以修改FreeIPA預設的一些設定</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">ipa config-mod --defaultshell=/bin/bash</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">ipa config-mod --homedirectory=/rhome</span><br></code></pre></td></tr></table></figure>
+<p>使用<code>user-add</code>與<code>group-add-member</code>來新增FreeIPA用戶</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-built_in">echo</span> password | ipa user-add someone --password --first=some --last=one --email=someone1@example.com --email=someone2@example.com --gecos=someone</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">ipa group-add-member somegroup --<span class="hljs-built_in">users</span>=someone</span><br></code></pre></td></tr></table></figure>
+<hr>
+<p>設定完成後就可以使用瀏覽器進入FreeIPA的網頁管理介面</p>
+<p><img src="login.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<h1 id="客戶端">客戶端</h1>
+<h2 id="使用LDAP驗證">使用LDAP驗證</h2>
+<p>如果是需要配置讓Linux可以使用FreeIPA中的帳號進行登入推薦使用底下的方式，而不是直接透過LDAP驗證，使用FreeIPA-Client可以有更細化的權限控制</p>
+<p>要讓應用程式使用FreeIPA的帳號驗證，需要建立應用程式使用的bind user來對LDAP查詢，在FreeIPA中可以建立System Accounts專門用作bind user<sup id="fnref:4" class="footnote-ref"><a href="#fn:4" rel="footnote"><span class="hint--top hint--rounded" aria-label="[LDAP — FreeIPA  documentation](https://www.freeipa.org/page/HowTo/LDAP)">[4]</span></a></sup></p>
+<p>可以使用ldif來增加System Accounts，但我更推薦使用<a target="_blank" rel="noopener" href="https://github.com/noahbliss/freeipa-sam">freeipa-sam</a><sup id="fnref:5" class="footnote-ref"><a href="#fn:5" rel="footnote"><span class="hint--top hint--rounded" aria-label="[noahbliss/freeipa-sam: System Account Manager for FreeIPA](https://github.com/noahbliss/freeipa-sam)">[5]</span></a></sup>的腳本來新增</p>
+<p>有了bind user後就可以按自己的 需求及應用程式設定LDAP的方式填入設定，即能完成LDAP的設定</p>
+<p>以下為一些FreeIPA的LDAP中的資料結構，在設定時可以參考</p>
+<ul>
+<li>
+<p>base dn: dc=example,dc=com</p>
+</li>
+<li>
+<p>user location: uid=someone,cn=users,cn=accounts,dc=example,dc=com</p>
+</li>
+<li>
+<p>group location: cn=group1,cn=groups,cn=accounts,dc=example,dc=com</p>
+</li>
+<li>
+<p>user classes: person</p>
+</li>
+<li>
+<p>user name attribute: uid</p>
+</li>
+<li>
+<p>email attribute: mail</p>
+</li>
+<li>
+<p>group classes: posixGroup</p>
+</li>
+<li>
+<p>group name attribute: cn</p>
+</li>
+<li>
+<p>user filter: memberOf=cn=group1,cn=groups,cn=accounts,dc=example,dc=com</p>
+</li>
+<li>
+<p>group filter: (|(cn=group1)(cn=group2))</p>
+</li>
+</ul>
+<h2 id="使用FreeIPA-Client驗證">使用FreeIPA-Client驗證</h2>
+<p>使用FreeIPA-Client來讓系統可以使用FreeIPA中的帳號來進行登入的話，可以使用FreeIPA中的HBAC Rules(Hardware Based Access Control)來控制只有哪些用戶/群組可以登入哪些Host或是哪些Host群組，並且控制能管理的service有哪些，並且可以配合FreeIPA中的Sudo Rules來限定哪些用戶/群組可以在哪些Host或是哪些Host群組中使用sudo中的哪些指令</p>
+<p>首先將Client的DNS設為FreeIPA的Server，編輯<code>/etc/resolv.conf</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs conf">search example.com<br>nameserver 10.0.0.1<br></code></pre></td></tr></table></figure>
+<p>接著安裝FreeIPA-Client，示範的client為debian</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">apt install freeipa-client</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">ipa-client-install --mkhomedir</span><br>This program will set up IPA client.<br>Version 4.9.11<br><br>WARNING: conflicting time&amp;date synchronization service &#x27;ntp&#x27; will be disabled in favor of chronyd<br><br>Discovery was successful!<br>Do you want to configure chrony with NTP server or pool address? [no]:<br>Client hostname: debian.client.example.com<br>Realm: EXAMPLE.COM<br>DNS Domain: example.com<br>IPA Server: freeipa.example.com<br>BaseDN: dc=example,dc=com<br><br>Continue to configure the system with these values? [no]: yes<br>Synchronizing time<br>No SRV records of NTP servers found and no NTP server or pool address was provided.<br>Using default chrony configuration.<br>Attempting to sync time with chronyc.<br>Time synchronization was successful.<br>User authorized to enroll computers: admin<br>Password for admin@EXAMPLE.COM:<br>Successfully retrieved CA cert<br>    Subject:     CN=Certificate Authority,O=EXAMPLE.COM<br>    Issuer:      CN=Certificate Authority,O=EXAMPLE.COM<br>    Valid From:  XXXX-XX-XX XX:XX:XX<br>    Valid Until: XXXX-XX-XX XX:XX:XX<br><br>Enrolled in IPA realm EXAMPLE.COM<br>Created /etc/ipa/default.conf<br>Configured /etc/sssd/sssd.conf<br>Systemwide CA database updated.<br>Hostname (debian.client.example.com) does not have A/AAAA record.<br>Missing reverse record(s) for address(es): 10.1.0.100.<br>Adding SSH public key from /etc/ssh/ssh_host_ecdsa_key.pub<br>Adding SSH public key from /etc/ssh/ssh_host_ed25519_key.pub<br>Adding SSH public key from /etc/ssh/ssh_host_rsa_key.pub<br>SSSD enabled<br>/etc/ldap/ldap.conf does not exist.<br>Failed to configure /etc/openldap/ldap.conf<br>Configured /etc/ssh/ssh_config<br>Configured /etc/ssh/sshd_config.d/04-ipa.conf<br>Configuring example.com as NIS domain.<br>Configured /etc/krb5.conf for IPA realm EXAMPLE.COM<br>Client configuration complete.<br>The ipa-client-install command was successful<br></code></pre></td></tr></table></figure>
+<h3 id="權限控制">權限控制</h3>
+<ul>
+<li>
+<p>在Client加入FreeIPA後可以在Identity&gt;Hosts中看到，並且可以在Identity&gt;Group&gt;Host Group裡將Hosts集合成Group，方便權限的管理</p>
+</li>
+<li>
+<p>如果要開啟管理用戶能否登入特定主機，需要在Policy&gt;Host-Based Access Control&gt;HBAC Rules中將<code>allow_all</code>的規則disable，不然所有用戶都可登入所有主機</p>
+</li>
+<li>
+<p>可以在Policy&gt;Host-Based Access Control&gt;HBAC Rules新增規則來設定用戶/群組可以登入哪些主機，並管理哪些服務</p>
+</li>
+<li>
+<p>在Policy&gt;Host-Based Access Control&gt;HBAC Services中可以設定服務的種類</p>
+</li>
+<li>
+<p>最後可以在Policy&gt;Host-Based Access Control&gt;HBAC Test中測試設定是否正確</p>
+</li>
+<li>
+<p>如果用戶要再Client中使用sudo需要在Policy&gt;Sudo&gt;Sudo Rules中新增規則</p>
+</li>
+<li>
+<p>在設定完成後如果在Client沒有生效，可以等待5~10分鐘來讓快取失效重新存取伺服器的內容</p>
+</li>
+</ul>
+<h2 id="參考">參考</h2>
+<section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://www.freeipa.org/page/DNS">DNS — FreeIPA  documentation</a>
+<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://www.freeipa.org/page/Deployment_Recommendations">Deployment_Recommendations — FreeIPA  documentation</a>
+<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:3" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://docs.oracle.com/zh-tw/learn/ol-freeipa/index.html#disable-anonymous-binds">在 Oracle Linux 上安裝 FreeIPA 伺服器</a>
+<a href="#fnref:3" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:4" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://www.freeipa.org/page/HowTo/LDAP">LDAP — FreeIPA  documentation</a>
+<a href="#fnref:4" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:5" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://github.com/noahbliss/freeipa-sam">noahbliss/freeipa-sam: System Account Manager for FreeIPA</a>
+<a href="#fnref:5" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:6" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://www.freeipa.org/page/Quick_Start_Guide">Quick_Start_Guide — FreeIPA  documentation</a>
+<a href="#fnref:6" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:7" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://freeipa.readthedocs.io/en/latest/workshop.html">FreeIPA workshop — FreeIPA 4.11-dev documentation</a>
+<a href="#fnref:7" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:8" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://linux.vbird.org/linux_server/rocky9/0240ldap.php">鳥哥私房菜 - 第十一章、使用 LDAP 統一管理帳號</a>
+<a href="#fnref:8" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:9" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://kentyeh.blogspot.com/2016/10/freeipa.html">企業人員的統一管理-FreeIPA學習筆記</a>
+<a href="#fnref:9" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:10" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://annvix.com/using_freeipa_for_user_authentication">Using FreeIPA for User Authentication  · Annvix</a>
+<a href="#fnref:10" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%95%99%E7%A8%8B/" class="category-chain-item">教程</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/server/" class="print-no-link">#server</a>
+      
+        <a href="/tags/linux/" class="print-no-link">#linux</a>
+      
+        <a href="/tags/FreeIPA/" class="print-no-link">#FreeIPA</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>FreeIPA設定與客戶端安裝過程</div>
+      <div>https://www.zenwen.eu.org/freeipa-install-and-client-setup/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Zen Wen</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>發布於</div>
+          <div>2024年12月23日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>許可協議</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="SA - 相同方式共享">
+                    <i class="iconfont icon-cc-sa"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/dell-g11-server-update-firmware/" title="DELL 11代伺服器韌體更新採坑記錄">
+                        <span class="hidden-mobile">DELL 11代伺服器韌體更新採坑記錄</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+    <div id="giscus" class="giscus"></div>
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#giscus', function() {
+        var options = {"repo":"zen8841/zen-blog","repo-id":"R_kgDOLf1xXw","category":"Announcements","category-id":"DIC_kwDOLf1xX84CkjqQ","theme-light":"light","theme-dark":"dark","mapping":"pathname","reactions-enabled":1,"emit-metadata":1,"input-position":"top","lang":"zh-TW"};
+        var attributes = {};
+        for (let option in options) {
+          if (!option.startsWith('theme-')) {
+            var key = option.startsWith('data-') ? option : 'data-' + option;
+            attributes[key] = options[option];
+          }
+        }
+        var light = 'light';
+        var dark = 'dark';
+        window.GiscusThemeLight = light;
+        window.GiscusThemeDark = dark;
+        attributes['data-theme'] = document.documentElement.getAttribute('data-user-color-scheme') === 'dark' ? dark : light;
+        for (let attribute in attributes) {
+          var value = attributes[attribute];
+          if (value === undefined || value === null || value === '') {
+            delete attributes[attribute];
+          }
+        }
+        var s = document.createElement('script');
+        s.setAttribute('src', 'https://giscus.app/client.js');
+        s.setAttribute('crossorigin', 'anonymous');
+        for (let attribute in attributes) {
+          s.setAttribute(attribute, attributes[attribute]);
+        }
+        var ss = document.getElementsByTagName('script');
+        var e = ss.length > 0 ? ss[ss.length - 1] : document.head || document.documentElement;
+        e.parentNode.insertBefore(s, e.nextSibling);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目錄</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜尋</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">關鍵字</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Power By Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Theme：Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允許 JavaScript 運行的環境下瀏覽效果更佳</div>
+  </noscript>
+</body>
+</html>

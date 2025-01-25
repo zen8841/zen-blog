@@ -15,8 +15,31 @@
     <atom:link href="https://www.zenwen.eu.org/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>簡單記錄一下折騰的內容，可能還會發發感想？</description>
-    <pubDate>Sun, 22 Dec 2024 17:40:00 GMT</pubDate>
+    <pubDate>Sat, 25 Jan 2025 16:18:11 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>Linux上的電源管理</title>
+      <link>https://www.zenwen.eu.org/linux-power-management/</link>
+      <guid>https://www.zenwen.eu.org/linux-power-management/</guid>
+      <pubDate>Sat, 25 Jan 2025 16:18:11 GMT</pubDate>
+      
+      <description>記錄如何在Linux上進行電源管理來達成省電及延長電池續航</description>
+      
+      
+      
+      
+      <category domain="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/">教程</category>
+      
+      
+      <category domain="https://www.zenwen.eu.org/tags/linux/">linux</category>
+      
+      <category domain="https://www.zenwen.eu.org/tags/power/">power</category>
+      
+      
+      <comments>https://www.zenwen.eu.org/linux-power-management/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>FreeIPA設定與客戶端安裝過程</title>
@@ -59,9 +82,9 @@
       <category domain="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/%E7%96%91%E9%9B%A3%E9%9B%9C%E7%97%87/">疑難雜症</category>
       
       
-      <category domain="https://www.zenwen.eu.org/tags/3C%E7%A1%AC%E9%AB%94/">3C硬體</category>
-      
       <category domain="https://www.zenwen.eu.org/tags/server/">server</category>
+      
+      <category domain="https://www.zenwen.eu.org/tags/3C%E7%A1%AC%E9%AB%94/">3C硬體</category>
       
       
       <comments>https://www.zenwen.eu.org/dell-g11-server-update-firmware/#disqus_thread</comments>

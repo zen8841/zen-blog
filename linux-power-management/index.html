@@ -1,0 +1,1179 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-TW" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/icon.png">
+  <link rel="icon" href="/assets/icon.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Zen Wen">
+  <meta name="keywords" content="linux network computer">
+  
+    <meta name="description" content="記錄如何在Linux上進行電源管理來達成省電及延長電池續航">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux上的電源管理">
+<meta property="og:url" content="https://www.zenwen.eu.org/linux-power-management/index.html">
+<meta property="og:site_name" content="Zen&#39;s Blog">
+<meta property="og:description" content="記錄如何在Linux上進行電源管理來達成省電及延長電池續航">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://www.zenwen.eu.org/linux-power-management/zenmonitor3.png">
+<meta property="article:published_time" content="2025-01-25T16:18:11.000Z">
+<meta property="article:modified_time" content="2025-01-25T16:18:11.000Z">
+<meta property="article:author" content="Zen Wen">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="power">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.zenwen.eu.org/linux-power-management/zenmonitor3.png">
+  
+  
+  
+  <title>Linux上的電源管理 - Zen&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.zenwen.eu.org","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"|","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+  <script>
+    var titleTime;
+    var OriginTitile = document.title;
+    document.addEventListener('visibilitychange', function() {
+      if (document.hidden) {
+        document.title = '|ω·) 喵~快回來呀！';
+        clearTimeout(titleTime);
+      } else {
+        document.title = '(/≧▽≦)/ Meow！';
+        titleTime = setTimeout(function() {
+          document.title = OriginTitile;
+        }, 800);
+      }
+    });
+  </script>
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "nvapckx4pu");
+  </script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7CFKVVXFVL"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-7CFKVVXFVL');
+  </script>
+  <script defer src="https://vercount.one/js"></script>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Zen's Blog" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="Zen's Blog" type="application/rss+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Zen&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首頁</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>歸檔</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分類</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>標籤</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>關於</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>連結</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-rss"></i>
+                <span>RSS</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/atom.xml" target="_self">
+                    
+                    <span>Atom</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/rss2.xml" target="_self">
+                    
+                    <span>RSS2</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/assets/banner.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Linux上的電源管理"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-01-26 00:18" pubdate>
+          2025年1月26日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          25 分鐘
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-right: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="教程"
+        id="heading-b7824d5cd41d06de995a661879fefd3d" role="tab" data-toggle="collapse" href="#collapse-b7824d5cd41d06de995a661879fefd3d"
+        aria-expanded="true"
+      >
+        教程
+        <span class="list-group-count">(22)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-b7824d5cd41d06de995a661879fefd3d"
+           role="tabpanel" aria-labelledby="heading-b7824d5cd41d06de995a661879fefd3d">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/gre-over-ipsec-between-edgeos-and-routeros/" title="在EdgeOS和RouterOS之間建立GRE over IPsec tunnel"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">在EdgeOS和RouterOS之間建立GRE over IPsec tunnel</span>
+        </a>
+      
+    
+      
+      
+        <a href="/doh-dot-networkmanager-and-systemd-resolved/" title="DoH、DoT、Networkmanager與systemd-resolved的設定"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">DoH、DoT、Networkmanager與systemd-resolved的設定</span>
+        </a>
+      
+    
+      
+      
+        <a href="/docker-compose-file-limit-resource/" title="如何在docker compose file中限制系統資源的使用"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">如何在docker compose file中限制系統資源的使用</span>
+        </a>
+      
+    
+      
+      
+        <a href="/hexo-customization/" title="Hexo的個人化設定"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Hexo的個人化設定</span>
+        </a>
+      
+    
+      
+      
+        <a href="/vyos-quick-setup/" title="VyOS快速設定"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">VyOS快速設定</span>
+        </a>
+      
+    
+      
+      
+        <a href="/turning-linux-into-a-router/" title="配置linux做為router"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">配置linux做為router</span>
+        </a>
+      
+    
+      
+      
+        <a href="/wordpress-with-LNMP-environment/" title="使用LNMP環境搭建WordPress網站"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">使用LNMP環境搭建WordPress網站</span>
+        </a>
+      
+    
+      
+      
+        <a href="/create-wireguard-site-to-site-tunnel/" title="使用Wireguard建立Site to Site Tunnel"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">使用Wireguard建立Site to Site Tunnel</span>
+        </a>
+      
+    
+      
+      
+        <a href="/using-openssl-to-create-ca-on-linux/" title="使用openssl在linux上建立CA"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">使用openssl在linux上建立CA</span>
+        </a>
+      
+    
+      
+      
+        <a href="/linux-qos-with-tc-and-nft/" title="使用nftables和tc在linux上實現QoS"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">使用nftables和tc在linux上實現QoS</span>
+        </a>
+      
+    
+      
+      
+        <a href="/pci-passthrough-with-proxmox/" title="在Proxmox上進行PCI-E直通"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">在Proxmox上進行PCI-E直通</span>
+        </a>
+      
+    
+      
+      
+        <a href="/how-to-use-jnlp-kvm/" title="如何打開jnlp格式的kvm console"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">如何打開jnlp格式的kvm console</span>
+        </a>
+      
+    
+      
+      
+        <a href="/how-to-print-and-scan-over-network/" title="如何透過網路列印和掃描"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">如何透過網路列印和掃描</span>
+        </a>
+      
+    
+      
+      
+        <a href="/how-to-create-proxmox-package-repository-mirror/" title="如何建立Proxmox的鏡像站"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">如何建立Proxmox的鏡像站</span>
+        </a>
+      
+    
+      
+      
+        <a href="/proxmox-network-config-ovs-and-sdn/" title="Proxmox Network： OVS 與 SDN"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Proxmox Network： OVS 與 SDN</span>
+        </a>
+      
+    
+      
+      
+        <a href="/freeipa-install-and-client-setup/" title="FreeIPA設定與客戶端安裝過程"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">FreeIPA設定與客戶端安裝過程</span>
+        </a>
+      
+    
+      
+      
+        <a href="/linux-power-management/" title="Linux上的電源管理"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">Linux上的電源管理</span>
+        </a>
+      
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="疑難雜症"
+        id="heading-e2411166d77f023169f0978db441925c" role="tab" data-toggle="collapse" href="#collapse-e2411166d77f023169f0978db441925c"
+        aria-expanded="false"
+      >
+        疑難雜症
+        <span class="list-group-count">(5)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse " id="collapse-e2411166d77f023169f0978db441925c"
+           role="tabpanel" aria-labelledby="heading-e2411166d77f023169f0978db441925c">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/asus-x99-code-00/" title="Asus X99 通病"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Asus X99 通病</span>
+        </a>
+      
+    
+      
+      
+        <a href="/cloudflare-infinite-301-redirection/" title="Cloudflare Proxy 無限301轉址"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Cloudflare Proxy 無限301轉址</span>
+        </a>
+      
+    
+      
+      
+        <a href="/e1000e-detected-hardware-unit-hang/" title="I218-V、I219-V系列網卡在Linux下突然關閉的解法"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">I218-V、I219-V系列網卡在Linux下突然關閉的解法</span>
+        </a>
+      
+    
+      
+      
+        <a href="/wireguard-persistent-keepalive/" title="Wireguard的keepalive設定"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Wireguard的keepalive設定</span>
+        </a>
+      
+    
+      
+      
+        <a href="/dell-g11-server-update-firmware/" title="DELL 11代伺服器韌體更新採坑記錄"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">DELL 11代伺服器韌體更新採坑記錄</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Linux上的電源管理</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="前言">前言</h1>
+<p>這篇文章主要是偏向我對於網路上關於Linux電源管理的內容的整理，以及我自己在筆電上實作的結果，如果想要更加了解可以查看文章中的參考資料。</p>
+<p>我的筆電型號是Swift SFX14-41G，CPU為5800U，因此在底下的實作中有針對只能在AMD與Ryzen上進行的電源管理設定。</p>
+<h1 id="CPU">CPU</h1>
+<p>如果不算GPU的話，一個系統中CPU大概率是最耗電的部分，因此大部分的電源管理都是針對CPU來進行，像是限制運行頻率之類的，CPU如果可以省電，那麼將可以給電池續航帶來顯著的提升。</p>
+<p>CPU的省電主要是靠調節CPU運行的頻率，而Linux中調整CPU頻率依靠CPUFreq子系統，CPUFreq定義了<code>Scaling governors </code>和<code>Scaling drivers</code>兩個選項，可以透過改變這兩個選項來改變CPU的調度，更詳細的內容，可以查看<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/CPU_frequency_scaling">Archwiki</a><sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span class="hint--top hint--rounded" aria-label="[CPU frequency scaling - ArchWiki](https://wiki.archlinux.org/title/CPU_frequency_scaling)">[1]</span></a></sup>裡的介紹。</p>
+<p><code>Scaling governors </code>和<code>Scaling drivers</code>的功能如下</p>
+<ul>
+<li>Scaling governors： 調度策略，決定CPU頻率要跑哪個頻率，並傳遞給Scaling drivers執行，大部分的driver都定義了四種調度器，每種driver提供的調度策略雖然名稱相同，但調度並不完全一樣，大部分情況下ondemand或schedutil可以滿足多數需求
+<ul>
+<li>performance： 始終維持CPU最大頻率</li>
+<li>powersave： 始終維持CPU最小頻率</li>
+<li>ondemand： 在負載時使用高頻率，閒置時逐漸降低到最低</li>
+<li>schedutil： 根據CPU使用率調整頻率，且調速快</li>
+</ul>
+</li>
+<li>Scaling drivers： 調度驅動，直接與CPU交互，將governors決定的頻率傳到CPU，調整CPU的頻率</li>
+</ul>
+<h2 id="Scaling-drivers">Scaling drivers</h2>
+<p>因為我使用AMD的CPU，這部份就只會提AMD CPU可使用的調度器，完整列表可參考<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/CPU_frequency_scaling#Scaling_drivers">Archwiki</a><sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span class="hint--top hint--rounded" aria-label="[CPU frequency scaling - ArchWiki](https://wiki.archlinux.org/title/CPU_frequency_scaling)">[1]</span></a></sup></p>
+<p>在AMD平台上可以使用的driver有3種，<code>acpi_cpufreq</code>、<code>amd_pstate</code>和<code>amd_pstate_epp</code>，其中<code>amd_pstate</code>又有三種模式，分別為<code>passive</code>、<code>guided</code>和<code>active</code>，設定為<code>active</code>模式時使用的driver為<code>amd_pstate_epp</code>，可以在kernel command line parameters中設定選擇哪一種driver的哪種模式<sup id="fnref:2" class="footnote-ref"><a href="#fn:2" rel="footnote"><span class="hint--top hint--rounded" aria-label="[amd-pstate CPU Performance Scaling Driver — The Linux Kernel  documentation](https://docs.kernel.org/admin-guide/pm/amd-pstate.html)">[2]</span></a></sup></p>
+<ul>
+<li><code>amd_pstate=disable</code>使用的driver為<code>acpi_cpufreq</code>，此driver為核心中CPUFreq負責，使用ACPI提供的CPU能效等級來調度，好處是基本所有的CPU都可使用此driver，但是調度較粗糙，無法達到精細的調度來省電</li>
+<li><code>amd_pstate=active</code>使用的driver為<code>amd_pstate_epp</code>，在此模式下由CPPC(Collaborative Power and Performance Control)決定運行頻率，只提供performance與powersave兩種governor，driver將governor與EPP(energy performance preference)的值提供給CPPC來決定頻率，由於需要CPU內有CPPC，因此只有zen2後支援此driver；這個driver除了可以調整governor，還可以額外設定EPP，可以理解成在governor的電源指示上做微調，有4種EPP，性能和耗電從高到低分別是performance、balance_performance、balance_power、power，這個部分就按需選擇即可</li>
+<li><code>amd_pstate=guided</code>使用的driver為<code>amd_pstate</code>的<code>guided</code>模式，此模式同樣使用CPPC，但是可以在OS內設定最高及最低性能，CPPC會在範圍之間自動決定運行頻率，同樣的，因為對CPPC有需求，只有zen2後可以使用此driver</li>
+<li><code>amd_pstate=passive</code>使用的driver為<code>amd_pstate</code>的<code>passive</code>模式，此模式下由driver來決定運行頻率，類似<code>acpi_cpufreq</code>，但可能會好一點</li>
+</ul>
+<p>目前大部分的核心編譯設定<code>CONFIG_X86_AMD_PSTATE_DEFAULT_MODE=3</code>，即核心在沒有設定時預設使用<code>amd_pstate_epp</code>，可以在<code>/proc/config.gz</code>裡的Config中找到目前運行核心的編譯設定。</p>
+<p>核心編譯設定的定義可以在kernel的源始碼中找到，在<a target="_blank" rel="noopener" href="https://github.com/torvalds/linux/tree/master/drivers/cpufreq/Kconfig.x86">drivers/cpufreq/Kconfig.x86</a>中<code>config X86_AMD_PSTATE_DEFAULT_MODE</code>底下有定義設定數值對應預設使用的driver</p>
+<ul>
+<li>1 -&gt; Disabled</li>
+<li>2 -&gt; Passive</li>
+<li>3 -&gt; Active (EPP)</li>
+<li>4 -&gt; Guided</li>
+</ul>
+<hr>
+<p>至於這幾種driver要選擇哪一種的問題，我參考了<a target="_blank" rel="noopener" href="https://www.phoronix.com/review/amd-pstate-epp-ryzen-mobile">phoronix的測試</a><sup id="fnref:3" class="footnote-ref"><a href="#fn:3" rel="footnote"><span class="hint--top hint--rounded" aria-label="[Ryzen Mobile Power/Performance With Linux 6.3's New AMD P-State EPP Driver - Phoronix](https://www.phoronix.com/review/amd-pstate-epp-ryzen-mobile)">[3]</span></a></sup>，<code>amd-pstate-epp</code>的表現很好，在CPU閒置時他可以達到接近<code>acpi_freq</code>在<code>powersave</code> governors的耗電量，但是在有需求時它可以自動boost到較高的頻率，而不是像其他driver的<code>powersave</code> governor，只會保持在最低頻率，幾乎不可使用。我個人的體驗覺得<code>amd-pstate-epp</code>的表現不錯，相比於<code>passive</code>或<code>guided</code>在續航上有較好的表現。</p>
+
+    <div class="fold">
+      <div class="fold-title fold-info collapsed" data-toggle="collapse" href="#collapse-7e900a56" role="button" aria-expanded="false" aria-controls="collapse-7e900a56">
+        <div class="fold-arrow">▶</div>一些其他參考資料
+      </div>
+      <div class="fold-collapse collapse" id="collapse-7e900a56">
+        <div class="fold-content">
+          <p><a target="_blank" rel="noopener" href="https://www.reddit.com/r/linux/comments/15p4bfs/amd_pstate_and_amd_pstate_epp_scaling_driver/">AMD P-State and AMD P-State EPP Scaling Driver Configuration Guide : r/linux</a></p><p><a target="_blank" rel="noopener" href="https://www.phoronix.com/news/AMD-P-State-Guided-Auto">AMD Posts P-State Linux Patches For New “Guided Autonomous Mode” - Phoronix</a></p><p><a target="_blank" rel="noopener" href="https://www.reddit.com/r/linux_gaming/comments/15hjq8l/in_case_anyone_wants_to_use_the_amd_pstate/">In case anyone wants to use the AMD pstate frequency scaling driver : r/linux_gaming</a></p>
+        </div>
+      </div>
+    </div>
+<h2 id="Setting">Setting</h2>
+<p>可以透過操作<code>/sys</code>底下的檔案來改變kernel設定的driver與governor</p>
+<h3 id="driver">driver</h3>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-built_in">echo</span> &lt;driver&gt; &gt; /sys/devices/system/cpu/amd_pstate/status</span><br></code></pre></td></tr></table></figure>
+<p>&lt;driver&gt;的值可以為active/guided/passive/disable</p>
+<h3 id="governor">governor</h3>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-built_in">echo</span> &lt;governor&gt; &gt; /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor</span><br></code></pre></td></tr></table></figure>
+<p>&lt;governor&gt;的值可以是<code>/sys/devices/system/cpu/cpu*/cpufreq/scaling_available_governors</code>中提供的選項</p>
+<h3 id="EPP">EPP</h3>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-built_in">echo</span> &lt;EPP&gt; &gt; /sys/devices/system/cpu/cpu*/cpufreq/energy_performance_preference</span><br></code></pre></td></tr></table></figure>
+<p>&lt;EPP&gt;的值可以是<code>/sys/devices/system/cpu/cpu*/cpufreq/energy_performance_preference</code>中提供的選項</p>
+<h3 id="frequencies">frequencies</h3>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-comment"># 設定CPU以指定頻率運作</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">cpupower frequency-set -f &lt;clock_freq&gt;</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-comment"># 設定CPU頻率上限</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">cpupower frequency-set -u &lt;clock_freq&gt;</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-comment"># 或是使用/sys操作</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-built_in">echo</span> &lt;clock_freq&gt; &gt; /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-comment">#設定CPU頻率下限</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">cpupower frequency-set -d &lt;clock_freq&gt;</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-comment"># 或是使用/sys操作</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-built_in">echo</span> &lt;clock_freq&gt; &gt; /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq</span><br></code></pre></td></tr></table></figure>
+<h3 id="boost">boost</h3>
+<p>設定是否開啟turbo boost</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-comment"># 開啟turbo boost</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-built_in">echo</span> 1 &gt; /sys/devices/system/cpu/cpufreq/boost <span class="hljs-comment"># amd/intel</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-built_in">echo</span> 0 &gt; /sys/devices/system/cpu/intel_pstate/no_turbo <span class="hljs-comment"># intel</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-comment"># 關閉turbo boost</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-built_in">echo</span> 0 &gt; /sys/devices/system/cpu/cpufreq/boost <span class="hljs-comment"># amd/intel</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-built_in">echo</span> 1 &gt; /sys/devices/system/cpu/intel_pstate/no_turbo <span class="hljs-comment"># intel</span></span><br></code></pre></td></tr></table></figure>
+<h1 id="工具">工具</h1>
+<p>前面章節介紹了調整CPU省電的方法，但是如果每次拔下插頭都要做一堆設定總是不方便的，雖然可以自己寫一個腳本被udev rules觸發或是寫一個daemon監控acpi電源事件，不過目前linux上已經有很多成熟的電源管理專案了，沒有必要重複造輪子。</p>
+<p>目前linux常見的電源管理方案有以下幾種</p>
+<ul>
+<li>tlp： 大部分人的推薦，省電設定包含了CPU、無線、USB、GPU等等，幾乎所有設備的省電設定都可設置，而且可以使用tlpui來用GUI進行設定，可以設定一套接AC時的設定和使用電池時的設定，可以在離電後自動切換，也可手動切換模式，堪稱電源管理工具的瑞士刀，只是需要良好的設定。</li>
+<li>power-profiles-daemon： 一個較新的電源管理工具，只針對CPU做幾項設定，可使用tlp重現相同的功能<sup id="fnref:4" class="footnote-ref"><a href="#fn:4" rel="footnote"><span class="hint--top hint--rounded" aria-label="[power-profiles-daemon — TLP 1.7.0 documentation](https://linrunner.de/tlp/faq/ppd.html)">[4]</span></a></sup> (後文會說明)，ppd會內置3種配置power、balanced、performance，優點是不需配置，就可以達成不差的效果，雖然只針對CPU做省電設定(前文有提到大部分耗電是CPU造成的)，而且對桌面環境有很好的支持，KDE Plasma和Gnome都可以直接在Taskbar上進行三種配置的切換。</li>
+<li>tuned： 和tlp相似，有豐富的省電選項可以設置，這款工具由RetHat負責維護，因此RH系的Linux大部分都是使用這個，Fedora在41後預設安裝tuned而不是ppd<sup id="fnref:5" class="footnote-ref"><a href="#fn:5" rel="footnote"><span class="hint--top hint--rounded" aria-label="[Changes/TunedAsTheDefaultPowerProfileManagementDaemon - Fedora Project Wiki](https://fedoraproject.org/wiki/Changes/TunedAsTheDefaultPowerProfileManagementDaemon)">[5]</span></a></sup>；使用人數較tlp少，但最近tuned推出了tuned-ppd這個提供ppd的兼容層，可以達成和ppd一樣對桌面環境很好的支持，同時又有和tlp一樣豐富的功能，也許我之後會嘗試這個工具。</li>
+<li>auto-cpufreq： 也是近幾年討論比較多的工具，它一樣只針對CPU做設定，調整CPU的頻率，根據它的文檔，這個工具可以根據工作負載自動決定CPU的頻率來達到省電的功能，我個人是覺得CPU內的CPPC單元應該可以有更好的效果啦，畢竟判斷工作負載同樣需要算力，有興趣可以自己測試看看。</li>
+<li>thermald： 這個工具和省電其實沒有很大的關係，它主要關注發熱，可以設定達到溫度自動降頻，好處是和前面幾個工具都不衝突，前面幾個工具一般都是建議只裝其中一個，畢竟每個工具都是用同樣的操作方式進行省電設定，如果幾個都在跑大概率會衝突。</li>
+<li>powertop： 這個工具其實也和省電沒有什麼關係，主要是它可以查看目前系統CPU的耗電量、idle、C狀態之類的，不過他也有提供<code>--auto-tune</code>選項，不過這個選項的省電設定會很激進，可能會影響系統的使用，我一般只有在需要極致省電的時候才會在開啟了tlp下再執行<code>sudo powertop --auto-tune</code></li>
+</ul>
+<p>在tlp、ppd、tuned和auto-cpufreq這4個工具中，我曾經使用過tlp和ppd，目前是又從ppd換回tlp了，大概可以多提升幾十分鐘的續航，畢竟多了一些外圍設備的省電；我個人建議筆電一定要進行省電設定，如果不想查文檔，可以直接裝ppd即可，如果不做電源管理，可能windows下能用6小時，Linux下只剩2~3小時，哪怕只有ppd，也可以把續航拉回正常的水平</p>
+
+    <div class="fold">
+      <div class="fold-title fold-info collapsed" data-toggle="collapse" href="#collapse-893d600a" role="button" aria-expanded="false" aria-controls="collapse-893d600a">
+        <div class="fold-arrow">▶</div>一些關於電源管理工具的討論
+      </div>
+      <div class="fold-collapse collapse" id="collapse-893d600a">
+        <div class="fold-content">
+          <p><a target="_blank" rel="noopener" href="https://discussion.fedoraproject.org/t/tuned-ppd-vs-tlp/141203/3">Tuned-ppd vs tlp - Fedora Discussion</a></p><p><a target="_blank" rel="noopener" href="https://www.reddit.com/r/Fedora/comments/p7uz33/confused_about_power_saving_tlp_vs_tuned_vs/">Confused about power saving: TLP vs tuned vs powertop, etc : r/Fedora</a></p><p><a target="_blank" rel="noopener" href="https://forum.endeavouros.com/t/tlp-or-power-profiles-for-battery-life/37921">TLP or Power-Profiles for Battery Life - General system / Newbie - EndeavourOS</a></p><p><a target="_blank" rel="noopener" href="https://community.frame.work/t/tracking-ppd-v-tlp-for-amd-ryzen-7040/39423">[TRACKING] PPD v TLP for AMD Ryzen 7040 - Framework Laptop 13 / Linux - Framework Community</a></p><p><a target="_blank" rel="noopener" href="https://www.reddit.com/r/Fedora/comments/qpaa4g/tlp_vs_powerprofilesdaemon/">tlp vs. power-profiles-daemon : r/Fedora</a></p><p>這些討論都只是參考，如果想要達成最好的省電，還是要在自己的電腦上做測試，我是懶得做精細的測試了，就tlp用著就很好</p>
+        </div>
+      </div>
+    </div>
+<h2 id="TLP">TLP</h2>
+<p>這段主要會講我對tlp在使用電池下的設定，我設定在連接AC下是什麼省電都關閉，抱持最大性能的運行</p>
+<p>在使用電池時我設定tlp的CPU設定與ppd的power模式下相同，並做了一些修改，ppd的三種模式的設定相當於tlp中的<code>PLATFORM_PROFILE_ON_AC/BAT</code>、<code>CPU_ENERGY_PERF_POLICY_ON_AC/BAT</code>和<code>CPU_BOOST_ON_AC/BAT</code><sup id="fnref:4" class="footnote-ref"><a href="#fn:4" rel="footnote"><span class="hint--top hint--rounded" aria-label="[power-profiles-daemon — TLP 1.7.0 documentation](https://linrunner.de/tlp/faq/ppd.html)">[4]</span></a></sup></p>
+<p>ppd的performance設定等於</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs conf">PLATFORM_PROFILE_ON_AC/BAT=performance<br>CPU_ENERGY_PERF_POLICY_ON_AC/BAT=performance<br>CPU_BOOST_ON_AC/BAT=1<br></code></pre></td></tr></table></figure>
+<p>balanced</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs conf">PLATFORM_PROFILE_ON_AC/BAT=balanced<br>CPU_ENERGY_PERF_POLICY_ON_AC/BAT=balance_performance<br>CPU_BOOST_ON_AC/BAT=0<br></code></pre></td></tr></table></figure>
+<p>power</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs conf">PLATFORM_PROFILE_ON_AC/BAT=low-power<br>CPU_ENERGY_PERF_POLICY_ON_AC/BAT=power<br>CPU_BOOST_ON_AC/BAT=0<br></code></pre></td></tr></table></figure>
+<p>我個人在使用電池下，有關處理器的設定為</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs conf">CPU_DRIVER_OPMODE_ON_BAT=active<br>CPU_SCALING_GOVERNOR_ON_BAT=powersave<br>CPU_ENERGY_PERF_POLICY_ON_BAT=power<br>CPU_BOOST_ON_BAT=0<br></code></pre></td></tr></table></figure>
+<p>可以視自己的機器不同來做調整，tlpui裡都有對每個選項做相關設定</p>
+<p>CPU以外的部分我基本沒有更改什麼設定，如果有發現像是USB斷線或是網路/音訊設備閒置後斷線，可以把那部份的省電關掉即可</p>
+<h2 id="other-Tools">other Tools</h2>
+<ul>
+<li>cpupower： 前面就有用到的工具，可以設定CPU使用的governors、運行的頻率，也可以查看目前CPU調度相關的資訊，<code>cpupower frequency-info</code></li>
+<li>turbostat： 用來查看CPU每顆核心boost的狀態，也會顯示C狀態的比例，一般不太會需要這個工具</li>
+<li>lm_sensors： 統整電腦內各種感測器的狀態，可以獲得各種零部件的溫度或是風扇轉速</li>
+</ul>
+<h2 id="Ryzen-only-Tools">Ryzen only Tools</h2>
+<ul>
+<li>ryzenadj： 可以理解為等同Intel XTU的工具，如果BIOS有開放設置，可以在OS內設定CPU的功耗、溫度牆或是超頻，只是我電腦BIOS沒有開放這些選項，所以我無法使用</li>
+<li>zenpower3/zenpower： 提供zenpower的dkms模組，可以更精確的獲得CPU內感測器的數值，如電壓、電流等</li>
+<li>zenmonitor3/zenmonitor： 將zenpower的資訊列表呈現在GUI上的工具</li>
+</ul>
+<p><img src="zenmonitor3.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<ul>
+<li>amdctl： 纇似ryzenadj，同樣無法使用</li>
+<li>zenstate： 調電壓曲線的工具，好像也可以超頻，同樣無法使用</li>
+<li>ryzen-ppd： 一個用來幫助ryzen省電的工具，但我跑不動，看起來也沒什麼人用</li>
+<li>ryzen_smu： 一個CPU內SMU(System Management Unit)驅動的核心模組</li>
+</ul>
+<p>不過AMD沒有公布SMU可以使用的指令，目前只有Matisse和Vermeer的指令有被試出來，在ryzen_smu的<a target="_blank" rel="noopener" href="https://github.com/leogx9r/ryzen_smu/blob/master/docs/rsmu_commands.md">github</a><sup id="fnref:6" class="footnote-ref"><a href="#fn:6" rel="footnote"><span class="hint--top hint--rounded" aria-label="[ryzen_smu/docs/rsmu_commands.md at master · leogx9r/ryzen_smu](https://github.com/leogx9r/ryzen_smu/blob/master/docs/rsmu_commands.md)">[6]</span></a></sup>上有給出，其他處理器系列能使用的指令只有Test和GetSMUVersion這兩個，我個人測試5800U也只有這兩個指令會有反應</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-comment"># test，Arg0輸入數字X，回傳X+1</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-comment"># 先隨便寫入一些數值</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-built_in">printf</span> <span class="hljs-string">&#x27;%0*x&#x27;</span> 48 142000 | <span class="hljs-built_in">fold</span> -w 2 | <span class="hljs-built_in">tac</span> | <span class="hljs-built_in">tr</span> -d <span class="hljs-string">&#x27;\n&#x27;</span> | xxd -r -p | <span class="hljs-built_in">tee</span> /sys/kernel/ryzen_smu_drv/smu_args</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-built_in">cat</span> /sys/kernel/ryzen_smu_drv/smu_args | xxd</span><br>00000000: b02a 0200 0000 0000 0000 0000 0000 0000  .*..............<br>00000010: 0000 0000 0000 0000                      ........<br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-comment"># 執行SMU指令</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-built_in">printf</span> <span class="hljs-string">&#x27;\x01&#x27;</span> | <span class="hljs-built_in">tee</span> /sys/kernel/ryzen_smu_drv/rsmu_cmd</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-comment"># 查看回傳，發現第一個參數+1</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-built_in">cat</span> /sys/kernel/ryzen_smu_drv/smu_args | xxd</span><br>00000000: b12a 0200 0000 0000 0000 0000 0000 0000  .*..............<br>00000010: 0000 0000 0000 0000                      ........<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-comment"># GetSMUVersion，無參數，回傳小端排序的版本</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-comment"># 執行SMU指令</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-built_in">printf</span> <span class="hljs-string">&#x27;\x02&#x27;</span> | <span class="hljs-built_in">tee</span> /sys/kernel/ryzen_smu_drv/rsmu_cmd</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-comment"># 查看回傳</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-built_in">cat</span> /sys/kernel/ryzen_smu_drv/smu_args | xxd</span><br>00000000: 002c 4000 0000 0000 0000 0000 0000 0000  .,@.............<br>00000010: 0000 0000 0000 0000                      ........<br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-comment"># 回傳002c40，十進位為0 44 64，因為是小端排序，所以SMU正確版本為64.44.0</span></span><br></code></pre></td></tr></table></figure>
+<h2 id="參考">參考</h2>
+<section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/CPU_frequency_scaling">CPU frequency scaling - ArchWiki</a>
+<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://docs.kernel.org/admin-guide/pm/amd-pstate.html">amd-pstate CPU Performance Scaling Driver — The Linux Kernel  documentation</a>
+<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:3" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://www.phoronix.com/review/amd-pstate-epp-ryzen-mobile">Ryzen Mobile Power/Performance With Linux 6.3’s New AMD P-State EPP Driver - Phoronix</a>
+<a href="#fnref:3" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:4" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://linrunner.de/tlp/faq/ppd.html">power-profiles-daemon — TLP 1.7.0 documentation</a>
+<a href="#fnref:4" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:5" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://fedoraproject.org/wiki/Changes/TunedAsTheDefaultPowerProfileManagementDaemon">Changes/TunedAsTheDefaultPowerProfileManagementDaemon - Fedora Project Wiki</a>
+<a href="#fnref:5" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:6" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://github.com/leogx9r/ryzen_smu/blob/master/docs/rsmu_commands.md">ryzen_smu/docs/rsmu_commands.md at master · leogx9r/ryzen_smu</a>
+<a href="#fnref:6" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%95%99%E7%A8%8B/" class="category-chain-item">教程</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/linux/" class="print-no-link">#linux</a>
+      
+        <a href="/tags/power/" class="print-no-link">#power</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Linux上的電源管理</div>
+      <div>https://www.zenwen.eu.org/linux-power-management/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Zen Wen</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>發布於</div>
+          <div>2025年1月26日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>許可協議</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="SA - 相同方式共享">
+                    <i class="iconfont icon-cc-sa"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/freeipa-install-and-client-setup/" title="FreeIPA設定與客戶端安裝過程">
+                        <span class="hidden-mobile">FreeIPA設定與客戶端安裝過程</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+    <div id="giscus" class="giscus"></div>
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#giscus', function() {
+        var options = {"repo":"zen8841/zen-blog","repo-id":"R_kgDOLf1xXw","category":"Announcements","category-id":"DIC_kwDOLf1xX84CkjqQ","theme-light":"light","theme-dark":"dark","mapping":"pathname","reactions-enabled":1,"emit-metadata":1,"input-position":"top","lang":"zh-TW"};
+        var attributes = {};
+        for (let option in options) {
+          if (!option.startsWith('theme-')) {
+            var key = option.startsWith('data-') ? option : 'data-' + option;
+            attributes[key] = options[option];
+          }
+        }
+        var light = 'light';
+        var dark = 'dark';
+        window.GiscusThemeLight = light;
+        window.GiscusThemeDark = dark;
+        attributes['data-theme'] = document.documentElement.getAttribute('data-user-color-scheme') === 'dark' ? dark : light;
+        for (let attribute in attributes) {
+          var value = attributes[attribute];
+          if (value === undefined || value === null || value === '') {
+            delete attributes[attribute];
+          }
+        }
+        var s = document.createElement('script');
+        s.setAttribute('src', 'https://giscus.app/client.js');
+        s.setAttribute('crossorigin', 'anonymous');
+        for (let attribute in attributes) {
+          s.setAttribute(attribute, attributes[attribute]);
+        }
+        var ss = document.getElementsByTagName('script');
+        var e = ss.length > 0 ? ss[ss.length - 1] : document.head || document.documentElement;
+        e.parentNode.insertBefore(s, e.nextSibling);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目錄</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜尋</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">關鍵字</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Power By Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Theme：Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允許 JavaScript 運行的環境下瀏覽效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -6,7 +6,7 @@
   <link href="https://www.zenwen.eu.org/atom.xml" rel="self"/>
   
   <link href="https://www.zenwen.eu.org/"/>
-  <updated>2024-12-22T17:40:00.000Z</updated>
+  <updated>2025-01-25T16:18:11.000Z</updated>
   <id>https://www.zenwen.eu.org/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux上的電源管理</title>
+    <link href="https://www.zenwen.eu.org/linux-power-management/"/>
+    <id>https://www.zenwen.eu.org/linux-power-management/</id>
+    <published>2025-01-25T16:18:11.000Z</published>
+    <updated>2025-01-25T16:18:11.000Z</updated>
+    
+    
+    <summary type="html">記錄如何在Linux上進行電源管理來達成省電及延長電池續航</summary>
+    
+    
+    
+    <category term="教程" scheme="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/"/>
+    
+    
+    <category term="linux" scheme="https://www.zenwen.eu.org/tags/linux/"/>
+    
+    <category term="power" scheme="https://www.zenwen.eu.org/tags/power/"/>
+    
+  </entry>
   
   <entry>
     <title>FreeIPA設定與客戶端安裝過程</title>
@@ -56,9 +77,9 @@
     <category term="疑難雜症" scheme="https://www.zenwen.eu.org/categories/%E6%95%99%E7%A8%8B/%E7%96%91%E9%9B%A3%E9%9B%9C%E7%97%87/"/>
     
     
-    <category term="3C硬體" scheme="https://www.zenwen.eu.org/tags/3C%E7%A1%AC%E9%AB%94/"/>
-    
     <category term="server" scheme="https://www.zenwen.eu.org/tags/server/"/>
+    
+    <category term="3C硬體" scheme="https://www.zenwen.eu.org/tags/3C%E7%A1%AC%E9%AB%94/"/>
     
   </entry>
   

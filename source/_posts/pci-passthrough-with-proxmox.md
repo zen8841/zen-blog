@@ -20,7 +20,7 @@ tags:
 
 簡單來說，PCI Passthrough就是將物理機(Host)上的PCI(E) device從Host上隔離並直通給客戶機(Client)的技術，對於Client來說，就會認為他真的插著一個PCI device。
 
-直通也不一定是直通PCI device，也有可能是直通透過SR-IOV或是其他技術虛擬化出來的資源，不過這就需要硬體集Driver的支持，相對來說會更複雜。
+直通也不一定是直通PCI device，也有可能是直通透過SR-IOV或是其他技術虛擬化出來的資源，不過這就需要硬體及Driver的支持，相對來說會更複雜。
 
 因為每個Host的配置都不同，每個Host的PCI直通設定都不完全相同，有時候甚至PCIE device插在哪個PCIE插槽可能都會有影響，可能別人能用的解決方法你試就沒用，堪稱玄學。而直通顯卡到Windows Client更是PCI直通中最麻煩的設定，大概率會碰到更多的問題，不同Host的解決方法還不一定一樣，我對此的評價只有：玄學中的玄學。
 

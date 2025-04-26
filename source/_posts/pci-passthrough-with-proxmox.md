@@ -255,7 +255,7 @@ hostpci0: 0000:02:00,pcie=1,x-vga=1,romfile=vbios.rom
 
 ## 問題2：無法安裝驅動
 
-具體的症狀大概是只要Windows Client不裝驅動，那麼就可以正常開機，但是使用連在顯卡上的螢幕裝驅動會裝到一半直接黑屏死機，如果是使用RDP遠程連入裝驅動，雖然可以成功安裝，但是開機到進入系統前就會直接死機重鎧(只能開機到轉圈的地方，猜測是載入驅動的時候內核的問題)
+具體的症狀大概是只要Windows Client不裝驅動，那麼就可以正常開機，但是使用連在顯卡上的螢幕裝驅動會裝到一半直接黑屏死機，如果是使用RDP遠程連入裝驅動，雖然可以成功安裝，但是開機到進入系統前就會直接死機重開(只能開機到轉圈的地方，猜測是載入驅動的時候內核的問題)
 
 經過一些googling後在[UNRAID的論壇](https://forums.unraid.net/topic/131013-windows-10-vm-crashesbreaks-during-nvidia-driver-install-for-gpu-passthrough/)[^2]和[Proxmox的論壇](https://forum.proxmox.com/threads/gpu-passthrough-issue.109074/)[^3]上找到了和我相同問題的提問，給出的解法加上一些kernel parameter後在Windows Client中使用安全模式安裝驅動，並將顯卡的MSI(Message Signaled Interrupts)打開，我嘗試後成功解決問題，直通成功。
 

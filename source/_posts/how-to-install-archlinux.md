@@ -116,14 +116,14 @@ ArchLinux的安裝其實很簡單，就像把大象放進冰箱只需要三個�
 
 #### 分區範例
 
-UEFI需要使用GPT分區表，並且指少需要將`/boot`獨立分區，底下是範例的分區，如果需要安裝很多不同核心或是Early KMS的kernel module，則Boot可以適當放大到1G
+UEFI需要使用GPT分區表，並且指少需要將`/boot`獨立分區，底下是範例的分區，如果需要安裝很多不同核心或是Early KMS的kernel module，則Boot可以適當放大到1G，timeshift是用來做系統備份的，我使用ext4因此需要額外的空間做備份，如果使用btrfs則不用，可以跳過這個
 
 |   Name    |  Size  |   Code    |
 | :-------: | :----: | :-------: |
 |   Boot    | 512MiB |   EF00    |
 |   Root    | 60GiB  | 8300/8304 |
 | Timeshift | 70GiB  |   8300    |
-|   Home    |  $-$   | 8300/8302 |
+|   Home    |   -    | 8300/8302 |
 
 #### gdisk 指令
 

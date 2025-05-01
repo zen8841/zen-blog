@@ -449,9 +449,7 @@ Exec=/bin/sh -c 'while read -r trg; do case $trg in linux) exit 0; esac; done; /
 # systemctl enable NetworkManager
 # systemctl enable avahi-daemon
 # systemctl enable bluetooth
-# systemctl enable cups
 # systemctl enable sddm
-# systemctl enable paccache.timer
 ```
 
 ### 重新啟動

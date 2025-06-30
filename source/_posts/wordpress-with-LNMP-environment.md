@@ -12,7 +12,7 @@ categories:
 tags:
 - server
 - linux
-- nginx
+- Nginx
 - wordpress
 ---
 

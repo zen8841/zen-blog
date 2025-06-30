@@ -14,7 +14,7 @@ categories:
 tags:
 - network
 - server
-- cloudflare
+- Cloudflare
 - https
 - 301-redirection
 ---

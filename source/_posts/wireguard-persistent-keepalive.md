@@ -41,7 +41,7 @@ ping -c1 -W5 <peer's wireguard IP> 1>/dev/null 2>/dev/null || (sudo wg-quick dow
 
 雖然上面的方法的確可以變更 src port，來規避路由器的連接切斷，但在被切斷到偵測到後重新連接會有一小段掉線時間，既然找到了真正的問題，那麼就可以來解決了。
 
-解決方法是專門針對這條 wireguard 的連接去做隨機 masquerade，讓出去的 port 單獨隨機一次，然後間隔固定時間切斷對應的 conntrack 連線，強迫 kernel 重新 masquerade，但不影響wireguard process 接收的 port，以 nftable 設定做示範
+解決方法是專門針對這條 wireguard 的連接去做隨機 masquerade，讓出去的 port 單獨隨機一次，然後間隔固定時間切斷對應的 conntrack 連線，強迫 kernel 重新 masquerade，但不影響 wireguard process 接收的 port，以 nftable 設定做示範
 
 ```conf
 table inet nat {

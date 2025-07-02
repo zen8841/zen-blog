@@ -1,9 +1,9 @@
 ---
-title: Hexo的個人化設定
+title: Hexo 的個人化設定
 katex: false
 mathjax: false
 mermaid: false
-excerpt: 分享一些好看的hexo主題和好用的插件
+excerpt: 分享一些好看的 hexo 主題和好用的插件
 date: 2024-07-09 23:28:06
 updated: 2024-07-09 23:28:06
 index_img:
@@ -39,12 +39,12 @@ tags:
 # Plugin
 
 - [hexo-renderer-markdown-it](https://github.com/hexojs/hexo-renderer-markdown-it)
-  - 將渲染器從marked更換為markdown-it
+  - 將渲染器從 marked 更換為 markdown-it
 - [hexo-generator-search](https://github.com/wzpan/hexo-generator-search)
-  - 生成搜尋使用的index
+  - 生成搜尋使用的 index
 - [hexo-generator-feed](https://github.com/hexojs/hexo-generator-feed)
-  - 生成rss feed
+  - 生成 rss feed
 - [hexo-math](https://github.com/hexojs/hexo-math)
   - 對數學公式提供更好的渲染
 - [hexo-deployer-git](https://github.com/hexojs/hexo-deployer-git)
-  - 方便部屬到github/gitlab的插件
+  - 方便部屬到 github/gitlab 的插件

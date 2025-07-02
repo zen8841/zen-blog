@@ -1,5 +1,5 @@
 ---
-title: ArchLinux安裝指北
+title: ArchLinux 安裝指北
 katex: false
 mathjax: false
 mermaid: false
@@ -8,7 +8,7 @@ categories:
 tags:
   - linux
   - Arch
-excerpt: ArchLinux + KDE Plasma + UEFI systemd boot的安裝流程
+excerpt: ArchLinux + KDE Plasma + UEFI systemd boot 的安裝流程
 date: 2025-05-01 18:09:23
 updated: 2025-05-01 18:09:23
 index_img:
@@ -17,29 +17,29 @@ index_img:
 
 # 前言
 
-這篇文章也是應該要很久以前就寫完了，但是因為我個人很懶，所以才拖到現在，剛好最近有CCNS的社課要教學ArchLinux安裝，就順便把文章趕出來。
+這篇文章也是應該要很久以前就寫完了，但是因為我個人很懶，所以才拖到現在，剛好最近有 CCNS 的社課要教學 ArchLinux 安裝，就順便把文章生出來。
 
-安裝Arch最好要確保你看得懂ArchWiki上寫什麼，在安裝過程中，我會盡量給出每個地方對應的Wiki Page，如果有能力，最好將Wiki看完，才能對自己的系統有更深的理解，這篇文章主要是跟隨[Installation guide](https://wiki.archlinux.org/title/Installation_guide)[^1]的流程
+安裝 Arch 最好要確保你看得懂 ArchWiki 上寫什麼，在安裝過程中，我會盡量給出每個地方對應的 Wiki Page，如果有能力，最好將 Wiki 看完，才能對自己的系統有更深的理解，這篇文章主要是跟隨 [Installation guide](https://wiki.archlinux.org/title/Installation_guide)[^1]的流程
 
-## 為什麼要使用Arch
+## 為什麼要使用 Arch
 
-我個人認為ArchLinux有三個最主要的優點
+我個人認為 ArchLinux 有三個最主要的優點
 
 - 高度的客製化：從安裝開始就完全由使用者決定裝什麼
-- Rolling Release：ArchLinux是滾動式更新，軟體會一直在最新的穩定版本上
-- AUR：Arch User Repository，提供其他Arch使用者撰寫的PKGBUILD，可以用來產生不在官方鏡像站裡的軟體包，當然，使用前需要自己看看有沒有人在裡面加料，AUR不對此保證安全
+- Rolling Release：ArchLinux 是滾動式更新，軟體會一直在最新的穩定版本上
+- AUR：Arch User Repository，提供其他 Arch 使用者撰寫的 PKGBUILD，可以用來產生不在官方鏡像站裡的軟體包，當然，使用前需要自己看看有沒有人在裡面加料， AUR 不對此保證安全
 
-## Arch很容易滾掛？
+## Arch 很容易滾掛？
 
-我使用ArchLinux差不多6年了，目前是沒有遇過更新到開不了機的大問題，不過日用可能隔幾個月會需要解決一些也許是因為軟體更新造成的問題，但是使用其他發行版同樣可能遇到，所以Arch其實並沒有別人想像的不穩定。
+我使用 ArchLinux 差不多6年了，目前是沒有遇過更新到開不了機的大問題，不過日用可能隔幾個月會需要解決一些也許是因為軟體更新造成的問題，但是使用其他發行版同樣可能遇到，所以 Arch 其實並沒有別人想像的不穩定。
 
 # 安裝
 
-我個人安裝Arch不喜歡使用`archinstall`指令，一方面是以前安裝的時候就沒這個指令，另一方面，前面提到我認為Arch最大的優點就是高度客製化，如果使用腳本來安裝，那為什麼不使用其他發行版或是Artix呢？
+我個人安裝 Arch 不喜歡使用`archinstall`指令，一方面是以前安裝的時候就沒這個指令，另一方面，前面提到我認為 Arch 最大的優點就是高度客製化，如果使用腳本來安裝，那為什麼不使用其他發行版或是 Artix 呢？
 
 ---
 
-ArchLinux的安裝其實很簡單，就像把大象放進冰箱只需要三個步驟一樣，我將ArchLinux的安裝也分成大致三個步驟(ArchWiki的Installation guide也是分成這三個大步驟[^1])
+ArchLinux 的安裝其實很簡單，就像把大象放進冰箱只需要三個步驟一樣，我將 ArchLinux 的安裝也分成大致三個步驟( ArchWiki 的 Installation guide 也是分成這三個大步驟[^1])
 
 - 前置準備
   - 連接網路
@@ -49,23 +49,23 @@ ArchLinux的安裝其實很簡單，就像把大象放進冰箱只需要三個�
 - 系統設定
   - 設定各種系統文件
   - 安裝其他軟體
-  - 設定bootloader
+  - 設定 bootloader
 
 ## 前置準備
 
-假設現在已經開機到Arch live USB的環境
+假設現在已經開機到 Arch live USB 的環境
 
 ### 連接網路
 
 #### 有線網路
 
-如果是使用ethernet，並且LAN中有DHCP server，則live USB會在開機後自動獲取IP，或是可以使用`dhcpcd`指令來手動獲取DHCP
+如果是使用 ethernet，並且 LAN 中有 DHCP server，則 live USB 會在開機後自動獲取 IP，或是可以使用`dhcpcd`指令來手動獲取 DHCP
 
-使用`ip address`來確認自己是否有獲取IP
+使用`ip address`來確認自己是否有獲取 IP
 
 #### Wi-Fi
 
-我個人在live USB中喜歡使用`iwctl`來連接無線網路[^2]
+我個人在 live USB 中喜歡使用`iwctl`來連接無線網路[^2]
 
 ```SHELL
 # iwctl
@@ -79,19 +79,19 @@ ArchLinux的安裝其實很簡單，就像把大象放進冰箱只需要三個�
 # iwctl --passphrase <passphrase> station <device> connect <SSID>
 ```
 
-同樣使用`ip address`來確認自己是否有獲取Wi-Fi連接後DHCP配發的IP
+同樣使用`ip address`來確認自己是否有獲取 Wi-Fi 連接後 DHCP 配發的 IP
 
 #### 測試
 
-隨便ping個東西測試
+隨便 ping 個東西測試
 
 ```shell
 # ping archlinux.org
 ```
 
-#### 設定SSH
+#### 設定 SSH
 
-這一項並不是必須，但如果網路內有其他電腦，我會習慣在其他電腦上ssh到live USB裡遠端安裝，這樣終端機比較好看，也可以複製貼上
+這一項並不是必須，但如果網路內有其他電腦，我會習慣在其他電腦上 ssh 到 live USB 裡遠端安裝，這樣終端機比較好看，也可以複製貼上
 
 ```shell
 # # 設定密碼，隨便設就好
@@ -112,11 +112,11 @@ ArchLinux的安裝其實很簡單，就像把大象放進冰箱只需要三個�
 
 ### 硬碟分區
 
-我個人習慣使用gdisk來進行分區，看個人習慣也可以使用fdisk、parted或是有TUI的cfdisk、cgdisk
+我個人習慣使用 gdisk 來進行分區，看個人習慣也可以使用 fdisk、parted 或是有 TUI 的 cfdisk、cgdisk
 
 #### 分區範例
 
-UEFI需要使用GPT分區表，並且指少需要將`/boot`獨立分區，底下是範例的分區，如果需要安裝很多不同核心或是Early KMS的kernel module，則Boot可以適當放大到1G，timeshift是用來做系統備份的，我使用ext4因此需要額外的空間做備份，如果使用btrfs則不用，可以跳過這個
+UEFI 需要使用 GPT 分區表，並且至少需要將`/boot`獨立分區，底下是範例的分區，如果需要安裝很多不同核心或是 Early KMS 的 kernel module，則 Boot 可以適當放大到 1G， timeshift 是用來做系統備份的，我使用 ext4 因此需要額外的空間做備份，如果使用 btrfs 則不用，可以跳過這個
 
 |   Name    |  Size  |   Code    |
 | :-------: | :----: | :-------: |
@@ -127,7 +127,7 @@ UEFI需要使用GPT分區表，並且指少需要將`/boot`獨立分區，底下
 
 #### gdisk 指令
 
-在gdisk中會需要用到的指令大概就這些，可以按?來查看所有選項
+在 gdisk 中會需要用到的指令大概就這些，可以按?來查看所有選項
 
 | Command |              Usage               |
 | :-----: | :------------------------------: |
@@ -140,12 +140,12 @@ UEFI需要使用GPT分區表，並且指少需要將`/boot`獨立分區，底下
 |    w    |          save and exit           |
 |   x-z   | zap GPT data structures and exit |
 
-1. 基本上就是先x然後z摧毀所有原本的GPT分區表(如果硬碟之前有裝東西，而且不再需要裡面的資料)
+1. 基本上就是先 x 然後 z 摧毀所有原本的 GPT 分區表(如果硬碟之前有裝東西，而且不再需要裡面的資料)
 
-2. 然後n創建新分區，我習慣`boot`在第一個，所以創建一個1G的分區，可以使用+1GiB來指定分區結束的位置，接著Partition type必須填EF00
-3. 後面同樣創建root分區，home分區可以是選擇性創建，swap可以使用swapfile或是單獨創建swap分區
+2. 然後 n 創建新分區，我習慣`boot`在第一個，所以創建一個 1G 的分區，可以使用 +1GiB 來指定分區結束的位置，接著 Partition type 必須填 EF00
+3. 後面同樣創建 root 分區， home 分區可以是選擇性創建， swap 可以使用 swapfile 或是單獨創建 swap 分區
 
-4. 接著w儲存分區表並離開
+4. 接著 w 儲存分區表並離開
 
 ### 格式化
 
@@ -174,7 +174,7 @@ UEFI需要使用GPT分區表，並且指少需要將`/boot`獨立分區，底下
 
 ### 安裝基本系統
 
-前置準備到這裡就結束了，接著是安裝基本系統到`/mnt`(剛剛掛載的根目錄)，在這裡安裝了基本的軟體和編輯器，<intel/amd>看使用的cpu來選擇
+前置準備到這裡就結束了，接著是安裝基本系統到`/mnt`(剛剛掛載的根目錄)，在這裡安裝了基本的軟體和編輯器，<intel/amd>看使用的 cpu 來選擇
 
 ```shell
 # pacstrap -i  /mnt linux linux-headers linux-firmware base base-devel vim nano <intel/amd>-ucode
@@ -182,13 +182,13 @@ UEFI需要使用GPT分區表，並且指少需要將`/boot`獨立分區，底下
 
 ## 系統設定
 
-### 生成fstab
+### 生成 fstab
 
 ```shell
 # genfstab -U -p /mnt >> /mnt/etc/fstab
 ```
 
-### chroot進新的系統
+### chroot 進新的系統
 
 ```shell
 # arch-chroot /mnt
@@ -214,7 +214,7 @@ UEFI需要使用GPT分區表，並且指少需要將`/boot`獨立分區，底下
 # export LANG=en_US.UTF-8
 ```
 
-### 設定hostname
+### 設定 hostname
 
 ```shell
 # # 直接填喜歡的機器名稱就好
@@ -239,13 +239,13 @@ UEFI需要使用GPT分區表，並且指少需要將`/boot`獨立分區，底下
 # useradd -m -G wheel,storage,power -s /bin/bash <username>
 # # 設定用戶密碼
 # passwd <username>
-# 設定sudo，找到 %wheel ALL=(ALL:ALL) ALL 並取消註解
+# 設定sudo，找到%wheel ALL=(ALL:ALL) ALL並取消註解
 # visudo
 ```
 
 ### 設定固態硬碟修剪(垃圾回收)
 
-如果沒有SSD可以跳過這裡
+如果沒有 SSD 可以跳過這裡
 
 ```shell
 # systemctl enable fstrim.timer
@@ -271,9 +271,9 @@ initrd /initramfs-linux.img
 # mkinitcpio -P
 ```
 
-到這一步ArchLinux已經安裝完成了，但為了方便，我習慣直接把需要的軟體一起安裝完，而不是等重啟後進系統再裝
+到這一步 ArchLinux 已經安裝完成了，但為了方便，我習慣直接把需要的軟體一起安裝完，而不是等重啟後進系統再裝
 
-### 設定pacman
+### 設定 pacman
 
 #### Mirrorlist
 
@@ -281,7 +281,7 @@ initrd /initramfs-linux.img
 # vim /etc/pacman.d/mirrorlist
 ```
 
-看自己習慣用哪些鏡像站，目前台灣最快的是TWDS，但我有在維護CCNS的鏡像，所以優先使用
+看自己習慣用哪些鏡像站，目前台灣最快的是 TWDS，但我有在維護 CCNS 的鏡像，所以優先使用
 
 ```mirrorlist
 Server = https://archlinux.ccns.ncku.edu.tw/archlinux/$repo/os/$arch
@@ -305,7 +305,7 @@ Server = https://mirror.archlinux.tw/ArchLinux/$repo/os/$arch
 # reflector --verbose -c HK -c JP -c TW -c US -f 10 --sort rate --save /etc/pacman.d/mirrorlist
 ```
 
-#### 開啟32bit的支持
+#### 開啟 32bit 的支持
 
 ```shell
 # # 找到下面的並取消註解
@@ -317,9 +317,9 @@ Server = https://mirror.archlinux.tw/ArchLinux/$repo/os/$arch
 Include = /etc/pacman.d/mirrorlist
 ```
 
-#### 開啟Archlinux CN
+#### 開啟 Archlinux CN
 
-開啟Archlinux CN Repository，有一些常用的AUR已經被編譯好了，看你信不信任他
+開啟 Archlinux CN Repository，有一些常用的 AUR 已經被編譯好了，看你信不信任他
 
 ```shell
 # vim /etc/pacman.conf
@@ -342,13 +342,13 @@ Server = https://mirror.twds.com.tw/archlinuxcn/$arch
 
 ### 安裝顯卡驅動
 
-這部份最好看每個對應的wiki page，這邊只是我很久以前整理出來節省時間的
+這部份最好看每個對應的 wiki page，這邊只是我很久以前整理出來節省時間的
 
 #### Intel[^3]
 
 ```shell
 # pacman -S mesa lib32-mesa xf86-video-intel vulkan-intel intel-media-driver intel-gpu-tools
-# xf86-video-intel 可不安裝，可能導致部分問題
+# # xf86-video-intel可不安裝，可能導致部分問題
 ```
 
 #### Nvidia[^4]
@@ -372,7 +372,7 @@ options root=... nvidia_drm.modeset=1
 
 ##### hooks
 
-使用nvidia-dkms可跳過設定hook
+使用 nvidia-dkms 可跳過設定 hook
 
 ```shell
 # mkdir /etc/pacman.d/hooks
@@ -402,9 +402,9 @@ Exec=/bin/sh -c 'while read -r trg; do case $trg in linux) exit 0; esac; done; /
 # pacman -S mesa lib32-mesa xf86-video-amdgpu vulkan-radeon lib32-vulkan-radeon
 ```
 
-### 安裝AUR Helper
+### 安裝 AUR Helper
 
-我習慣的AUR Helper是yay，他的用法和pacman一模一樣
+我習慣的 AUR Helper 是 yay，他的用法和 pacman 一模一樣
 
 ```shell
 # su <username>
@@ -441,7 +441,7 @@ Exec=/bin/sh -c 'while read -r trg; do case $trg in linux) exit 0; esac; done; /
 
 #### 其他
 
-我個人還有額外裝很多東西，不過那些等到下一篇文章：ArchLinux的客製化再說吧，這篇只是針對安裝ArchLinux已經夠長了
+我個人還有額外裝很多東西，不過那些等到下一篇文章再說吧，這篇只是針對安裝 ArchLinux 已經夠長了
 
 ### 啟動服務
 

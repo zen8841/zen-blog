@@ -1,9 +1,9 @@
 ---
-title: VyOS快速設定
+title: VyOS 快速設定
 katex: false
 mathjax: false
 mermaid: false
-excerpt: 簡單介紹如何配置VyOS到能通網路
+excerpt: 簡單介紹如何配置 VyOS 到能通網路
 date: 2024-07-10 17:18:57
 updated: 2024-07-10 17:18:57
 index_img:
@@ -17,15 +17,15 @@ tags:
 
 # 前言
 
-之前在配置家中的網路時，曾經嘗試使用VyOS作為路由器的系統，這篇文章簡單記錄一下安裝及配置的過程。
+之前在配置家中的網路時，曾經嘗試使用 VyOS 作為路由器的系統，這篇文章簡單記錄一下安裝及配置的過程。
 
 # 下載
 
-VyOS雖然是開源的系統，但是並未對一般用戶提供LTS版本的ISO下載，只能下載Rolling Release版本的（也就是nightly build），不過我試用的感覺覺得沒什麼差別，應該不至於有穩定性上的問題，相較來說只是測試沒有LTS全面的版本，如果對於Rolling Release版本保有疑慮，也可以考慮自行編譯LTS版本，可以參考這篇[文章](https://docs.vyos.io/en/latest/contributing/build-vyos.html)[^1]
+VyOS 雖然是開源的系統，但是並未對一般用戶提供 LTS 版本的 ISO 下載，只能下載 Rolling Release 版本的（也就是 nightly build），不過我試用的感覺覺得沒什麼差別，應該不至於有穩定性上的問題，相較來說只是測試沒有 LTS 全面的版本，如果對於 Rolling Release 版本保有疑慮，也可以考慮自行編譯 LTS 版本，可以參考這篇[文章](https://docs.vyos.io/en/latest/contributing/build-vyos.html)[^1]
 
 # 安裝
 
-在使用ISO開機後，使用預設帳號登入(vyos/vyos)
+在使用 ISO 開機後，使用預設帳號登入(vyos/vyos)
 
 ![](vyos_login.png)
 
@@ -33,13 +33,13 @@ VyOS雖然是開源的系統，但是並未對一般用戶提供LTS版本的ISO�
 
 ![](vyos_install.png)
 
-VyOS可以同時安裝多個版本，未來若想更新，可以直接使用新的ISO安裝，或是從已安裝好的系統內添加新系統的entry
+VyOS 可以同時安裝多個版本，未來若想更新，可以直接使用新的 ISO 安裝，或是從已安裝好的系統內添加新系統的 entry
 
 # 配置
 
-VyOS的配置有點類似cisco的邏輯，使用set和delete兩個指令來新增或刪除設定，可以使用edit和top來進入下層設定或回到頂層，在configure mode下也可使用run來運行一般模式的指令。
+VyOS 的配置有點類似 cisco 的邏輯，使用 set 和 delete 兩個指令來新增或刪除設定，可以使用 edit  和 top 來進入下層設定或回到頂層，在 configure mode 下也可使用 run 來運行一般模式的指令。
 
-VyOS的shell是bash，不過載入了特製的設定檔，可以直接輸入linux中有的指令來使用，如果想使用bash的補全，可以直接執行`bash`進入常規的bash環境。
+VyOS 的 shell 是 bash，不過載入了特製的設定檔，可以直接輸入 linux 中有的指令來使用，如果想使用 bash  的補全，可以直接執行`bash`進入常規的  bash 環境。
 
 首先輸入`configure`進入配置模式
 
@@ -72,7 +72,7 @@ VyOS的shell是bash，不過載入了特製的設定檔，可以直接輸入linu
 # set protocols static route 0.0.0.0/0 next-hop <gateway ip>
 ```
 
-如果是使用pppoe撥號可以參考這篇[文章](https://docs.vyos.io/en/latest/configuration/interfaces/pppoe.html)[^2]
+如果是使用 pppoe 撥號可以參考這篇[文章](https://docs.vyos.io/en/latest/configuration/interfaces/pppoe.html)[^2]
 
 ### lan
 
@@ -109,7 +109,7 @@ VyOS的shell是bash，不過載入了特製的設定檔，可以直接輸入linu
 # # 設定dhcp ip pool
 # set range 0 start 10.x.x.2
 # set range 0 stop 10.x.x.199
-# # subnet id ，不重複即可
+# # subnet id，不重複即可
 # set subnet-id 1
 # # 如果想要設定static dhcp可以參考底下兩行的範例
 # set static-mapping <text> ip-address <ip>

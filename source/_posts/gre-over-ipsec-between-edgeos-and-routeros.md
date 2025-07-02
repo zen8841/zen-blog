@@ -1,9 +1,9 @@
 ---
-title: 在EdgeOS和RouterOS之間建立GRE over IPsec tunnel
+title: 在 EdgeOS 和 RouterOS 之間建立 GRE over IPsec tunnel
 katex: false
 mathjax: false
 mermaid: false
-excerpt: 介紹如何在兩個系統間建立安全的GRE tunnel
+excerpt: 介紹如何在兩個系統間建立安全的 GRE tunnel
 date: 2024-04-25 00:04:43
 updated: 2024-09-01 16:15:02
 index_img:
@@ -22,56 +22,56 @@ tags:
 
 {% note info %}
 
-2024/9/1更新： 更新GRE over IPsec transport mode的設定
+2024/9/1更新： 更新 GRE over IPsec transport mode 的設定
 
 {% endnote %}
 
 # 介紹
 
-一般來說建立GRE over IPsec tunnel有三種方法[^1]
+一般來說建立 GRE over IPsec tunnel 有三種方法[^1]
 
 - GRE over IPsec transport mode
 - GRE over IPsec tunnel mode
 - Virtual Tunnel Interface (VTI)
 
-不過RouterOS好像到現在都還不支持VTI，因此本文中不會討論
+不過 RouterOS 好像到現在都還不支持 VTI，因此本文中不會討論
 
 ![](ipsec_enc.jpg)
 
 ## GRE over IPsec transport mode
 
-GRE over IPsec transport mode簡單來說就是建立一個GRE tunnel，並設定IPsec transport mode保護在兩個peer中傳輸的封包內容。
+GRE over IPsec transport mode 簡單來說就是建立一個 GRE tunnel，並設定 IPsec transport mode 保護在兩個 peer 中傳輸的封包內容。
 
-這種方式缺點是兩邊都必須有public IP，不能位於NAT後方。
+這種方式缺點是兩邊都必須有 public IP，不能位於 NAT 後方。
 
 ## GRE over IPsec tunnel mode
 
-GRE over IPsec tunnel mode則是先在兩個peer間建立IPsec tunnel，接著使用IPsec tunnel中的IP去建立GRE tunnel，此時GRE tunnel的整個封包都會被ESP給包住，因此達到加密的效果。
+GRE over IPsec tunnel mode 則是先在兩個 peer 間建立 IPsec tunnel，接著使用 IPsec tunnel 中的 IP 去建立 GRE tunnel，此時 GRE tunnel 的整個封包都會被 ESP 給包住，因此達到加密的效果。
 
-這種方式建立的tunnel封包對多一個IPsec tunnel的IP header，MTU會比較低，如果可以，使用transport mode會是更好的選擇。
+這種方式建立的 tunnel 封包對多一個 IPsec tunnel 的 IP header， MTU 會比較低，如果可以，使用 transport mode 會是更好的選擇。
 
 ## IPsec
 
-在設定IPsec的過程中會看到很多參數像sha1、aes256、DH group14、modp2048或是其他類似的，這些參數在不同設定間有些重複，有些又不同，很容易讓人搞混，其實IPsec的主要部分按照我的理解可以分成4個部分
+在設定 IPsec 的過程中會看到很多參數像 sha1、aes256、DH group14、modp2048 或是其他類似的，這些參數在不同設定間有些重複，有些又不同，很容易讓人搞混，其實 IPsec 的主要部分按照我的理解可以分成 4 個部分
 
-- Phase 1設定： 負責身分驗證，成立才會進行Phase 2
-  - 在EdgeOS 中這部份的設定叫 ike-group
-  - 在RouterOS 中這部份的設定是 Profile
+- Phase 1 設定： 負責身分驗證，成立才會進行 Phase 2
+  - 在 EdgeOS 中這部份的設定叫 ike-group
+  - 在 RouterOS 中這部份的設定是 Profile
 - Phase 2 設定： 負責加密的設定
-  - 在EdgeOS 中這部份的設定叫 esp-group
-  - 在RouterOS 中這部份的設定是Proposals
+  - 在 EdgeOS 中這部份的設定叫 esp-group
+  - 在 RouterOS 中這部份的設定是 Proposals
 - Peer 設定： 定義對方的端點之類的資訊
-  - 在EdgeOS 中這部份的設定和Policy一起包在site-to-site/peer裡面
-  - 在RouterOS 中這部份的設定在Peers和Identities裡
-- Policy 設定： 定義要對哪些封包做IPsec加密/解密
-  - 在EdgeOS 中這部份的設定和Peer一起包在site-to-site/peer裡面
-  - 在RouterOS 中這部份的設定是Policy
+  - 在 EdgeOS 中這部份的設定和 Policy 一起包在 site-to-site/peer 裡面
+  - 在 RouterOS 中這部份的設定在 Peers 和 Identities 裡
+- Policy 設定： 定義要對哪些封包做 IPsec 加密/解密
+  - 在 EdgeOS 中這部份的設定和 Peer 一起包在 site-to-site/peer 裡面
+  - 在 RouterOS 中這部份的設定是 Policy
 
-剛剛提到的那些參數就是在Phase 1和Phase 2設定中會碰到的，其實只要記住一個原則就是兩邊的設定要相同即可，這樣連線應該就能正常起來，而DH group/modp/pfs其實是同樣的東西，不過叫法會不同，可以查到[對應表](https://www.watchguard.com/help/docs/help-center/en-US/Content/en-US/Fireware/bovpn/manual/diffie_hellman_c.html)
+剛剛提到的那些參數就是在 Phase 1 和 Phase 2 設定中會碰到的，其實只要記住一個原則就是兩邊的設定要相同即可，這樣連線應該就能正常起來，而 DH group/modp/pfs 其實是同樣的東西，不過叫法會不同，可以查到[對應表](https://www.watchguard.com/help/docs/help-center/en-US/Content/en-US/Fireware/bovpn/manual/diffie_hellman_c.html)
 
 # 操作
 
-網路拓樸如下，請自行替換對應的IP
+網路拓樸如下，請自行替換對應的 IP
 
 |              | **public IP(WAN IP)** | **tunnel interface IP** |   **內部網路**   |
 | :----------: | :-------------------: | :---------------------: | :--------------: |
@@ -82,11 +82,11 @@ GRE over IPsec tunnel mode則是先在兩個peer間建立IPsec tunnel，接著�
 
 ## GRE over IPsec transport mode
 
-EdgeOS的部分是參考DN42發布的這篇文章[^2]，在Ubiquiti Help Center中並沒有IPsec transport mode的相關文件
+EdgeOS 的部分是參考 DN42 發布的這篇文章[^2]，在 Ubiquiti Help Center 中並沒有 IPsec transport mode 的相關文件
 
 ### EdgeOS
 
-EdgeOS部分的設定我使用設定檔來呈現，和指令是對應的
+EdgeOS 部分的設定我使用設定檔來呈現，和指令是對應的
 
 ```conf
 interfaces {
@@ -151,7 +151,7 @@ vpn {
 
 **IP -> IPsec -> Profiles -> new**
 
-Profile 是IKE phase1協商的參數，基本上設定都可以和EdgeOS的部分對應到
+Profile 是 IKE phase1 協商的參數，基本上設定都可以和 EdgeOS 的部分對應到
 
 ![](transport_mode/ipsec_new_profile.png)
 
@@ -161,7 +161,7 @@ Profile 是IKE phase1協商的參數，基本上設定都可以和EdgeOS的部�
 
 **IP -> IPsec -> Identities -> new**
 
-這裡我是使用PreshareKey來驗證對方，雖然使用RSA key或證書來驗證更安全，但是EdgeOS那邊的RSA key格式是plain RSA格式，要和PEM格式相互轉換很麻煩
+這裡我是使用 PreshareKey 來驗證對方，雖然使用 RSA key 或證書來驗證更安全，但是 EdgeOS 那邊的 RSA key 格式是 plain RSA 格式，要和 PEM 格式相互轉換很麻煩
 
 ![](transport_mode/ipsec_new_indentities.png)
 
@@ -171,7 +171,7 @@ Profile 是IKE phase1協商的參數，基本上設定都可以和EdgeOS的部�
 
 **IP -> IPsec -> Policies -> new**
 
-Protocal 47就是代表GRE
+Protocal 47 就是代表 GRE
 
 ![](transport_mode/ipsec_new_polices_general.png)
 
@@ -179,9 +179,9 @@ Protocal 47就是代表GRE
 
 **Interfaces -> GRE Tunnel -> new**
 
-因為另一邊MTU設1400這邊也設同樣的值，不過不一定要1400，可以稍大一點像1420，因為GRE header佔24Byte，ESP header佔50～60Byte，大概1420也可以
+因為另一邊 MTU 設 1400 這邊也設同樣的值，不過不一定要 1400，可以稍大一點像 1420 ，因為 GRE header 佔 24Byte， ESP header 佔 50～60Byte，大概 1420 也可以
 
-這裡的local IP和remote IP直接填Public IP就行，Policy會攔截對應的封包加上IPsec
+這裡的 local IP 和 remote IP 直接填 Public IP 就行， Policy 會攔截對應的封包加上 IPsec
 
 ![](transport_mode/gre_new_interface.png)
 
@@ -189,13 +189,13 @@ Protocal 47就是代表GRE
 
 ![](transport_mode/gre_interface_ip.png)
 
-這樣就完成設定了，可以嘗試看看ping對方的GRE tunnel的 IP了
+這樣就完成設定了，可以嘗試看看 ping 對方的 GRE tunnel 的 IP 了
 
 ## GRE over IPsec tunnel mode
 
-在這部份中，將會在兩個peer上建立loopback interface，IPsec tunnel將設定成只會轉發對方loopback interface 的IP
+在這部份中，將會在兩個 peer 上建立 loopback interface， IPsec tunnel 將設定成只會轉發對方 loopback interface 的 IP
 
-下表是示範時使用的IP，如果要使用其他IP，請替換對應的位置
+下表是示範時使用的 IP，如果要使用其他 IP，請替換對應的位置
 
 |              | **loopback interface IP** |
 | :----------: | :-----------------------: |
@@ -209,12 +209,12 @@ Protocal 47就是代表GRE
 
 **IP -> IPsec -> Profiles -> new**
 
-Profile 是IKE phase1協商的參數
+Profile 是 IKE phase1 協商的參數
 
 ![](tunnel_mode/ipsec_new_profile.png)
 
-{% fold info @更改EdgeOS端Encryption的參數 %}
-如果想更改EdgeOS端Encryption的參數，要在這裡修改對應的參數
+{% fold info @更改 EdgeOS 端 Encryption 的參數 %}
+如果想更改 EdgeOS 端 Encryption 的參數，要在這裡修改對應的參數
 
 ![](tunnel_mode/ipsec_profile_encryption_change.png)
 
@@ -234,16 +234,16 @@ Profile 是IKE phase1協商的參數
 
 ![](tunnel_mode/ipsec_new_proposal.png)
 
-{% fold info @更改EdgeOS端DH Group的參數 %}
-如果想更改EdgeOS端DH Group的參數，要在這裡修改對應的參數
+{% fold info @更改 EdgeOS 端 DH Group 的參數 %}
+如果想更改 EdgeOS 端 DH Group 的參數，要在這裡修改對應的參數
 
 ![](tunnel_mode/ipsec_proposal_dhgroup_change.png)
 
 {% endfold %}
 
-**建立loopback interface**
+**建立 loopback interface**
 
-由於RouterOS沒有loopback interface一類的設備[^5][^6]，因此創建loopback interface的方法會是建立一個空的bridge，然後給予這個bridge一個IP
+由於 RouterOS 沒有 loopback interface 一類的設備[^5][^6]，因此創建 loopback interface 的方法會是建立一個空的 bridge，然後給予這個 bridge 一個 IP
 
 **Bridge -> Bridge -> new**
 
@@ -263,7 +263,7 @@ Profile 是IKE phase1協商的參數
 
 ![](tunnel_mode/ipsec_new_polices_action.png)
 
-如果要轉發多個子網的話Action部分的Level要設定為unique，不過此次設定只需要轉發兩端router的IP就好
+如果要轉發多個子網的話 Action 部分的 Level 要設定為 unique，不過此次設定只需要轉發兩端 router 的 IP 就好
 
 **IP -> Firewall -> NAT -> new**
 
@@ -275,21 +275,21 @@ Profile 是IKE phase1協商的參數
 
 #### EdgeOS
 
-**創建loopback interface**
+**創建 loopback interface**
 
 ```shell
 set interfaces loopback lo address 10.1.1.2/32
 ```
 
-**設定IPsec Site to Site VPN**
+**設定 IPsec Site to Site VPN**
 
-VPN頁面 -> IPsec Site-to-Site
+VPN 頁面 -> IPsec Site-to-Site
 
 ![](tunnel_mode/edgeos_ipsec_vpn.png)
 
-完成這些設定後，兩端的IPsec tunnel應該就架好了，可以嘗試互相ping看看對方的loopback inerface IP，使用RouterOS ping時記得要指定來源IP為loopback inerface IP
+完成這些設定後，兩端的 IPsec tunnel 應該就架好了，可以嘗試互相 ping 看看對方的 loopback inerface IP，使用 RouterOS ping 時記得要指定來源 IP 為 loopback inerface IP
 
-在IPsec 的Active Peers和Installed SAs應該就能看到東西出現了
+在 IPsec 的 Active Peers 和 Installed SAs 應該就能看到東西出現了
 
 ### GRE tunnel
 
@@ -299,7 +299,7 @@ VPN頁面 -> IPsec Site-to-Site
 
 ![](tunnel_mode/gre_new_interface.png)
 
-設定成功後應該會顯示mtu的資訊
+設定成功後應該會顯示 mtu 的資訊
 
 ![](tunnel_mode/gre_interface_status.png)
 
@@ -319,11 +319,11 @@ set interfaces tunnel tun0 address 10.2.1.2/30
 commit ; save
 ```
 
-完成這些設定後，在兩個peer間就建立了GRE over IPsec tunnel
+完成這些設定後，在兩個 peer 間就建立了 GRE over IPsec tunnel
 
 ## 設定路由
 
-完成tunnel的設定後要加上路由才能讓內網的連通到另一個內網
+完成 tunnel 的設定後要加上路由才能讓內網的連通到另一個內網
 
 ### RouterOS
 

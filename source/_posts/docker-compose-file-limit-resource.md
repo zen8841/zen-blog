@@ -1,9 +1,9 @@
 ---
-title: 如何在docker compose file中限制系統資源的使用
+title: 如何在 docker compose file 中限制系統資源的使用
 katex: false
 mathjax: false
 mermaid: false
-excerpt: 使用compose.yml來限制資源使用
+excerpt: 使用 docker-compose.yml 來限制資源使用
 date: 2024-06-07 03:34:01
 updated: 2024-06-07 03:34:01
 index_img:
@@ -16,9 +16,9 @@ tags:
 
 #  前言
 
-這也算是在舉辦 TSCCTF 中整理的一些資訊，因為題目都是放在docker container中跑，為了避免題目被打穿佔用資源影響到其他題目的正常運作，所以當時幫出題人員整理了一下在docker compose  file中限制系統資源使用的方式。
+這也算是在舉辦 TSCCTF 中整理的一些資訊，因為題目都是放在 docker container 中跑，為了避免題目被打穿佔用資源影響到其他題目的正常運作，所以當時幫出題人員整理了一下在 docker compose  file 中限制系統資源使用的方式。
 
-不過現在docker中已經包含了compose組件，而compose組件吃的格式和`docker-compose`指令吃的格式有點不一樣，所以重新整理了這一篇文章。
+不過現在 docker 中已經包含了 compose 組件，而 compose 組件吃的格式和`docker-compose`指令吃的格式有點不一樣，所以重新整理了這一篇文章。
 
 # 格式
 
@@ -95,13 +95,13 @@ docker-compose v3下必須在`docker-compose`後加上參數啟動
 
 `docker-compose --compatibility up -d`
 
-其實也可以用`docker stack deploy --compose-file docker-compose.yml stack_name`來deploy，但是必須先初始化docker stack
+其實也可以用`docker stack deploy --compose-file docker-compose.yml stack_name`來 deploy，但是必須先初始化 docker stack
 
 {% endfold %}
 
-## compose組件
+## compose 組件
 
-這個版本的compose格式應該會是現行的版本，這部份參考自docker官網的文檔[^2]
+這個版本的 compose 格式應該會是現行的版本，這部份參考自 docker 官網的文檔[^2]
 
 ```yaml
 services:

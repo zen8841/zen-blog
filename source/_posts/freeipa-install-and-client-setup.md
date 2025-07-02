@@ -1,5 +1,5 @@
 ---
-title: FreeIPA設定與客戶端安裝過程
+title: FreeIPA 設定與客戶端安裝過程
 katex: false
 mathjax: false
 mermaid: false
@@ -9,7 +9,7 @@ tags:
   - linux
   - server
   - FreeIPA
-excerpt: FreeIPA伺服器端的架設與細部設定及客戶端的安裝與連線
+excerpt: FreeIPA 伺服器端的架設與細部設定及客戶端的安裝與連線
 date: 2024-12-23 01:40:00
 updated: 2024-12-23 01:40:00
 index_img:
@@ -18,13 +18,13 @@ index_img:
 
 # 前言
 
-社團原本使用的帳號系統是搭在一個黑群輝虛擬機上的LDAP服務，只是之前機房搬遷後虛擬機的黑群輝直接無法開機了，後來是靠其他位置的LDAP備份恢復。所以就不太想把這個重要的服務放在黑群輝上，才開始了帳號系統的遷移，FreeIPA提供了類似於Linux中AD的功能；而這篇文章主要記錄FreeIPA的安裝過程和客戶端該如何設定。
+社團原本使用的帳號系統是搭在一個黑群輝虛擬機上的 LDAP 服務，只是之前機房搬遷後虛擬機的黑群輝直接無法開機了，後來是靠其他位置的 LDAP 備份恢復。所以就不太想把這個重要的服務放在黑群輝上，才開始了帳號系統的遷移， FreeIPA 提供了類似於 Linux 中 AD 的功能；而這篇文章主要記錄 FreeIPA 的安裝過程和客戶端該如何設定。
 
 # 服務端安裝
 
-在服務端系統的選擇上我使用Fedora，主要是FreeIPA在Fedora上有最新的版本，支援也比較全面，畢竟是RedHat支持的專案。
+在服務端系統的選擇上我使用 Fedora，主要是 FreeIPA 在 Fedora 上有最新的版本，支援也比較全面，畢竟是 RedHat 支持的專案。
 
-首先需要設定FreeIPA Server使用的hostname與domain，例如`freeipa.example.com`，網域為`example.com`，將`freeipa.example.com`寫入`/etc/hostname`，並在`/etc/hosts`中將`freeipa.example.com`解析到自己的IP，假設Server的IP為10.0.0.1則加上最後一行來進行解析
+首先需要設定 FreeIPA Server 使用的 hostname 與 domain，例如`freeipa.example.com`，網域為`example.com`，將`freeipa.example.com`寫入`/etc/hostname`，並在`/etc/hosts`中將`freeipa.example.com`解析到自己的 IP，假設 Server 的 IP 為10.0.0.1則加上最後一行來進行解析
 
 ```hosts
 # Loopback entries; do not change.
@@ -37,7 +37,7 @@ index_img:
 10.0.0.1        freeipa.example.com freeipa
 ```
 
-接著安裝Freeipa，網域名稱按照自己的需求更改，我安裝時同時安裝了bind9，同時安裝DNS未來配置kerberos會較為方便[^1][^2]，不過如果使用存在的域名，安裝腳本會檢查NS記錄有沒有指到機器上的IP，所以如果沒辦法這樣設定可以使用`.internal`域名，將不會檢查NS記錄
+接著安裝 Freeipa，網域名稱按照自己的需求更改，我安裝時同時安裝了 bind9 ，同時安裝 DNS 未來配置 kerberos 會較為方便[^1][^2]，不過如果使用存在的域名，安裝腳本會檢查 NS 記錄有沒有指到機器上的 IP，所以如果沒辦法這樣設定可以使用`.internal`域名，將不會檢查 NS 記錄
 
 ```shell
 # dnf install freeipa-server freeipa-server-dns
@@ -390,7 +390,7 @@ files is the Directory Manager password
 The ipa-server-install command was successful
 ```
 
-Fedora預設有開啟防火牆，所以需要開啟對應的端口，`freeipa-4`服務已經包括所有FreeIPA使用的端口了，如果前面沒有設定dns也可以不用開啟dns服務
+Fedora 預設有開啟防火牆，所以需要開啟對應的端口，`freeipa-4`服務已經包括所有 FreeIPA 使用的端口了，如果前面沒有設定 dns 也可以不用開啟 dns 服務
 
 ```shell
 # firewall-cmd --add-service=freeipa-4
@@ -401,9 +401,9 @@ Fedora預設有開啟防火牆，所以需要開啟對應的端口，`freeipa-4`
 
 ## DNS
 
-若要使用FreeIPA的DNS作為整個網路的DNS則需要允許讓網路內的客戶端可以進行遞回查詢(recursion)
+若要使用 FreeIPA 的 DNS 作為整個網路的 DNS 則需要允許讓網路內的客戶端可以進行遞回查詢(recursion)
 
-編輯`/etc/named/ipa-ext.conf`，加入這段來定義允許的客戶端，我設定為允許所有的private IP，視情況可以進行收縮
+編輯`/etc/named/ipa-ext.conf`，加入這段來定義允許的客戶端，我設定為允許所有的 Private IP，視情況可以進行收縮
 
 ```conf
 acl "trusted_network" {
@@ -430,9 +430,9 @@ allow-query-cache { trusted_network; };
 
 ## 拒絕匿名查詢
 
-FreeIPA安裝完後，它的LDAP預設是可以被沒有驗證的用戶查詢到部分資訊，可以將其設定為`rootdse`，而非`off`拒絕所有匿名查詢，因為當客戶端要加入網域時，需要知道`rootdse`的資訊[^3]
+FreeIPA 安裝完後，它的 LDAP 預設是可以被沒有驗證的用戶查詢到部分資訊，可以將其設定為`rootdse`，而非`off`拒絕所有匿名查詢，因為當客戶端要加入網域時，需要知道`rootdse`的資訊[^3]
 
-首先編輯更改用的ldif
+首先編輯更改用的 ldif
 
 ```ldif
 dn: cn=config
@@ -441,7 +441,7 @@ replace: nsslapd-allow-anonymous-access
 nsslapd-allow-anonymous-access: rootdse
 ```
 
-接著將使用ldif檔案修改LDAP Server的設定，ldif的檔名為`disable_anon_bind.ldif`
+接著將使用 ldif 檔案修改 LDAP Server 的設定， ldif 的檔名為`disable_anon_bind.ldif`
 
 ```shell
 # ldapmodify -x -D "cn=Directory Manager" -W -H ldap:// -ZZ -f disable_anon_bind.ldif
@@ -449,20 +449,20 @@ nsslapd-allow-anonymous-access: rootdse
 
 ## 一些自定義的設定
 
-在使用`ipa`指令前需要先取得kerberos的ticket，輸入設定的admin密碼，即可獲得
+在使用`ipa`指令前需要先取得 kerberos 的 ticket，輸入設定的 admin 密碼，即可獲得
 
 ```shell
 # kinit admin
 ```
 
-使用`config-mod`可以修改FreeIPA預設的一些設定
+使用`config-mod`可以修改 FreeIPA 預設的一些設定
 
 ```shell
 # ipa config-mod --defaultshell=/bin/bash
 # ipa config-mod --homedirectory=/rhome
 ```
 
-使用`user-add`與`group-add-member`來新增FreeIPA用戶
+使用`user-add`與`group-add-member`來新增 FreeIPA 用戶
 
 ```shell
 # echo password | ipa user-add someone --password --first=some --last=one --email=someone1@example.com --email=someone2@example.com --gecos=someone
@@ -471,23 +471,23 @@ nsslapd-allow-anonymous-access: rootdse
 
 ---
 
-設定完成後就可以使用瀏覽器進入FreeIPA的網頁管理介面
+設定完成後就可以使用瀏覽器進入 FreeIPA 網頁管理介面
 
 ![](login.png)
 
 # 客戶端
 
-## 使用LDAP驗證
+## 使用 LDAP 驗證
 
-如果是需要配置讓Linux可以使用FreeIPA中的帳號進行登入推薦使用底下的方式，而不是直接透過LDAP驗證，使用FreeIPA-Client可以有更細化的權限控制
+如果是需要配置讓 Linux 可以使用 FreeIPA 中的帳號進行登入推薦使用底下的方式，而不是直接透過 LDAP 驗證，使用 FreeIPA-Client 可以有更細化的權限控制
 
-要讓應用程式使用FreeIPA的帳號驗證，需要建立應用程式使用的bind user來對LDAP查詢，在FreeIPA中可以建立System Accounts專門用作bind user[^4]
+要讓應用程式使用 FreeIPA 的帳號驗證，需要建立應用程式使用的 bind user 來對 LDAP 查詢，在 FreeIPA 中可以建立 System Accounts 專門用作 bind user[^4]
 
-可以使用ldif來增加System Accounts，但我更推薦使用[freeipa-sam](https://github.com/noahbliss/freeipa-sam)[^5]的腳本來新增
+可以使用 ldif 來增加 System Accounts，但我更推薦使用 [freeipa-sam](https://github.com/noahbliss/freeipa-sam)[^5]的腳本來新增
 
-有了bind user後就可以按自己的 需求及應用程式設定LDAP的方式填入設定，即能完成LDAP的設定
+有了 bind user 後就可以按自己的 需求及應用程式設定 LDAP 的方式填入設定，即能完成 LDAP 的設定
 
-以下為一些FreeIPA的LDAP中的資料結構，在設定時可以參考
+以下為一些 FreeIPA 的 LDAP 中的資料結構，在設定時可以參考
 
 - base dn: dc=example,dc=com
 
@@ -502,18 +502,18 @@ nsslapd-allow-anonymous-access: rootdse
 - user filter: memberOf=cn=group1,cn=groups,cn=accounts,dc=example,dc=com
 - group filter: (|(cn=group1)(cn=group2))
 
-## 使用FreeIPA-Client驗證
+## 使用 FreeIPA-Client 驗證
 
-使用FreeIPA-Client來讓系統可以使用FreeIPA中的帳號來進行登入的話，可以使用FreeIPA中的HBAC Rules(Hardware Based Access Control)來控制只有哪些用戶/群組可以登入哪些Host或是哪些Host群組，並且控制能管理的service有哪些，並且可以配合FreeIPA中的Sudo Rules來限定哪些用戶/群組可以在哪些Host或是哪些Host群組中使用sudo中的哪些指令
+使用 FreeIPA-Client 來讓系統可以使用 FreeIPA 中的帳號來進行登入的話，可以使用 FreeIPA 中的 HBAC Rules(Hardware Based Access Control) 來控制只有哪些用戶/群組可以登入哪些 Host 或是哪些 Host 群組，並且控制能管理的 service 有哪些，並且可以配合 FreeIPA 中的 Sudo Rules 來限定哪些用戶/群組可以在哪些 Host 或是哪些 Host 群組中使用 sudo 中的哪些指令
 
-首先將Client的DNS設為FreeIPA的Server，編輯`/etc/resolv.conf`
+首先將 Client 的 DNS 設為 FreeIPA 的 Server，編輯`/etc/resolv.conf`
 
 ```conf
 search example.com
 nameserver 10.0.0.1
 ```
 
-接著安裝FreeIPA-Client，示範的client為debian
+接著安裝 FreeIPA-Client，示範的 client 為 debian
 
 ```shell
 # apt install freeipa-client
@@ -567,19 +567,19 @@ The ipa-client-install command was successful
 
 ### 權限控制
 
-- 在Client加入FreeIPA後可以在Identity>Hosts中看到，並且可以在Identity>Group>Host Group裡將Hosts集合成Group，方便權限的管理
+- 在 Client 加入 FreeIPA 後可以在 Identity>Hosts 中看到，並且可以在 Identity>Group>Host Group 裡將 Hosts 集合成 Group，方便權限的管理
 
-- 如果要開啟管理用戶能否登入特定主機，需要在Policy>Host-Based Access Control>HBAC Rules中將`allow_all`的規則disable，不然所有用戶都可登入所有主機
+- 如果要開啟管理用戶能否登入特定主機，需要在 Policy>Host-Based Access Control>HBAC Rules 中將`allow_all`的規則 disable，不然所有用戶都可登入所有主機
 
-- 可以在Policy>Host-Based Access Control>HBAC Rules新增規則來設定用戶/群組可以登入哪些主機，並管理哪些服務
+- 可以在 Policy>Host-Based Access Control>HBAC Rules 新增規則來設定用戶/群組可以登入哪些主機，並管理哪些服務
 
-- 在Policy>Host-Based Access Control>HBAC Services中可以設定服務的種類
+- 在 Policy>Host-Based Access Control>HBAC Services 中可以設定服務的種類
 
-- 最後可以在Policy>Host-Based Access Control>HBAC Test中測試設定是否正確
+- 最後可以在 Policy>Host-Based Access Control>HBAC Test 中測試設定是否正確
 
-- 如果用戶要再Client中使用sudo需要在Policy>Sudo>Sudo Rules中新增規則
+- 如果用戶要再 Client 中使用 sudo 需要在 Policy>Sudo>Sudo Rules 中新增規則
 
-- 在設定完成後如果在Client沒有生效，可以等待5~10分鐘來讓快取失效重新存取伺服器的內容
+- 在設定完成後如果在 Client 沒有生效，可以等待5~10分鐘來讓快取失效重新存取伺服器的內容
 
 ## 參考
 

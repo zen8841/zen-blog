@@ -1,5 +1,5 @@
 ---
-title: 技能競賽 - 資訊網路技術區賽Networking part筆記
+title: 技能競賽 - 資訊網路技術區賽 Networking part 筆記
 katex: false
 mathjax: false
 mermaid: false
@@ -16,9 +16,9 @@ index_img:
 
 {% note primary %}
 
-這篇大概包括近8年左右的packet tracer解答需要的指令，不保證正確，我個人的筆記而已
+這篇大概包括近8年左右的 packet tracer 解答需要的指令，不保證正確，我個人的筆記而已
 
-會分為三個部分，General Setting同時適用於router、switch、L3 switch，也是基本設定的指令，Switch Setting為在switch上的設定，設定接入等等的內容，Router Setting則是在router上的設定，基本是關於L3路由的內容，L3 switch則自行參考Switch和Router兩個部分的內容
+會分為三個部分， General Setting 同時適用於 router、switch、L3 switch，也是基本設定的指令， Switch Setting 為在 switch 上的設定，設定接入等等的內容， Router Setting 則是在 router 上的設定，基本是關於 L3 路由的內容， L3 switch 則自行參考 Switch 和 Router 兩個部分的內容
 
 {% endnote %}
 
@@ -26,15 +26,15 @@ index_img:
 
 標注*的代表每年都必出的部分
 
-如果沒有特別註明`#`，則默認是在config terminal mode下的指令，config mode下都用`(config)#`開頭
+如果沒有特別註明`#`，則默認是在 config terminal mode 下的指令， config mode 下都用 `(config)#` 開頭
 
-記得沒事就用`wr`(`write`)或是`do wr`(`do write`)來儲存設定
+記得沒事就用`wr`(`write`) 或是`do wr`(`do write`) 來儲存設定
 
 如果忘記指令就一直按?來查指令在哪個底下
 
-遇到要在每個設備上都要設定的指令時，可以直接開記事本一次打完，然後複製到所有設備的terminal上，這樣配置比較快
+遇到要在每個設備上都要設定的指令時，可以直接開記事本一次打完，然後複製到所有設備的 terminal 上，這樣配置比較快
 
-這篇文章裡如果有不懂的部分幾乎都可以透過關鍵詞+Jan Ho 的網絡世界來查到一個寫cisco介紹寫的很好的人的文章，可以看他更詳細的介紹
+這篇文章裡如果有不懂的部分幾乎都可以透過關鍵詞 + Jan Ho 的網絡世界來查到一個寫 cisco 介紹寫的很好的人的文章，可以看他更詳細的介紹
 
 {% endnote %}
 
@@ -42,7 +42,7 @@ index_img:
 
 ## *hostname
 
-設定hostname為ALS1
+設定 hostname 為 ALS1
 
 ```cisco
 (config)# hostname ALS1
@@ -50,7 +50,7 @@ index_img:
 
 ## domain name
 
-設定domain name為skills39\.tw
+設定 domain name 為 skills39\.tw
 
 ```cisco
 (config)# ip domain-name skills39.tw
@@ -64,13 +64,13 @@ index_img:
 
 ## *login
 
-vty的編號為同時能遠端開啟幾個連接，一般都開0-15全開，除非他要求同時連線的最大數量
+vty 的編號為同時能遠端開啟幾個連接，一般都開0-15全開，除非他要求同時連線的最大數量
 
 ### ssh
 
-設定ssh需要先設定domain name，他應該會一起提供
+設定 ssh 需要先設定 domain name，他應該會一起提供
 
-建立admin的user，密碼為Sills39，並且要雜湊來儲存
+建立 admin 的 user，密碼為 Sills39，並且要雜湊來儲存
 
 ```cisco
 (config)# ip ssh version 2
@@ -83,7 +83,7 @@ vty的編號為同時能遠端開啟幾個連接，一般都開0-15全開，除�
 
 ### telnet
 
-開啟telnet，並使用本機的user進行登入
+開啟 telnet，並使用本機的 user 進行登入
 
 ```cisco
 (config)# username admin secret 0 Skiils39
@@ -94,7 +94,7 @@ vty的編號為同時能遠端開啟幾個連接，一般都開0-15全開，除�
 
 ### 登入密碼驗證
 
-登入使用密碼驗證，密碼為Skills39，並進行雜湊，但不在本機建立user
+登入使用密碼驗證，密碼為 Skills39，並進行雜湊，但不在本機建立 user
 
 ```cisco
 (config)# service password-encryption
@@ -120,24 +120,24 @@ vty的編號為同時能遠端開啟幾個連接，一般都開0-15全開，除�
 (config-line)# privilege level 15
 ```
 
-### 設定log不切斷輸入
+### 設定 log 不切斷輸入
 
 ```cisco
 (config)# line vty 0 15 # 或是line console 0
 (config-line)# logging synchronous
 ```
 
-### user建立
+### user 建立
 
-建立admin的user並使用密碼Skills39，特權等級設定最高
+建立 admin 的 user 並使用密碼 Skills39，特權等級設定最高
 
 ```cisco
 (config)# username admin privilege 15 secret 0 Skiils39
 ```
 
-### enable密碼
+### enable 密碼
 
-設定enable密碼為Skills39，並開啟雜湊
+設定 enable 密碼為 Skills39，並開啟雜湊
 
 ```cisco
 (config)# enable secret 0 Skills39
@@ -148,7 +148,7 @@ vty的編號為同時能遠端開啟幾個連接，一般都開0-15全開，除�
 
 {% note info %}
 
-Switch只能在vlan的介面上設定IP，Router可以直接在interface上設定，L3 Switch可以透過使用`no switchport`來像Router一樣直接在介面上設IP
+Switch 只能在 vlan 的介面上設定 IP， Router 可以直接在 interface 上設定， L3 Switch 可以透過使用`no switchport`來像 Router 一樣直接在介面上設 IP
 
 {% endnote %}
 
@@ -165,13 +165,13 @@ Switch只能在vlan的介面上設定IP，Router可以直接在interface上設�
 
 {% note info %}
 
-如果router連接Switch的介面是走trunk，就需要sub interface來把vlan從介面中拆出來
+如果 router 連接 Switch 的介面是走 trunk，就需要 sub interface 來把 vlan 從介面中拆出來
 
 {% endnote %}
 
 ```cisco
 (config)# interface gigabitethernet 1/0/1.10 # 我習慣sub interface的id設成vlan的id
-(config-subif)# encapsulation dot1q 10 # 使用802.1q的vlan protocal，並且把vlan id為10的vlan分到這個sub interface
+(config-subif)# encapsulation dot1q 10 # 使用802.1q的vlan protocal，並且把lan id為10的vlan分到這個sub interface
 (config-subif)# ip address 10.0.0.253 255.255.255.0 # 後面就和一般介面設定一樣
 (config-subif)# no shutdown
 ```
@@ -191,7 +191,7 @@ Switch只能在vlan的介面上設定IP，Router可以直接在interface上設�
 
 {% note info %}
 
-發放10.0.0.10-10.0.0.100的IP，gateway為10.0.0.254，dns server為8.8.8.8，lease time一天
+發放10.0.0.10-10.0.0.100的 IP， gateway 為10.0.0.254， dns server 為8.8.8.8， lease time 一天
 
 {% endnote %}
 
@@ -208,13 +208,13 @@ Switch只能在vlan的介面上設定IP，Router可以直接在interface上設�
 
 {% note warning %}
 
-DHCPv6和DHCP Snopping沒有考過，如果想準備全面一點可以去看怎麼設定
+DHCPv6 和 DHCP Snopping 區賽沒有考過，如果想準備全面一點可以去看怎麼設定
 
 {% endnote %}
 
 ## *DHCP relay
 
-DHCP server和Client不在同一個子網中就會需要DHCP relay
+DHCP server 和 Client 不在同一個子網中就會需要 DHCP relay
 
 ```cisco
 (config)# interface gigabitethernet 1/0/1
@@ -255,7 +255,7 @@ DHCP server和Client不在同一個子網中就會需要DHCP relay
 
 ## *vlan setting
 
-建立下表的vlan
+建立下表的 vlan
 
 | vlan10 | vlan20 | vlan99 |
 | :----: | :----: | :----: |
@@ -274,9 +274,9 @@ DHCP server和Client不在同一個子網中就會需要DHCP relay
 
 ### access port
 
-- gigabitethernet 1/0/1 ~ 1/0/5 接入vlan10
-- gigabitethernet 1/0/6 ~ 1/0/10 接入vlan20
-- gigabitethernet 1/0/11 ~ 1/0/20 接入vlan99
+- gigabitethernet 1/0/1 ~ 1/0/5 接入 vlan10
+- gigabitethernet 1/0/6 ~ 1/0/10 接入 vlan20
+- gigabitethernet 1/0/11 ~ 1/0/20 接入 vlan99
 
 ```cisco
 (config)# interface range gigabitethernet 1/0/1-5
@@ -295,7 +295,7 @@ DHCP server和Client不在同一個子網中就會需要DHCP relay
 
 ### trunk port
 
-gigabitethernet 1/0/24設定為trunk，只允許vlan10,20，native vlan設定為99
+gigabitethernet 1/0/24 設定為 trunk，只允許 vlan10,20， native vlan 設定為99
 
 ```cisco
 (config)# interface gigabitethernet 1/0/24
@@ -307,7 +307,7 @@ gigabitethernet 1/0/24設定為trunk，只允許vlan10,20，native vlan設定為
 
 ### port security
 
-設定連接終端的介面只能連接固定的一個設備，並且會自動記錄接入的mac，如果有違規的新設備要記錄並停止網路
+設定連接終端的介面只能連接固定的一個設備，並且會自動記錄接入的 mac，如果有違規的新設備要記錄並停止網路
 
 ```cisco
 (config)# interface range gigabitethernet 1/0/1-10
@@ -318,7 +318,7 @@ gigabitethernet 1/0/24設定為trunk，只允許vlan10,20，native vlan設定為
 
 ### bdpuguard
 
-阻止接入終端的介面被私自接switch，並設定快速啟動接口，不等待STP收斂
+阻止接入終端的介面被私自接 switch，並設定快速啟動接口，不等待 STP 收斂
 
 ```cisco
 (config)# interface range gigabitethernet 1/0/1-10
@@ -328,7 +328,7 @@ gigabitethernet 1/0/24設定為trunk，只允許vlan10,20，native vlan設定為
 
 ### 關閉介面
 
-將Park vlan的介面關閉
+將 Park vlan 的介面關閉
 
 ```cisco
 (config)# interface range gigabitethernet 1/0/11-20
@@ -337,23 +337,23 @@ gigabitethernet 1/0/24設定為trunk，只允許vlan10,20，native vlan設定為
 
 ## *STP
 
-題目有可能要求更換switch上使用的STP算法，如果要求是CISCO私有的協定代表要使用pvst，如果要求要使用IEEE制定的協議則是rapid-pvst
+題目有可能要求更換 switch 上使用的 STP 算法，如果要求是 CISCO 私有的協定代表要使用 pvst，如果要求要使用 IEEE 制定的協議則是 rapid-pvst
 
 ```cisco
 (config)# spanning-tree mode rapid-pvst
 ```
 
-### 設定root bridge
+### 設定 root bridge
 
-有時候題目會要求說某個vlan要優先走哪台switch，這就是需要設定那個swtich為那個vlan的root bridge
+有時候題目會要求說某個 vlan 要優先走哪台 switch，這就是需要設定那個 swtich 為那個 vlan 的 root bridge
 
-可以透過手動設定priority來指定，但通常不會這樣做
+可以透過手動設定 priority 來指定，但通常不會這樣做
 
 ```cisco
 (config)# spanning-tree vlan 10 priority 36864 # priority需要是4096的倍數
 ```
 
-更常用的方法是下面這種，但是需要確保他和其他的switch有連接的介面或是在同一個bridge裡，他會得知其他switch在這個vlan的priority，並自動把自己設成低一個單位的priority(priority越低越優先)
+更常用的方法是下面這種，但是需要確保他和其他的 switch 有連接的介面或是在同一個 bridge 裡，他會得知其他 switch 在這個 vlan 的 priority，並自動把自己設成低一個單位的 priority(priority 越低越優先)
 
 ```cisco
 (config)# spanning-tree vlan 10 root primary # 備援的switch則設為secondary
@@ -361,7 +361,7 @@ gigabitethernet 1/0/24設定為trunk，只允許vlan10,20，native vlan設定為
 
 ### 縮短收斂時間
 
-主要使用uplinkfast和backbonefast兩個指令
+主要使用 uplinkfast 和 backbonefast 兩個指令
 
 ```cisco
 (config)# spanning-tree uplinkfast # 不能在root bridge上設定
@@ -370,15 +370,15 @@ gigabitethernet 1/0/24設定為trunk，只允許vlan10,20，native vlan設定為
 
 ## *Link Aggregation
 
-題目不會直接說要用哪種方式做鏈路聚合，如果題目說不經過任何協商代表使用static on mode；如果題目說要用IEEE制定的標準或是802.3ax或ad，代表就是使用LACP；如果題目說使用CISCO私有的協定則是使用PAgP
+題目不會直接說要用哪種方式做鏈路聚合，如果題目說不經過任何協商代表使用 static on mode；如果題目說要用 IEEE 制定的標準或是 802.3ax 或  ad，代表就是使用 LACP；如果題目說使用 CISCO 私有的協定則是使用 PAgP
 
-我這邊只設定其中一邊，兩邊使用的port channel number不同沒有關係，並且port channel做為trunk介面
+我這邊只設定其中一邊，兩邊使用的 port channel number 不同沒有關係，並且 port channel 做為 trunk 介面
 
-使用gigabitethernet 1/0/21、22和另一台switch連接，並作為trunk
+使用 gigabitethernet 1/0/21、22 和另一台 switch 連接，並作為 trunk
 
 ```cisco
 (config)# interface range gigabitethernet 1/0/21-22
-(config-if)# channel-group 1 on # on 代表static on mode,active或passive代表LACP，desirable或auto代表PAgP，但我習慣兩邊都設主動模式(active或desirable)
+(config-if)# channel-group 1 on # on代表static on mode,active或passive代表LACP，desirable或auto代表PAgP，但我習慣兩邊都設主動模式(active或desirable)
 (config-if)# switchport mode trunk
 (config-if)# switchport trunk encapsulation dot1q # 在pt裡某些型號的switch可能不用設定，看他有沒有這個選項
 (config-if)# switchport trunk allowed vlan 10,20
@@ -391,13 +391,13 @@ gigabitethernet 1/0/24設定為trunk，只允許vlan10,20，native vlan設定為
 
 ## vtp
 
-題目有可能會要求設定vtp，但是他可能不會直接講說哪台要做server或client(參考47屆的Networking題目)，他有可能要求說某台的vlan設定要存在哪裡
+題目有可能會要求設定 vtp，但是他可能不會直接講說哪台要做 server 或 client(參考47屆的 Networking 題目)，他有可能要求說某台的 vlan 設定要存在哪裡
 
-vtp server mode： vlan設定存在flash
+vtp server mode： vlan 設定存在 flash
 
-vtp client mode： vlan設定存在ram
+vtp client mode： vlan 設定存在 ram
 
-vtp transparent mode： vlan設定存在nvram，這個模式可以當成關閉vtp的感覺，如果題目這樣要求
+vtp transparent mode： vlan 設定存在 nvram，這個模式可以當成關閉 vtp 的感覺，如果題目這樣要求
 
 ### server
 
@@ -423,7 +423,7 @@ vtp transparent mode： vlan設定存在nvram，這個模式可以當成關閉vt
 
 ### version
 
-設定vtp版本為2，1有一些風險
+設定 vtp 版本為2，1有一些風險
 
 ```cisco
 (config)# vtp version 2
@@ -431,7 +431,7 @@ vtp transparent mode： vlan設定存在nvram，這個模式可以當成關閉vt
 
 ## cdp
 
-關閉思科設備發現協議，並阻止所有的介面發送cdp封包
+關閉思科設備發現協議，並阻止所有的介面發送 cdp 封包
 
 ```cisco
 (config)# no cdp run
@@ -441,13 +441,13 @@ vtp transparent mode： vlan設定存在nvram，這個模式可以當成關閉vt
 
 # Router Setting
 
-## *FHRP 第一跳冗餘協定(router備援)
+## *FHRP 第一跳冗餘協定( router 備援)
 
 {% note info %}
 
-應該只會考HSRP，PT裡好像不支援VRRP和GLBP的設定
+應該只會考 HSRP， PT 裡好像不支援 VRRP 和 GLBP 的設定
 
-設定都是在連接子網的介面上，子網10.0.0.0/24，gateway:10.0.0.254
+設定都是在連接子網的介面上，子網10.0.0.0/24， gateway:10.0.0.254
 
 {% endnote %}
 
@@ -467,7 +467,7 @@ vtp transparent mode： vlan設定存在nvram，這個模式可以當成關閉vt
 
 {% note info %}
 
-設定的概念和HSRP接近，就不再介紹
+設定的概念和 HSRP 接近，就不再介紹
 
 {% endnote %}
 
@@ -482,7 +482,7 @@ vtp transparent mode： vlan設定存在nvram，這個模式可以當成關閉vt
 
 {% note info %}
 
-設定的概念和HSRP接近，就不再介紹
+設定的概念和 HSRP 接近，就不再介紹
 
 {% endnote %}
 
@@ -499,11 +499,11 @@ vtp transparent mode： vlan設定存在nvram，這個模式可以當成關閉vt
 
 {% note info %}
 
-假設連接internet的IP為1.1.1.1-1.1.1.10/24
+假設連接 Internet 的 IP 為1.1.1.1-1.1.1.10/24
 
 {% endnote %}
 
-### 有多個外部IP可供轉換
+### 有多個外部 IP 可供轉換
 
 ```cisco
 (config)# ip access-list standard INSIDE_NET permit 10.0.0.0 0.0.0.255
@@ -516,7 +516,7 @@ vtp transparent mode： vlan設定存在nvram，這個模式可以當成關閉vt
 (config-if)# ip nat inside
 ```
 
-### 只有一個IP
+### 只有一個 IP
 
 ```cisco
 (config)# ip access-list standard INSIDE_NET permit 10.0.0.0 0.0.0.255 # 這裡是wildcard不是netmask
@@ -534,7 +534,7 @@ vtp transparent mode： vlan設定存在nvram，這個模式可以當成關閉vt
 
 {% note info %}
 
-CISCO在Serial介面上預設使用的協定，如果題目沒說要用PPP，大概就是這個，直接給介面上IP就好，或是可能需要改clock rate
+CISCO 在 Serial 介面上預設使用的協定，如果題目沒說要用 PPP，大概就是這個，直接給介面上 IP 就好，或是可能需要改 clock rate
 
 {% endnote %}
 
@@ -555,13 +555,13 @@ CISCO在Serial介面上預設使用的協定，如果題目沒說要用PPP，大
 (config)# username ISP password Skills39 # 假設連接的router hostname為ISP，設定密碼為Slills39，對面的router也要用你的hostname來新建用戶驗證
 ```
 
-PPPoE應該不會考，有興趣可以看[Jan Ho的網站](https://www.jannet.hk/point-to-point-protocol-ppp-zh-hant/)
+PPPoE 應該不會考，有興趣可以看 [Jan Ho 的網站](https://www.jannet.hk/point-to-point-protocol-ppp-zh-hant/)
 
 ## *Routing
 
 {% note info %}
 
-基本是一定會考EIGRP或OSPF其中一個
+基本是一定會考 EIGRP 或 OSPF 其中一個
 
 {% endnote %}
 
@@ -597,7 +597,7 @@ PPPoE應該不會考，有興趣可以看[Jan Ho的網站](https://www.jannet.hk
 
 #### Timer
 
-一樣有兩個timer，hello time和hold time，每隔hello time會發送封包，超過hold time沒收到就認為neighbor下線，預設值是5/15，縮短路由改變時間為1/5
+一樣有兩個 timer， hello time 和 hold time，每隔 hello time 會發送封包，超過 hold time 沒收到就認為 neighbor 下線，預設值是5/15，縮短路由改變時間為1/5
 
 ```cisco
 (config)# interface gigabitethernet 1/0/1
@@ -607,7 +607,7 @@ PPPoE應該不會考，有興趣可以看[Jan Ho的網站](https://www.jannet.hk
 
 #### passive-interface
 
-關閉不需要介面的eigrp封包發送，只讓需要的介面發送封包
+關閉不需要介面的 eigrp 封包發送，只讓需要的介面發送封包
 
 ```cisco
 (config)# router eigrp ASNUM
@@ -637,7 +637,7 @@ PPPoE應該不會考，有興趣可以看[Jan Ho的網站](https://www.jannet.hk
 (config-if)# ip ospf authentication-key xxxx
 ```
 
-或是使用md5來驗證
+或是使用 md5 來驗證
 
 ```cisco
 (config)# router ospf OSPFID
@@ -649,7 +649,7 @@ PPPoE應該不會考，有興趣可以看[Jan Ho的網站](https://www.jannet.hk
 
 #### Timer
 
-一樣有兩個timer，hello time和dead time，每隔hello time會發送封包，超過dead time沒收到就認為neighbor下線，預設值是10/40，縮短路由改變時間為1/4
+一樣有兩個 timer， hello time 和 dead time，每隔 hello time 會發送封包，超過 dead time 沒收到就認為 neighbor 下線，預設值是10/40，縮短路由改變時間為1/4
 
 ```cisco
 (config)# interface gigabitethernet 1/0/1
@@ -659,7 +659,7 @@ PPPoE應該不會考，有興趣可以看[Jan Ho的網站](https://www.jannet.hk
 
 #### passive-interface
 
-和EIGRP的定義一樣
+和 EIGRP 的定義一樣
 
 ```cisco
 (config)# router ospf OSPFID
@@ -669,7 +669,7 @@ PPPoE應該不會考，有興趣可以看[Jan Ho的網站](https://www.jannet.hk
 
 #### cost
 
-改變計算cost的reference bandwidth為1G，每個OSPF router都要改
+改變計算 cost 的 reference bandwidth 為1G，每個 OSPF router 都要改
 
 ```cisco
 (config)# router ospf OSPFID
@@ -678,7 +678,7 @@ PPPoE應該不會考，有興趣可以看[Jan Ho的網站](https://www.jannet.hk
 
 # 總結
 
-分區賽Networking會考的差不多就這些，基本就是有*的題目和一些其他小項，分數佔比也不高，我個人是練了2屆的題目而已，其他屆的題目就看看除了必出部分以外出了什麼記一下，而且這屆題目變簡單，不確定之後會不會越來越簡單，主要的決戰還是在OS part
+分區賽 Networking 會考的差不多就這些，基本就是有*的題目和一些其他小項，分數佔比也不高，我個人是練了2屆的題目而已，其他屆的題目就看看除了必出部分以外出了什麼記一下，而且這屆題目變簡單，不確定之後會不會越來越簡單，主要的決戰還是在 OS part
 
 ## 參考
 

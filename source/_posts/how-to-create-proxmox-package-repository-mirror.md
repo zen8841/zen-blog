@@ -1,5 +1,5 @@
 ---
-title: 如何建立Proxmox的鏡像站
+title: 如何建立 Proxmox 的鏡像站
 katex: false
 mathjax: false
 mermaid: false
@@ -9,7 +9,7 @@ tags:
   - Proxmox
   - server
   - linux
-excerpt: 記錄一下CCNS的Proxmox鏡像站是如何建立的
+excerpt: 記錄一下 CCNS 的 Proxmox 鏡像站是如何建立的
 date: 2024-11-24 03:47:10
 updated: 2024-11-24 03:47:10
 index_img:
@@ -18,13 +18,13 @@ index_img:
 
 # 前言
 
-Proxmox官方提供的鏡像只有http://download.proxmox.com，https://download.proxmox.com 只包含了部分的repository，並且沒有提供rsync、ftp等連接方式，因為鏡像中的軟連結都沒辦法從http/https中下載到，如果直接鏡像那麼就會完整的下載，會浪費容量在重複且相同版本的軟體上。( 像debian/ubuntu/archlinux之類的鏡像，軟體包的檔案可能會放在集中的資料夾中( 像是debian的/pool )，不同大版本的資料夾中只有指向對應軟體包文件的軟連結 )
+Proxmox 官方提供的鏡像只有 http://download.proxmox.com、https://download.proxmox.com 只包含了部分的 repository，並且沒有提供 rsync、ftp 等連接方式，因為鏡像中的軟連結都沒辦法從 http/https 中下載到，如果直接鏡像那麼就會完整的下載，會浪費容量在重複且相同版本的軟體上。( 像 debian/ubuntu/archlinux 之類的鏡像，軟體包的檔案可能會放在集中的資料夾中( 像是 debian 的/pool )，不同大版本的資料夾中只有指向對應軟體包文件的軟連結 )
 
-最開始我是使用`apt-mirror`來進行鏡像的工作，但就和前面提到的，從http進行鏡像沒辦法得知軟連結之類的訊息，在今年8月左右重整CCNS的Proxmox鏡像的過程中，我使用了`proxmox-offline-mirror`來替換`apt-mirror`進行鏡像( 具體原因後文會介紹 )，當然也不一定要使用這種方式來鏡像，[twds](https://mirror.twds.com.tw)就是使用[tunasync](https://github.com/tuna/tunasync)( 北京清華開發的一套鏡像站工具之一 )。
+最開始我是使用`apt-mirror`來進行鏡像的工作，但就和前面提到的，從 http 進行鏡像沒辦法得知軟連結之類的訊息，在今年8月左右重整 CCNS 的 Proxmox 鏡像的過程中，我使用了`proxmox-offline-mirror`來替換`apt-mirror`進行鏡像( 具體原因後文會介紹 )，當然也不一定要使用這種方式來鏡像， [twds](https://mirror.twds.com.tw) 就是使用 [tunasync](https://github.com/tuna/tunasync) ( 北京清華開發的一套鏡像站工具之一 )。
 
 # Proxmox-offline-mirror
 
-會選擇此工具的最大原因就是他擁有去重的功能，用它下載的檔案結構如下，軟體包的文件都儲存在`.pool`底下，並且計算了hash，在各個repository中只有指向文件的軟連結，如果有相同版本的同一個軟體包在不同的repository中，就不會重新下載( 因為hash一樣 )，而是直接新建軟連結。
+會選擇此工具的最大原因就是他擁有去重的功能，用它下載的檔案結構如下，軟體包的文件都儲存在`.pool`底下，並且計算了 hash，在各個 repository 中只有指向文件的軟連結，如果有相同版本的同一個軟體包在不同的 repository 中，就不會重新下載( 因為 hash 一樣 )，而是直接新建軟連結。
 
 ```shell
 # tree -L 2 -a /path/to/mirror/proxmox/download/
@@ -64,11 +64,11 @@ Proxmox官方提供的鏡像只有http://download.proxmox.com，https://download
 
 ## 設定
 
-使用proxmox-offline-mirror需要設定，設定檔預設使用`/etc/proxmox-offline-mirror.cfg`，不過可以使用`--config`改變使用的設定檔。
+使用 proxmox-offline-mirror 需要設定，設定檔預設使用`/etc/proxmox-offline-mirror.cfg`，不過可以使用`--config`改變使用的設定檔。
 
 設定鏡像可以使用指令直接新增，或是使用互動式新增
 
-- 互動式，需注意不要新增Debian的鏡像
+- 互動式，需注意不要新增 Debian 的鏡像
 
 ```shell
 # proxmox-offline-mirror setup --config /etc/proxmox-offline-mirror.cfg
@@ -124,9 +124,9 @@ Choice ([0]): 3
 
 這兩種方式產生的設定檔相同，如下
 
-- 需注意`key-path`的位置是否有對應的gpgkey，如果沒有可以到[http://download.proxmox.com/debian/](http://download.proxmox.com/debian/)下載對應的key，`proxmox-ve-release-6.x.gpg`是對應buster，往前同理。
-- 設定檔中的`sync`代表是否要使用fsync寫入檔案
-- 設定檔中的`verify`代表是否在鏡像的時候要不要檢查存在的檔案是否正確( 重新下載並計算hash檢查 )，或是默認存在的檔案正確
+- 需注意`key-path`的位置是否有對應的 gpgkey，如果沒有可以到 [http://download.proxmox.com/debian/](http://download.proxmox.com/debian/) 下載對應的 key，`proxmox-ve-release-6.x.gpg`是對應 buster，往前同理。
+- 設定檔中的`sync`代表是否要使用 fsync 寫入檔案
+- 設定檔中的`verify`代表是否在鏡像的時候要不要檢查存在的檔案是否正確( 重新下載並計算 hash 檢查 )，或是默認存在的檔案正確
 
 ```cfg
 mirror: pve_bookworm_no_subscription
@@ -140,9 +140,9 @@ mirror: pve_bookworm_no_subscription
         verify true
 ```
 
-如果想要同時鏡像測試版的repository，使用互動式的新增方式會再創一個`pve_bookworm_test`的條目，可以直接修改設定檔來新增要鏡像的repository，只是要確認設定檔是否正確。
+如果想要同時鏡像測試版的 repository，使用互動式的新增方式會再創一個`pve_bookworm_test`的條目，可以直接修改設定檔來新增要鏡像的 repository，只是要確認設定檔是否正確。
 
-修改後的設定檔。可以直接在`repository`後方多新增想要鏡像的repository，也將`id`修改為整個版本的集合名。
+修改後的設定檔。可以直接在`repository`後方多新增想要鏡像的 repository，也將`id`修改為整個版本的集合名。
 
 ```cfg
 mirror: pve_bookworm
@@ -158,7 +158,7 @@ mirror: pve_bookworm
 
 ---
 
-從buster向後算，截至目前(2024/11/23)，Proxmox提供的所有鏡像包括這些
+從 buster 向後算，截至目前(2024/11/23)， Proxmox 提供的所有鏡像包括這些
 
 ```txt
 # proxmox-offline-mirror config mirror list --config /etc/proxmox-offline-mirror.cfg
@@ -209,13 +209,13 @@ mirror: pve_bookworm
 
 # 同步腳本
 
-從上面proxmox-offline-mirror下載的目錄結構可以看到這並不是正確的可以讓`apt`下載的鏡像目錄結構，因此需要一個腳本包裝並產生正確的目錄結構並軟連結到下載的目錄。
+從上面 proxmox-offline-mirror 下載的目錄結構可以看到這並不是正確的可以讓`apt`下載的鏡像目錄結構，因此需要一個腳本包裝並產生正確的目錄結構並軟連結到下載的目錄。
 
 腳本大致分為三個部分
 
-1. 最前面的部分是設定鏡像的位置，並檢查是否有其他同步正在進行及鏡像位置的資料夾是否存在，在每週一的00:00~01:59執行時，會使用verify=true的設定檔，日常的同步不進行完全檢查
+1. 最前面的部分是設定鏡像的位置，並檢查是否有其他同步正在進行及鏡像位置的資料夾是否存在，在每週一的00:00~01:59執行時，會使用 verify=true 的設定檔，日常的同步不進行完全檢查
 
-存儲的結構如下，download是儲存proxmox-offline-mirror下載的位置，logs儲存日誌，packages則是鏡像的根目錄
+存儲的結構如下， download 是儲存 proxmox-offline-mirror 下載的位置， logs 儲存日誌， packages 則是鏡像的根目錄
 
 ```shell
 # tree -L 1 /path/to/mirror/proxmox
@@ -229,8 +229,8 @@ mirror: pve_bookworm
 └── syncrepo.lck
 ```
 
-2. 中間的部分負責proxmox-offline-mirror的下載及軟連結的工作，由於設定檔的`id`都是設定成`repository_version`的格式，因此可以很方便的知道目錄是該軟連結到哪裡
-3. 最後一部分則是直接使用`wget`從[http://download.proxmox.com/debian/](http://download.proxmox.com/debian/)下載CT的Template和ISO
+2. 中間的部分負責 proxmox-offline-mirror 的下載及軟連結的工作，由於設定檔的`id`都是設定成`repository_version`的格式，因此可以很方便的知道目錄是該軟連結到哪裡
+3. 最後一部分則是直接使用`wget`從 [http://download.proxmox.com/debian/](http://download.proxmox.com/debian/) 下載 CT 的 Template 和 ISO
 
 最後只需要定時執行腳本並定時清理日誌即可完成鏡像的架設
 

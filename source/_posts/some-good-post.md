@@ -14,7 +14,7 @@ tags:
 
 # [【譯】替 swap 辯護：常見的誤解](https://farseerfc.me/in-defence-of-swap.html)
 
-對於swap的功能解釋清楚，用簡單的語言解釋了內核是如何操作記憶體和swap
+對於 swap 的功能解釋清楚，用簡單的語言解釋了內核是如何操作記憶體和 swap
 
 # [【譯】使用 GNU stow 管理你的點文件](https://farseerfc.me/using-gnu-stow-to-manage-your-dotfiles.html)
 
@@ -22,4 +22,4 @@ tags:
 
 # [Nginx server 和 location 優先順序](https://bigpxuan.blogspot.com/2018/07/nginx-server-location.html)
 
-一篇文章講清楚nginx 內部導向的規則，當然，如果你只是把他當成反向代理，也許這篇文章幫助沒那麼大
+一篇文章講清楚 nginx 內部導向的規則，當然，如果你只是把他當成反向代理，也許這篇文章幫助沒那麼大

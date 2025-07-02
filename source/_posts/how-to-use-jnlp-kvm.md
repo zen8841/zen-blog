@@ -1,9 +1,9 @@
 ---
-title: '如何打開jnlp格式的kvm console'
+title: '如何打開 jnlp 格式的 kvm console'
 katex: false
 mathjax: false
 mermaid: false
-excerpt: 分享如何使用jnlp格式的kvm/IPMI
+excerpt: 分享如何使用 jnlp 格式的 kvm/IPMI
 date: 2024-11-13 01:56:50
 updated: 2024-11-13 01:56:50
 index_img:
@@ -15,7 +15,7 @@ tags:
 
 # 前言
 
-有些老舊的伺服器內的IPMI給的kvm console是一個jnlp檔，而不是直接給html5來用，本文將介紹如何使用jnlp檔來連上IPMI開啟kvm。
+有些老舊的伺服器內的 IPMI 給的 kvm console 是一個 jnlp 檔，而不是直接給 html5 來用，本文將介紹如何使用 jnlp 檔來連上 IPMI 開啟 kvm 。
 
 # 設定
 
@@ -27,7 +27,7 @@ tags:
 
 {% endnote %}
 
-2. 修改`java.security`( linux上全域的設定在`/etc/java-jre8/security/java.security` )，找到這三段內容，全部註解掉
+2. 修改`java.security`( linux 上全域的設定在`/etc/java-jre8/security/java.security` )，找到這三段內容，全部註解掉
 
 ```
 jdk.certpath.disabledAlgorithms=MD2, MD5, SHA1 jdkCA & usage TLSServer, \
@@ -45,16 +45,16 @@ jdk.tls.disabledAlgorithms=SSLv3, TLSv1, TLSv1.1, RC4, DES, MD5withRSA, \
     DH keySize < 1024, EC keySize < 224, 3DES_EDE_CBC, anon, NULL
 ```
 
-3. 打開Java Control Panel，修改security分頁的設定，將安全等級下降為high，並把IPMI的域名/IP加進白名單來允許Self-signed certificate
+3. 打開 Java Control Panel，修改 security 分頁的設定，將安全等級下降為 high，並把 IPMI 的域名/IP 加進白名單來允許 Self-signed certificate
 
 ![](java_security.png)
 
-4. 把`icedtea-web`設成用來開啟jnlp檔，並把使用的java切成jre8即可( 例如在Arch上是這樣設定`sudo archlinux-java set java-8-jre/jre` )
+4. 把`icedtea-web`設成用來開啟 jnlp 檔，並把使用的 java 切成 jre8 即可( 例如在 Arch 上是這樣設定`sudo archlinux-java set java-8-jre/jre` )
 
 # 同場加映
 
-1. 如果使用的是DELL的伺服器，而且IPMI為iDRAC6，那麼可以直接使用docker來開啟kvm( [DomiStyle/docker-idrac6](https://github.com/DomiStyle/docker-idrac6) )
-2. 如果使用的是很舊的IPMI，有可能連設定的網頁部分都需要flash( 例如Cisco UCS C240 )，不想配置flash環境的話也可以直接用docker來開( [jchprj/Play-Adobe-Flash-After-EOL](https://github.com/jchprj/Play-Adobe-Flash-After-EOL) )
+1. 如果使用的是 DELL 的伺服器，而且 IPMI 為 iDRAC6 ，那麼可以直接使用 docker 來開啟 kvm( [DomiStyle/docker-idrac6](https://github.com/DomiStyle/docker-idrac6) )
+2. 如果使用的是很舊的 IPMI，有可能連設定的網頁部分都需要 flash ( 例如 Cisco UCS C240 )，不想配置 flash 環境的話也可以直接用 docker 來開( [jchprj/Play-Adobe-Flash-After-EOL](https://github.com/jchprj/Play-Adobe-Flash-After-EOL) )
 
 ## 參考
 

@@ -1,9 +1,9 @@
 ---
-title: 使用LNMP環境搭建WordPress網站
+title: 使用 LNMP 環境搭建 WordPress 網站
 katex: false
 mathjax: false
 mermaid: false
-excerpt: 記錄使用nginx架設WordPress的過程
+excerpt: 記錄使用 nginx 架設 WordPress 的過程
 date: 2024-08-05 23:41:48
 updated: 2024-08-05 23:41:48
 index_img:
@@ -18,7 +18,7 @@ tags:
 
 # 前言
 
-這算是之前搭建部落格時考慮過的方案，不過後來還是選擇了hexo這種靜態框架，所以就記錄一下查詢資料和架設的歷程。
+這算是之前搭建部落格時考慮過的方案，不過後來還是選擇了 hexo 這種靜態框架，所以就記錄一下查詢資料和架設的歷程。
 
 # 架設
 
@@ -44,9 +44,9 @@ $ chown -R www-data:www-data /var/www/sitename
 $ chmod -R 755 /var/www/sitename
 ```
 
-## Database配置
+## Database 配置
 
-使用root執行`mysql_secure_installation`
+使用 root 執行`mysql_secure_installation`
 
 ```shell
 # mysql_secure_installation
@@ -56,7 +56,7 @@ $ chmod -R 755 /var/www/sitename
 
 ---
 
-執行`mysql`，進入Database
+執行`mysql`，進入 Database
 
 ```sql
 # 可以使用其他的名稱來命名Database，這裡以wordpress作為範例，如果改名後面也要更改
@@ -79,7 +79,7 @@ Bye
 
 ### php
 
-編輯`/etc/php/8.2/fpm/php.ini`，搜尋這三個設定並更改，如果php版本較高，記得更改對應的位置
+編輯`/etc/php/8.2/fpm/php.ini`，搜尋這三個設定並更改，如果 php 版本較高，記得更改對應的位置
 
 ```ini
 cgi.fix_pathinfo=0
@@ -124,7 +124,7 @@ http{
 fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
 ```
 
-新增`/etc/nginx/sites-available/wordpress`，編輯virtual server設定，這個設定為http站點，且設定為default_server，可依照自己需求進行更改。
+新增`/etc/nginx/sites-available/wordpress`，編輯 virtual server 設定，這個設定為 http 站點，且設定為 default_server，可依照自己需求進行更改。
 
 ```conf
 server {
@@ -175,7 +175,7 @@ server {
 }
 ```
 
-最後將站點啟用並重啟nginx
+最後將站點啟用並重啟 nginx
 
 ```shell
 $ # 創建設定檔中log的放置資料夾
@@ -193,15 +193,15 @@ $ sudo nginx -s reload
 
 ```
 
-## WordPress安裝
+## WordPress 安裝
 
-在完成前面的設定後使用瀏覽器打開你架設WordPress服務器的IP，應該會看到這個頁面
+在完成前面的設定後使用瀏覽器打開你架設 WordPress 服務器的 IP，應該會看到這個頁面
 
 ![](wordpress1.png)
 
 接下來就跟著導引安裝即可
 
-資料庫名稱使用剛剛Database設定部分資料庫的名字，帳號和密碼同樣也是按照設定的填
+資料庫名稱使用剛剛 Database 設定部分資料庫的名字，帳號和密碼同樣也是按照設定的填
 
 ![](wordpress2.png)
 
@@ -209,11 +209,11 @@ $ sudo nginx -s reload
 
 ![](wordpress3.png)
 
-接下來就是WordPress站點的設定，同樣也是自己按需填寫即可，這邊填的都是範例資料
+接下來就是 WordPress 站點的設定，同樣也是自己按需填寫即可，這邊填的都是範例資料
 
 ![](wordpress4.png)
 
-這樣就完成WordPress的安裝了，登入即可開始Wordpress網站的設定
+這樣就完成 WordPress 的安裝了，登入即可開始 Wordpress 網站的設定
 
 ![](wordpress5.png)
 

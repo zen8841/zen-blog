@@ -1,9 +1,9 @@
 ---
-title: 使用openssl在linux上建立CA
+title: 使用 openssl 在 Linux 上建立 CA
 katex: false
 mathjax: false
 mermaid: false
-excerpt: 如何在linux上建立Certificate Authority
+excerpt: 如何在 Linux 上建立 Certificate Authority
 date: 2024-08-26 00:38:38
 updated: 2024-08-26 00:38:38
 index_img:
@@ -17,21 +17,21 @@ tags:
 
 # 前言
 
-最近打算幫內網的域名上個合格的https證書，之前一直是用自簽名的，每次都會有安全性警告，因此就有了這篇記錄。
+最近打算幫內網的域名上個合格的 https 證書，之前一直是用自簽名的，每次都會有安全性警告，因此就有了這篇記錄。
 
 # 設定
 
-在Linux上架設Certificate Authority有兩種方式，比較簡單的方式是使用easy-rsa，另一種就是使用openssl做設定，不過這兩種方式的底層都還是openssl。
+在 Linux 上架設 Certificate Authority 有兩種方式，比較簡單的方式是使用 easy-rsa，另一種就是使用 openssl 做設定，不過這兩種方式的底層都還是 openssl。
 
 ## easy-rsa
 
-easy-rsa建立CA的方式在[這裡](https://www.digitalocean.com/community/tutorial-collections/how-to-set-up-and-configure-a-certificate-authority-ca)[^1]已經說明的很詳細了，就不再介紹。
+easy-rsa 建立 CA 的方式在[這裡](https://www.digitalocean.com/community/tutorial-collections/how-to-set-up-and-configure-a-certificate-authority-ca)[^1]已經說明的很詳細了，就不再介紹。
 
 ## openssl
 
-### 建立CA
+### 建立 CA
 
-首先要先創建用於存放CA的資料夾結構，在這裡用`/root/ca`作為存放CA的資料夾做示範，接下來的默認工作目錄都是`/root/ca`
+首先要先創建用於存放 CA 的資料夾結構，在這裡用`/root/ca`作為存放 CA 的資料夾做示範，接下來的默認工作目錄都是`/root/ca`
 
 ```shell
 # mkdir /root/ca
@@ -60,37 +60,37 @@ easy-rsa建立CA的方式在[這裡](https://www.digitalocean.com/community/tuto
 
 - 目錄結構說明
   - certs： 存放證書
-  - newcerts： 使用openssl以CA簽署完後會將證書放在這，可以手動移至certs
+  - newcerts： 使用 openssl 以 CA 簽署完後會將證書放在這，可以手動移至 certs
   - private： 存放私鑰
-  - crl： 存放crl的發布證書
-  - index.txt： CA的datebase
+  - crl： 存放 crl 的發布證書
+  - index.txt： CA 的 datebase
   - serial： 目前證書發行的編號
-  - openssl.cnf： 用於配置CA的設定
+  - openssl.cnf： 用於配置 CA 的設定
 
-#### 產生RootCA私鑰
+#### 產生 RootCA 私鑰
 
 ```shell
 # openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 -outform PEM -aes256 -out private/cakey.pem
 ```
 
 - 參數說明
-  - -algorithm RSA： 使用RSA算法
-  - -pkeyopt rsa_keygen_bits:4096： 建立4096bit長度的RSA私鑰
-  - -outform PEM： 使用PEM格式而非DER
-  - -aes256： 使用aes256加密私鑰
+  - -algorithm RSA： 使用 RSA 算法
+  - -pkeyopt rsa_keygen_bits:4096： 建立 4096bit 長度的 RSA 私鑰
+  - -outform PEM： 使用 PEM 格式而非 DER
+  - -aes256： 使用 aes256 加密私鑰
   - -out private/cakey.pem： 存放私鑰在`private/cakey.pem`，不要更改，這是`openssl.cnf`中預設的值
 
 也可不必再此時產生私鑰，可以使用`openssl req`一次產生私鑰和公鑰/CSR，不過我個人習慣先產生私鑰，再按照私鑰產生公鑰。
 
-在這裡我使用`openssl genpkey`生成私鑰，不過在網路上其他的教程有些會使用`openssl genrsa`生成rsa私鑰，根據stackoverflow的[這篇回答](https://stackoverflow.com/questions/65449771/difference-between-openssl-genrsa-and-openssl-genpkey-algorithm-rsa)[^2]，`genrsa`會生成PKCS #1格式的私鑰，`genpkey`則是生成PKCS #8格式的私鑰，不過我自己測試目前`genrsa`和`genpkey`都是生成PKCS #8格式的私鑰，所以結果是相同的。
+在這裡我使用`openssl genpkey`生成私鑰，不過在網路上其他的教程有些會使用`openssl genrsa`生成 rsa 私鑰，根據 stackoverflow 的[這篇回答](https://stackoverflow.com/questions/65449771/difference-between-openssl-genrsa-and-openssl-genpkey-algorithm-rsa)[^2]，`genrsa`會生成 PKCS #1 格式的私鑰，`genpkey`則是生成 PKCS #8 格式的私鑰，不過我自己測試目前`genrsa`和`genpkey`都是生成 PKCS #8 格式的私鑰，所以結果是相同的。
 
-#### 產生RootCA憑證(公鑰)
+#### 產生 RootCA 憑證(公鑰)
 
-接下來就是產生RootCA的憑證，產生完成後要複製到客戶端上讓客戶端信任這個RootCA，linux可以參考[這篇archwiki](https://wiki.archlinux.org/title/User:Grawity/Adding_a_trusted_CA_certificate)[^3]操作。
+接下來就是產生 RootCA 的憑證，產生完成後要複製到客戶端上讓客戶端信任這個 RootCA，   Linux 可以參考[這篇 archwiki](https://wiki.archlinux.org/title/User:Grawity/Adding_a_trusted_CA_certificate)[^3]操作。
 
 ---
 
-首先要修改複製過來的`openssl.cnf`，這份設定預設會影響`openssl ca`、`openssl req`的預設參數，想要了解openssl的設定可以參考[官網的文檔](https://docs.openssl.org/master/man5/x509v3_config/)[^4]
+首先要修改複製過來的`openssl.cnf`，這份設定預設會影響`openssl ca`、`openssl req`的預設參數，想要了解 openssl 的設定可以參考[官網的文檔](https://docs.openssl.org/master/man5/x509v3_config/)[^4]
 
 更正或增加內容到`openssl.cnf`
 
@@ -114,15 +114,15 @@ keyUsage = critical, keyCertSign, cRLSign
 ```
 
 - 說明
-  - dir： 指向儲存CA的目錄，也就是`/root/ca`
-  - copy_extensions： 這樣可以在生成CSR時就將extention包進去
-  - [ policy_match ]： 這裡是設定申請證書的csr哪些部分要與CA的憑證相同才允許簽發憑證，這裡我改成只要求`countryName`相同就允許簽發
-  - [ v3_ca ]： 這是一個設定x509憑證擴展選項的部分，在前面的`[ req ]`區段可以看到`x509_extensions = v3_ca`，這樣在待會使用`openssl req -x509`產生RootCA的憑證時會就會自動包含這些選項，不用手動加上`-extensions v3_ca`
-  - keyUsage、basicConstraints： 讓憑證可以簽署其他憑證並且可以簽署CRL憑證
+  - dir： 指向儲存 CA 的目錄，也就是`/root/ca`
+  - copy_extensions： 這樣可以在生成 CSR 時就將 extention 包進去
+  - [ policy_match ]： 這裡是設定申請證書的 csr 哪些部分要與 CA 的憑證相同才允許簽發憑證，這裡我改成只要求`countryName`相同就允許簽發
+  - [ v3_ca ]： 這是一個設定 x509 憑證擴展選項的部分，在前面的`[ req ]`區段可以看到`x509_extensions = v3_ca`，這樣在待會使用`openssl req -x509`產生 RootCA 的憑證時會就會自動包含這些選項，不用手動加上`-extensions v3_ca`
+  - keyUsage、basicConstraints： 讓憑證可以簽署其他憑證並且可以簽署 CRL 憑證
 
 ---
 
-產生RootCA憑證
+產生 RootCA 憑證
 
 ```shell
 # openssl req -x509 -new -config openssl.cnf -key private/cakey.pem -out cacert.pem -set_serial 0 -days 3650
@@ -145,7 +145,7 @@ Email Address []:mail@example.com
 
 - 參數說明
   - req -x509 -new： 直接產生憑證，而不是憑證申請要求(CSR)
-  - -config openssl.cnf： 使用剛剛設定的的openssl.cnf做設定檔
+  - -config openssl.cnf： 使用剛剛設定的的 openssl.cnf 做設定檔
   - -key private/cakey.pem： 剛剛產生的私鑰
   - -out cacert.pem：存放憑證在``cacert.pem`不要更改，這是`openssl.cnf`中預設的值
   - -set_serial 0： 序號0的憑證
@@ -153,11 +153,11 @@ Email Address []:mail@example.com
 
 #### 產生中間憑證
 
-常規的RootCA不會直接簽發憑證，而是簽署中間CA的中間憑證，再由中間憑證簽發憑證，不過演示環境比較小，就沒做這邊，有興趣的可以參考[這篇文章](https://blog.davy.tw/posts/use-openssl-to-sign-intermediate-ca/)[^5]
+常規的 RootCA 不會直接簽發憑證，而是簽署中間 CA 的中間憑證，再由中間憑證簽發憑證，不過演示環境比較小，就沒做這邊，有興趣的可以參考[這篇文章](https://blog.davy.tw/posts/use-openssl-to-sign-intermediate-ca/)[^5]
 
 #### CRL (可選)
 
-**產生CRL**
+**產生 CRL**
 
 ```shell
 # # 記錄crl發行的版本
@@ -173,9 +173,9 @@ Email Address []:mail@example.com
 
 **簽署**
 
-更改openssl.cnf，讓CA在簽證書時加上CRL的entry
+更改 openssl.cnf，讓 CA 在簽證書時加上 CRL 的 entry
 
-編輯`[ usr_cert ]`區段，ca的設定`x509_extensions = usr_cert`讓openssl在簽署證書時會自動帶上`[ usr_cert ]`裡面設定的擴展
+編輯`[ usr_cert ]`區段，  CA 的設定`x509_extensions = usr_cert`讓 openssl 在簽署證書時會自動帶上`[ usr_cert ]`裡面設定的擴展
 
 ```conf
 [ usr_cert ]
@@ -191,13 +191,13 @@ crlDistributionPoints = URI:http://ca.example.com/root.crl
 
 #### OCSP (可選)
 
-生成給ocsp responder用的私鑰，不要加上密碼，不然ocsp responder每次啟動都要輸入密碼
+生成給 ocsp responder 用的私鑰，不要加上密碼，不然 ocsp responder 每次啟動都要輸入密碼
 
 ```shell
 # openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 -outform PEM -out private/ocsp.key
 ```
 
-產生ocsp證書的申請
+產生 ocsp 證書的申請
 
 ```shell
 # openssl req -new -key private/ocsp.key -addext 'extendedKeyUsage = critical, OCSPSigning' -out requests/ocsp.csr
@@ -222,7 +222,7 @@ A challenge password []:
 An optional company name []:
 ```
 
-由CA簽署申請並發下證書，大概會長下面這樣
+由 CA 簽署申請並發下證書，大概會長下面這樣
 
 ```shell
 # openssl ca -in requests/ocsp.csr -config openssl.cnf -out certs/ocsp.pem
@@ -257,13 +257,15 @@ Write out database with 1 new entries
 
 證書會輸出到`certs/ocsp.pem`
 
-啟動ocsp responder
+啟動 ocsp responder
 
 ```shell
 # openssl ocsp -index index.txt -CA cacert.pem -rsigner certs/ocsp.pem -rkey private/ocsp.key -port <the port to listen> -text
 ```
 
-使用systemd service把ocsp responder變成daemon，編輯`/etc/systemd/system/ocsp.service`
+使用 systemd service 把 ocsp responder 變成 daemon
+
+編輯`/etc/systemd/system/ocsp.service`
 
 ```service
 [Unit]
@@ -285,7 +287,7 @@ WantedBy=multi-user.target
 systemd enable --now ocsp.service
 ```
 
-更改openssl.cnf，讓CA在簽證書時加上ocsp的entry
+更改 openssl.cnf，讓 CA 在簽證書時加上 ocsp 的 entry
 
 ```conf
 [ usr_cert ]
@@ -299,9 +301,9 @@ authorityKeyIdentifier=keyid,issuer
 authorityInfoAccess = OCSP;URI:http://ca.example.com/ocsp/
 ```
 
-#### 產生HTTPS憑證
+#### 產生 HTTPS 憑證
 
-產生私鑰和證書申請可以在其他電腦上完成，像是準備要用到證書的機器上，這樣不會暴露私鑰，只需要將CSR檔傳到CA的機器上就好
+產生私鑰和證書申請可以在其他電腦上完成，像是準備要用到證書的機器上，這樣不會暴露私鑰，只需要將 CSR 檔傳到 CA 的機器上就好
 
 **產生私鑰**
 
@@ -311,17 +313,17 @@ authorityInfoAccess = OCSP;URI:http://ca.example.com/ocsp/
 
 **產生證書申請**
 
-申請HTTPS的證書，DNS的部分要填正確的域名，可以包括通配符*，在Common Name的部分最好也填正確的域名
+申請 HTTPS 的證書， DNS 的部分要填正確的域名，可以包括通配符*，在 Common Name 的部分最好也填正確的域名
 
 ```shell
 # openssl req -new -key example.com.key -addext 'subjectAltName=DNS:example.com,DNS:www.example.com' -out example.com.csr
 ```
 
-一樣也是輸入對應的資訊，可以參考前面ocsp的部分
+一樣也是輸入對應的資訊，可以參考前面 ocsp 的部分
 
-**CA簽署**
+**CA 簽署**
 
-將CSR上傳到CA的`requests`資料夾內
+將 CSR 上傳到 CA 的`requests`資料夾內
 
 ```shell
 # openssl ca -in requests/example.com.csr -config openssl.cnf -out certs/example.com.pem
@@ -337,25 +339,25 @@ authorityInfoAccess = OCSP;URI:http://ca.example.com/ocsp/
 # openssl ca -config openssl.cnf -revoke newcerts/02.pem
 ```
 
-`-revoke`後面接憑證就ok了
+`-revoke`後面接憑證就 ok 了
 
-## 驗證CRL
+## 驗證 CRL
 
-由於crl是DER格式要加上`-crl_download`選項，如果是PEM格式的應該就不用
+由於 crl 是 DER 格式要加上`-crl_download`選項，如果是 PEM 格式的應該就不用
 
 ```shell
 # openssl verify -crl_check -crl_download -CAfile cacert.pem verify.pem
 ```
 
-`cacert.pem`是CA的憑證，`verify.pem`是待驗證的憑證
+`cacert.pem`是 CA 的憑證，`verify.pem`是待驗證的憑證
 
-## 驗證OCSP
+## 驗證 OCSP
 
 ```shell
 # openssl ocsp -issuer cacert.pem -cert verify.pem -text -url <ocsp URL>
 ```
 
-`cacert.pem`是CA的憑證，`verify.pem`是待驗證的憑證
+`cacert.pem`是 CA 的憑證，`verify.pem`是待驗證的憑證
 
 ## 參考
 

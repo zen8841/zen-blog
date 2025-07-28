@@ -5,6 +5,7 @@ mathjax: false
 mermaid: false
 categories:
   - 比賽
+  - WriteUp
 tags:
   - network
 excerpt: 分享一下區賽準備過程的筆記

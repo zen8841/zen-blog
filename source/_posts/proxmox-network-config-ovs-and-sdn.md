@@ -10,6 +10,8 @@ tags:
   - network
   - linux
   - server
+  - OVS
+  - OpenvSwitch
 excerpt: 分享設定 OVS 和 SDN 的過程中的理解
 date: 2024-12-16 21:36:51
 updated: 2024-12-16 21:36:51

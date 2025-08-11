@@ -3,18 +3,21 @@ title: Proxmox 救援記錄
 katex: false
 mathjax: false
 mermaid: false
-excerpt: 更新到 PVE9 的救援記錄
-index_img:
 categories:
-- 教程
-- 疑難雜症
+  - 教程
+  - 疑難雜症
 tags:
-- server
-- Proxmox
-- network
-- OVS
-- OpenvSwitch
+  - server
+  - Proxmox
+  - network
+  - OVS
+  - OpenvSwitch
+excerpt: 更新到 PVE9 的救援記錄
+date: 2025-08-12 03:29:42
+updated: 2025-08-12 03:29:42
+index_img:
 ---
+
 
 # 前言
 

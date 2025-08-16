@@ -13,10 +13,15 @@ tags:
   - 3C硬體
 excerpt: '介紹這個長達一年 Debug 的故事: 關於我是如何從與實際錯誤毫無關係的記錄中推斷出真相'
 date: 2025-08-15 04:32:17
-updated: 2025-08-15 04:32:17
+updated: 2025-08-16 21:32:17
 index_img:
 ---
 
+{% note info %}
+
+更新 [#after](#after) 章節
+
+{% endnote %}
 
 # 前言
 
@@ -266,6 +271,17 @@ Pinned kernel:
 ~~最後，慶祝我晉升資深開關工程師，能熟練操作多種開關~~
 
 ![<del>晉升資深開關工程師</del>](discord-chat-13.png)
+
+## after
+
+在這篇文章發布後我繼續了一些測試，發現有辦法讓`intel_iommu=on`或是不改`intel_iommu`使用核心編譯時預設的設定，即`CONFIG_INTEL_IOMMU_DEFAULT_ON=y`，只要在 Kernel parameter 再加上`iommu=pt`或`iommu=off`即可
+
+- `iommu=pt`設定只有 Passthrough 的設備開啟 IOMMU
+- `iommu=off`關閉在所有設備上啟用 IOMMU
+
+這兩個設定都是讓 ConnectX-3 不會被啟用 IOMMU，畢竟網卡沒有直通，不過我估計如果嘗試直通網卡或是 SR-IOV 虛擬網卡，可能虛擬機開機時就會發生 Kernel panic
+
+也許 ConnectX-3 這張卡的 IOMMU 實作有點問題
 
 # 總結
 

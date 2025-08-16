@@ -277,7 +277,10 @@ Pinned kernel:
 在這篇文章發布後我繼續了一些測試，發現有辦法讓`intel_iommu=on`或是不改`intel_iommu`使用核心編譯時預設的設定，即`CONFIG_INTEL_IOMMU_DEFAULT_ON=y`，只要在 Kernel parameter 再加上`iommu=pt`或`iommu=off`即可
 
 - `iommu=pt`設定只有 Passthrough 的設備開啟 IOMMU
-- `iommu=off`關閉在所有設備上啟用 IOMMU
+- `iommu=off`關閉在所有設備上啟用 IOMMU，但 CPU 的 IOMMU 功能還是有被啟用，`DMAR: IOMMU enabled`會出現在 Kernel message 裡
+- `iommu=force`會強制啟用設備的 IOMMU[^1]，無法開機
+- `iommu=noforce`是預設的選項[^1]，也無法開機
+- `iommu=soft`是使用 Intel CPU 機器預設的選項[^1]，也無法開機
 
 這兩個設定都是讓 ConnectX-3 不會被啟用 IOMMU，畢竟網卡沒有直通，不過我估計如果嘗試直通網卡或是 SR-IOV 虛擬網卡，可能虛擬機開機時就會發生 Kernel panic
 
@@ -296,3 +299,7 @@ Pinned kernel:
 至於 ConnectX-3 上的 firmware 我也已經更新到最新，看[貼文內有一個有11台機器的用戶](https://forum.proxmox.com/threads/random-6-8-4-2-pve-kernel-crashes.145760/post-659209)，其中只有3台使用 ConnectX-3 的機器發生了 Kernel crash，但是看他的 crash.log 和我們發生的情況也並不相同，可能真的就是 ConnectX-3 與某些東西發生衝突了。
 
 這次 Debug 比較困難的原因主要是引起問題的 Kernel 編譯設定`CONFIG_INTEL_IOMMU_DEFAULT_ON`被打開後，引起的問題五花八門，基本很難用對應問題的錯誤訊息去找到相關的回答，但是這些問題最後往往會引導到 Kernel panic，反而直接查詢像 Kernel panic 這種大範圍的關鍵詞才能找到資訊，和過往 Debug 的經驗不太相同。
+
+## 參考
+
+[^1]: [The kernel’s command-line parameters — The Linux Kernel  documentation](https://docs.kernel.org/admin-guide/kernel-parameters.html)

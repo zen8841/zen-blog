@@ -18,6 +18,7 @@ excerpt: 簡介與教學 Cloudflare Zero Trust 服務及如何在使用 Nginx �
 date: 2025-06-30 23:13:34
 updated: 2025-06-30 23:13:34
 index_img:
+banner_img: cloudflare-zero-trust-and-nginx-realip/cloudflare_tunnel_http.webp
 ---
 
 
@@ -50,7 +51,7 @@ Cloudflare Zero Trust 提供了多種服務，在這篇文章中主要是聚焦�
 
 在我的理解裡這東西就是在 Linux Router 上安裝的 WARP[^3]，他可以把以他為 Gateway 的網路通通發到 Cloudflare 網路中，相當於整個子網都開了 WARP，看起來還可以作為 Site to Site VPN 來用(但好像用其他的 Tunnel 組合也可以實現)，不過我沒試過這東西，目前還在測試版，開啟了 Magic WAN 的帳戶無法使用 WARP Connector。
 
-![](warp_connector.webp)
+![WARP Connector](warp_connector.webp)
 
 ### Magic WAN
 
@@ -69,7 +70,7 @@ Cloudflare Zero Trust 提供了多種服務，在這篇文章中主要是聚焦�
 
 需要使用 Cloudflared 或 WARP Connector 來將服務連線到 Cloudflare Network，由於流量是從內部向 Cloudflare 發起，一般不會被防火牆擋住，因此其中一個用途就是前文提到的可用來做內網穿透，但是只能穿透幾種服務， HTTP(S)、SSH、RDP，後面兩種都是只能使用瀏覽器連線 Cloudflare 網頁來提供 Webshell，或是在網頁上呈現 RDP 的內容。流程大概是像這樣[^5]，服務不一定要開在有 cloudflared(WARP Connector) 的機器上，只要可以被 cloudflared(WARP Connector) 訪問到就可以。
 
-![](cloudflare_tunnel_http.webp)
+![Cloudflare Tunnel 的代理流程](cloudflare_tunnel_http.webp)
 
 這些服務雖然說是被 Public Network 訪問，但也可在 Cloudflare dash board 設定 access list，讓只有指定的 email 才能透過一次性郵件驗證登入。
 
@@ -77,7 +78,7 @@ Cloudflare Zero Trust 提供了多種服務，在這篇文章中主要是聚焦�
 
 這部分的服務就比較沒有限定要用哪種方式連到 Cloudflare 前面提到的建立 Tunnel 的方法應該都可以，具體流程如下， client 透過 WARP、cloudflared 或是在 Gateway 上的 WARP Connector、Magic WAN 連上 Cloudflare 網路，就可以存取另一端透過類似方法連線上 Cloudflare 網路的資源(需要在同一個 Zero Trust team 中， WARP 是用前面說的 email 一次性郵件驗證登入)。
 
-![](connect_private_ip.webp)
+![通過 Cloudflare 網路中轉的服務](connect_private_ip.webp)
 
 如果在 Cloudflare dash board 上設定了 Private IP Routing，就可以用 WARP+cloudflared 實現 VPN 的功能， Cloudflare 網路會將設定的 Private IP 路由到內部網路的 cloudflared 上，來連線內部網路的 IP，其他種 Tunnel 組合也可以達成相同的功能。
 
@@ -129,7 +130,7 @@ Cloudflare Zero Trust 還可以設定對 WARP 客戶端的權限，可以設定�
 
 如果使用了 Cloudflare 提供的 Proxy 或是 Zero Trust 的內網穿透服務，則內網的 Nginx 會收到的 IP 就會是 Cloudflare CDN 或 安裝有 cloudflared 機器的 IP，如果想要在 log 或其他記錄中記載真實的客戶端 IP，就需要使用`ngx_http_realip_module`[^7]。
 
-![](restore_realip.webp)
+![RealIP 的工作方式](restore_realip.webp)
 
 這個模組的使用很簡單，只有3種指令[^8]
 

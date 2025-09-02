@@ -27,25 +27,25 @@ tags:
 
 在開啟 Cloudflare Proxy 的狀況下，連接網站時會發生如圖的無限301轉址迴圈，最後因為跳轉過多而停止。
 
-![](infinite301.png)
+![載入過程](infinite301.png)
 
 # 發生原因
 
 這是因為在 Cloudflare 的 Proxy 設定中選擇了 Flexble，而且同時後端服務器監聽的 http 會返回301轉址到 https 造成的（也就是在沒有 Proxy 的情況下連到 http 會自動使用 https 連線）。
 
-![](ssl_policy.png)
+![Cloudflare 的 TLS 策略](ssl_policy.png)
 
 因為後端返回的 return to https 一樣會由 Cloudflare Proxy 處理，再次去訪問後端的 http，然後再次返回301造成無限迴圈
 
-![](why_infinite301.png)
+![Cloudflare Proxy 的流程](why_infinite301.png)
 
 # 解決
 
 只需要將 Cloudflare 的 Proxy 設定成 Full 即可，或是將後端服務器的 http 改成呈現網頁內容
 
-![](ssl_policy_full.png)
+![正確的策略](ssl_policy_full.png)
 
-![](solve_infinite301.png)
+![正確的流程](solve_infinite301.png)
 
 
 

@@ -92,7 +92,7 @@ key "host1-host2" {
 # chmod 640 host1-host2.key
 ```
 
-## 使用金鑰
+### 使用金鑰
 
 將金鑰檔案複製到 master/slave 兩台 server 上，並 include 進`named.conf`的第一層，不要放在其他的 block 中。
 
@@ -116,7 +116,7 @@ server y.y.y.y {
 
 設定完成後在 x.x.x.x 和 y.y.y.y 中間的所有 DNS 通訊都會使用 TSIG 的金鑰進行簽章，防止有中間人進行竄改，但是 TSIG 不會加密通訊，如果不想要被中間人監聽到 DNS 記錄，最好單獨使用 IPSec 或是其他 VPN 建立安全通道。
 
-## 其他使用方式
+### 其他使用方式
 
 不止可以使用 TSIG 對 某台 server 進行驗證，也可使用 key 來做 ACL 限制
 

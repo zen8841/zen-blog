@@ -12,7 +12,7 @@ categories:
 tags:
 - linux
 - network
-- dns
+- DNS
 ---
 
 {% note info %}

@@ -9,6 +9,7 @@ tags:
   - linux
   - server
   - FreeIPA
+  - DNS
 excerpt: FreeIPA 伺服器端的架設與細部設定及客戶端的安裝與連線
 date: 2024-12-23 01:40:00
 updated: 2024-12-23 01:40:00

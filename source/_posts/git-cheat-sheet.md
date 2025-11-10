@@ -201,6 +201,12 @@ $ git rebase B
 $ git pull --rebase
 ```
 
+### 刪除分支快取
+
+```shell
+$ git fetch --all --prune
+```
+
 ### Reset
 
 ```shell

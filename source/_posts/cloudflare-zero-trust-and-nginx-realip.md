@@ -13,14 +13,20 @@ tags:
   - Zero Trust
   - cloudflared
   - WARP
+  - Cloudflare One
   - Cloudflare Proxy
 excerpt: 簡介與教學 Cloudflare Zero Trust 服務及如何在使用 Nginx 的狀況下還原真實的客戶端 IP
 date: 2025-06-30 23:13:34
-updated: 2025-06-30 23:13:34
+updated: 2026-02-23 00:44:26
 index_img:
 banner_img: cloudflare-zero-trust-and-nginx-realip/cloudflare_tunnel_http.webp
 ---
 
+{% note info %}
+
+2026/2/23更新： Cloudflare 將產品名稱更換[^9]，舊名稱以括號表示
+
+{% endnote %}
 
 # 前言
 
@@ -35,27 +41,27 @@ Cloudflare Zero Trust 提供了多種服務，在這篇文章中主要是聚焦�
 ## Tunnel
 
 - cloudflared
-- WARP
-- WARP Connector
-- Magic WAN
+- Cloudflare One Client (WARP)
+- Cloudflare Mesh (WARP Connector)
+- Cloudflare WAN / Cloudflare IPsec / Cloudflare GRE (Magic WAN)
 
 ### cloudflared
 
-在使用內網穿透功能中主要使用的 Tunnel，比較像是作為服務端，連上 Cloudflare 網路來提供服務，但也不止可以提供內網穿透的功能，可以透過 cloudflared 實現 WARP 提供的部分功能。
+在使用內網穿透功能中主要使用的 Tunnel，比較像是作為服務端，連上 Cloudflare 網路來提供服務，但也不止可以提供內網穿透的功能，可以透過 cloudflared 實現 Cloudflare One Client (WARP) 提供的部分功能。
 
-### WARP
+### Cloudflare One Client (WARP)
 
-就是 WARP，前陣子很流行的 " Cloudflare VPN "，主要作用是用來做為客戶端連上 Cloudflare 的網路，不過在設定中也可以開啟選項[^2]，讓 Cloudflare 給你一個 CGNAT 裡的 IP，其他同一個 Zero Trust Team 內的客戶端可以在連上 Cloudflare 網路後碰到開啟 WARP 的客戶端(透過 IPv4 或 IPv6)。
+就是 Cloudflare One Client (WARP)，前陣子很流行的 " Cloudflare VPN "，主要作用是用來做為客戶端連上 Cloudflare 的網路，不過在設定中也可以開啟選項[^2]，讓 Cloudflare 給你一個 CGNAT 裡的 IP，其他同一個 Zero Trust Team 內的客戶端可以在連上 Cloudflare 網路後碰到開啟 Cloudflare One Client (WARP) (透過 IPv4 或 IPv6)。
 
-### WARP Connector
+### Cloudflare Mesh (WARP Connector)
 
-在我的理解裡這東西就是在 Linux Router 上安裝的 WARP[^3]，他可以把以他為 Gateway 的網路通通發到 Cloudflare 網路中，相當於整個子網都開了 WARP，看起來還可以作為 Site to Site VPN 來用(但好像用其他的 Tunnel 組合也可以實現)，不過我沒試過這東西，目前還在測試版，開啟了 Magic WAN 的帳戶無法使用 WARP Connector。
+在我的理解裡這東西就是在 Linux Router 上安裝的 Cloudflare One Client (WARP)[^3]，他可以把以他為 Gateway 的網路通通發到 Cloudflare 網路中，相當於整個子網都開了 Cloudflare One Client (WARP)，看起來還可以作為 Site to Site VPN 來用(但好像用其他的 Tunnel 組合也可以實現)，不過我沒試過這東西，目前還在測試版，開啟了 Cloudflare WAN (Magic WAN) 的帳戶無法使用 Cloudflare Mesh (WARP Connector)。
 
 ![WARP Connector](warp_connector.webp)
 
-### Magic WAN
+### Cloudflare WAN (Magic WAN)
 
-這個是 Enterprise-only 的功能，所以我更沒用過了，看起來就是提供更多種連接到 Cloudflare 方式的服務，包括使用 GRE、IPsec  和上面提到 WARP、Cloudflare Tunnel 來連到 Cloudflare[^4]， Cloudflare 似乎還有賣專門跑 Magic WAN 的硬體，不過也可以在一般的 x86 中使用。
+這個是 Enterprise-only 的功能，所以我更沒用過了，看起來就是提供更多種連接到 Cloudflare 方式的服務，包括使用 GRE、IPsec  和上面提到 Cloudflare One Client (WARP)、Cloudflare Tunnel 來連到 Cloudflare[^4]， Cloudflare 似乎還有賣專門跑 Cloudflare WAN (Magic WAN) 的硬體，不過也可以在一般的 x86 中使用。
 
 ## 服務
 
@@ -68,7 +74,7 @@ Cloudflare Zero Trust 提供了多種服務，在這篇文章中主要是聚焦�
 
 這部份的服務都是透過 HTTP based 來呈現，也是此篇教學會介紹的部分。
 
-需要使用 Cloudflared 或 WARP Connector 來將服務連線到 Cloudflare Network，由於流量是從內部向 Cloudflare 發起，一般不會被防火牆擋住，因此其中一個用途就是前文提到的可用來做內網穿透，但是只能穿透幾種服務， HTTP(S)、SSH、RDP，後面兩種都是只能使用瀏覽器連線 Cloudflare 網頁來提供 Webshell，或是在網頁上呈現 RDP 的內容。流程大概是像這樣[^5]，服務不一定要開在有 cloudflared(WARP Connector) 的機器上，只要可以被 cloudflared(WARP Connector) 訪問到就可以。
+需要使用 Cloudflared 或 Cloudflare Mesh (WARP Connector) 來將服務連線到 Cloudflare Network，由於流量是從內部向 Cloudflare 發起，一般不會被防火牆擋住，因此其中一個用途就是前文提到的可用來做內網穿透，但是只能穿透幾種服務， HTTP(S)、SSH、RDP，後面兩種都是只能使用瀏覽器連線 Cloudflare 網頁來提供 Webshell，或是在網頁上呈現 RDP 的內容。流程大概是像這樣[^5]，服務不一定要開在有 cloudflared(Cloudflare Mesh (WARP Connector)) 的機器上，只要可以被 cloudflared(Cloudflare Mesh (WARP Connector)) 訪問到就可以。
 
 ![Cloudflare Tunnel 的代理流程](cloudflare_tunnel_http.webp)
 
@@ -76,13 +82,13 @@ Cloudflare Zero Trust 提供了多種服務，在這篇文章中主要是聚焦�
 
 ### Cloudflare Network Access Service
 
-這部分的服務就比較沒有限定要用哪種方式連到 Cloudflare 前面提到的建立 Tunnel 的方法應該都可以，具體流程如下， client 透過 WARP、cloudflared 或是在 Gateway 上的 WARP Connector、Magic WAN 連上 Cloudflare 網路，就可以存取另一端透過類似方法連線上 Cloudflare 網路的資源(需要在同一個 Zero Trust team 中， WARP 是用前面說的 email 一次性郵件驗證登入)。
+這部分的服務就比較沒有限定要用哪種方式連到 Cloudflare 前面提到的建立 Tunnel 的方法應該都可以，具體流程如下， client 透過 Cloudflare One Client (WARP)、cloudflared 或是在 Gateway 上的 Cloudflare Mesh (WARP Connector)、Cloudflare WAN (Magic WAN) 連上 Cloudflare 網路，就可以存取另一端透過類似方法連線上 Cloudflare 網路的資源(需要在同一個 Zero Trust team 中， Cloudflare One Client (WARP) 是用前面說的 email 一次性郵件驗證登入)。
 
 ![通過 Cloudflare 網路中轉的服務](connect_private_ip.webp)
 
-如果在 Cloudflare dash board 上設定了 Private IP Routing，就可以用 WARP+cloudflared 實現 VPN 的功能， Cloudflare 網路會將設定的 Private IP 路由到內部網路的 cloudflared 上，來連線內部網路的 IP，其他種 Tunnel 組合也可以達成相同的功能。
+如果在 Cloudflare dash board 上設定了 Private IP Routing，就可以用 Cloudflare One Client (WARP)+cloudflared 實現 VPN 的功能， Cloudflare 網路會將設定的 Private IP 路由到內部網路的 cloudflared 上，來連線內部網路的 IP，其他種 Tunnel 組合也可以達成相同的功能。
 
-Cloudflare Zero Trust 還可以設定對 WARP 客戶端的權限，可以設定讓 WARP 無法被客戶端手動關閉，所有流量通過 Cloudflare，方便企業級用戶對工作用裝置進行流量審計。
+Cloudflare Zero Trust 還可以設定對 Cloudflare One Client (WARP) 的權限，可以設定讓 Cloudflare One Client (WARP) 無法被客戶端手動關閉，所有流量通過 Cloudflare，方便企業級用戶對工作用裝置進行流量審計。
 
 # 教學
 
@@ -170,3 +176,4 @@ Cloudflare CDN 的 IP 需要定期更新，分別在 https://www.cloudflare.com/
 [^6]: [Connect private networks · Cloudflare Zero Trust docs](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/private-net/cloudflared/)
 [^7]: [Restoring original visitor IPs · Cloudflare Support docs](https://developers.cloudflare.com/support/troubleshooting/restoring-visitor-ips/restoring-original-visitor-ips/#nginx-1)
 [^8]: [Module ngx_http_realip_module](https://nginx.org/en/docs/http/ngx_http_realip_module.html)
+[^9]: [Cloudflare One in 2026: Product Name Updates - What's New - Cloudflare Community](https://community.cloudflare.com/t/cloudflare-one-in-2026-product-name-updates/891403)

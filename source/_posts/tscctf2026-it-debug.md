@@ -1,5 +1,5 @@
 ---
-title: TSCCTF2026賽中IT除錯記錄
+title: TSCCTF2026 賽中 IT 除錯記錄
 katex: false
 mathjax: false
 mermaid: false

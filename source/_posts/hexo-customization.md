@@ -8,10 +8,10 @@ date: 2024-07-09 23:28:06
 updated: 2024-07-09 23:28:06
 index_img:
 categories:
-- 教程
+  - Tutorial
 tags:
-- blog
-- hexo
+  - blog
+  - hexo
 ---
 
 # Theme

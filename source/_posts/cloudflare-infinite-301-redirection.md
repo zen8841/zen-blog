@@ -9,14 +9,14 @@ updated: 2024-06-05 14:17:08
 index_img:
 banner_img: cloudflare-infinite-301-redirection/infinite301.png
 categories:
-- 教程
-- 疑難雜症
+  - Tutorial
+  - 疑難雜症
 tags:
-- network
-- server
-- Cloudflare
-- https
-- 301-redirection
+  - Network
+  - server
+  - Cloudflare
+  - https
+  - 301-redirection
 ---
 
 # 前情提要

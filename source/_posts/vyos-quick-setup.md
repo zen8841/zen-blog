@@ -8,11 +8,11 @@ date: 2024-07-10 17:18:57
 updated: 2024-07-10 17:18:57
 index_img:
 categories:
-- 教程
+  - Tutorial
 tags:
-- linux
-- network
-- router
+  - Linux
+  - Network
+  - router
 ---
 
 # 前言

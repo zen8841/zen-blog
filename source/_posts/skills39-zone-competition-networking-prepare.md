@@ -7,7 +7,7 @@ categories:
   - 比賽
   - WriteUp
 tags:
-  - network
+  - Network
 excerpt: 分享一下區賽準備過程的筆記
 date: 2025-04-09 18:31:30
 updated: 2025-04-09 18:31:30

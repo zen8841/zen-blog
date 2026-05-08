@@ -8,12 +8,12 @@ date: 2024-08-01 23:36:18
 updated: 2024-09-08 21:33:10
 index_img:
 categories:
-- 教程
+  - Tutorial
 tags:
-- linux
-- network
-- router
-- server
+  - Linux
+  - Network
+  - router
+  - server
 ---
 
 {% note info %}

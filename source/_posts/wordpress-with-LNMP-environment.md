@@ -8,12 +8,12 @@ date: 2024-08-05 23:41:48
 updated: 2024-08-05 23:41:48
 index_img:
 categories:
-- 教程
+  - Tutorial
 tags:
-- server
-- linux
-- Nginx
-- wordpress
+  - server
+  - Linux
+  - Nginx
+  - wordpress
 ---
 
 # 前言

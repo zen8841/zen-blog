@@ -4,9 +4,9 @@ katex: false
 mathjax: false
 mermaid: false
 categories:
-  - 教程
+  - Tutorial
 tags:
-  - linux
+  - Linux
   - server
   - FreeIPA
   - DNS

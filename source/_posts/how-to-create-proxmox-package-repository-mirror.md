@@ -4,11 +4,11 @@ katex: false
 mathjax: false
 mermaid: false
 categories:
-  - 教程
+  - Tutorial
 tags:
   - Proxmox
   - server
-  - linux
+  - Linux
 excerpt: 記錄一下 CCNS 的 Proxmox 鏡像站是如何建立的
 date: 2024-11-24 03:47:10
 updated: 2024-11-24 03:47:10

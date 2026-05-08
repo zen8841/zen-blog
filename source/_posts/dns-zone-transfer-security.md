@@ -4,7 +4,7 @@ katex: false
 mathjax: false
 mermaid: false
 categories:
-  - 教程
+  - Tutorial
 tags:
   - DNS
 excerpt: 如何在 BIND9 上進行 DNS zone transfer 的安全設定

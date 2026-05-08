@@ -4,10 +4,10 @@ katex: false
 mathjax: false
 mermaid: false
 categories:
-  - 教程
+  - Tutorial
 tags:
-  - linux
-  - network
+  - Linux
+  - Network
   - wireguard
 excerpt: 介紹在 Linux 上連接 Wireguard VPN 的幾種方式
 date: 2026-04-30 23:14:45

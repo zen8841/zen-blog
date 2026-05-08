@@ -4,7 +4,7 @@ katex: false
 mathjax: false
 mermaid: false
 categories:
-  - 教程
+  - Tutorial
   - 疑難雜症
 tags:
   - 3C硬體

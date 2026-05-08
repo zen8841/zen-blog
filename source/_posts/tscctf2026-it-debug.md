@@ -7,8 +7,8 @@ categories:
   - 雜七雜八
 tags:
   - server
-  - linux
-  - network
+  - Linux
+  - Network
 excerpt: 簡單記錄一下賽中的維護記錄
 date: 2026-03-10 17:45:06
 updated: 2026-03-10 17:45:06

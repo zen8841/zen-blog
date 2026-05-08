@@ -8,16 +8,16 @@ date: 2024-04-25 00:04:43
 updated: 2024-09-01 16:15:02
 index_img:
 categories:
-- 教程
+  - Tutorial
 tags:
-- network
-- UBNT
-- Ubiquiti
-- EdgeOS
-- Mikrotik
-- RouterOS
-- GRE over IPsec
-- IPsec
+  - Network
+  - UBNT
+  - Ubiquiti
+  - EdgeOS
+  - Mikrotik
+  - RouterOS
+  - GRE over IPsec
+  - IPsec
 ---
 
 {% note info %}

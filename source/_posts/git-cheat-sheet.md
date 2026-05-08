@@ -4,7 +4,7 @@ katex: false
 mathjax: false
 mermaid: false
 categories:
-  - 教程
+  - Tutorial
 tags:
   - Git
 excerpt: 記錄自己一些常用的 Git 指令

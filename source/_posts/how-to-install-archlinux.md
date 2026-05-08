@@ -4,9 +4,9 @@ katex: false
 mathjax: false
 mermaid: false
 categories:
-  - 教程
+  - Tutorial
 tags:
-  - linux
+  - Linux
   - Arch
 excerpt: ArchLinux + KDE Plasma + UEFI systemd boot 的安裝流程
 date: 2025-05-01 18:09:23

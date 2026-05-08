@@ -8,10 +8,10 @@ date: 2024-05-17 11:47:27
 updated: 2024-06-09 22:24:00
 index_img:
 categories:
-- 教程
+  - Tutorial
 tags:
-- linux
-- network
+  - Linux
+  - Network
 - DNS
 ---
 

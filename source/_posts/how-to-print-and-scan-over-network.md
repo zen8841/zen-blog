@@ -4,9 +4,9 @@ katex: false
 mathjax: false
 mermaid: false
 categories:
-  - 教程
+  - Tutorial
 tags:
-  - linux
+  - Linux
   - server
 excerpt: 介紹如何建立 print server 用來遠端列印和掃描
 date: 2024-11-19 04:08:21

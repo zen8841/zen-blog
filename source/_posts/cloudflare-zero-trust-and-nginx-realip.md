@@ -4,9 +4,9 @@ katex: false
 mathjax: false
 mermaid: false
 categories:
-  - 教程
+  - Tutorial
 tags:
-  - network
+  - Network
   - server
   - Cloudflare
   - Nginx

@@ -8,11 +8,11 @@ date: 2024-08-26 00:38:38
 updated: 2024-08-26 00:38:38
 index_img:
 categories:
-- 教程
+  - Tutorial
 tags:
-- linux
-- server
-- network
+  - Linux
+  - server
+  - Network
 ---
 
 # 前言

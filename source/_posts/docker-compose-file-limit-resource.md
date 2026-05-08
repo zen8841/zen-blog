@@ -8,9 +8,9 @@ date: 2024-06-07 03:34:01
 updated: 2024-06-07 03:34:01
 index_img:
 categories:
-- 教程
+  - Tutorial
 tags:
-- server
+  - server
 - docker
 ---
 

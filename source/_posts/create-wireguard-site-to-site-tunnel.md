@@ -8,12 +8,12 @@ date: 2024-08-18 18:30:54
 updated: 2024-08-18 18:30:54
 index_img:
 categories:
-- 教程
+  - Tutorial
 tags:
-- router
-- wireguard
-- network
-- linux
+  - router
+  - wireguard
+  - Network
+  - Linux
 ---
 
 # 前言

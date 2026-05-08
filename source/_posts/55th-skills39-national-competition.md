@@ -6,7 +6,7 @@ mermaid: false
 categories:
   - 比賽
 tags:
-  - network
+  - Network
   - server
 excerpt: 分享一下比賽的心得
 date: 2025-07-29 02:03:10

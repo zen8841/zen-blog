@@ -4,11 +4,11 @@ katex: false
 mathjax: false
 mermaid: false
 categories:
-  - 教程
+  - Tutorial
 tags:
   - Proxmox
-  - network
-  - linux
+  - Network
+  - Linux
   - server
   - OVS
   - OpenvSwitch

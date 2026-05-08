@@ -6,7 +6,7 @@ mermaid: false
 categories:
   - 比賽
 tags:
-  - network
+  - Network
   - server
 excerpt: 分享一下今年拿第一的感想
 date: 2025-04-02 03:03:52

@@ -8,11 +8,11 @@ date: 2024-07-10 23:28:37
 updated: 2024-07-10 23:28:37
 index_img:
 categories:
-- 教程
-- 疑難雜症
+  - Tutorial
+  - 疑難雜症
 tags:
-- network
-- wireguard
+  - Network
+  - wireguard
 ---
 
 {% note info %}

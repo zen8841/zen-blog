@@ -9,10 +9,10 @@ updated: 2024-05-06 15:45:42
 index_img: 
 banner_img: asus-x99-code-00/mos.jpg
 categories:
-- 教程
-- 疑難雜症
+  - Tutorial
+  - 疑難雜症
 tags:
-- 3C硬體
+  - 3C硬體
 ---
 
 # 前情提要

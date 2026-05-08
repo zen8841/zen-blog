@@ -4,11 +4,11 @@ katex: false
 mathjax: false
 mermaid: false
 categories:
-  - 教程
+  - Tutorial
   - 疑難雜症
 tags:
   - FreeIPA
-  - linux
+  - Linux
   - server
   - ssh
 excerpt: 舊版 FreeIPA 產生的設定檔並未隨著更新改變導致的 SSH 錯誤

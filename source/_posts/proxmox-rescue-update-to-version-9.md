@@ -4,12 +4,12 @@ katex: false
 mathjax: false
 mermaid: false
 categories:
-  - 教程
+  - Tutorial
   - 疑難雜症
 tags:
   - server
   - Proxmox
-  - network
+  - Network
   - OVS
   - OpenvSwitch
 excerpt: 更新到 PVE9 的救援記錄

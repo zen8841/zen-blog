@@ -8,7 +8,7 @@ categories:
 tags:
   - AWS
   - server
-  - network
+  - Network
 excerpt: 分享一下今年比賽的感覺
 date: 2026-04-14 03:20:17
 updated: 2026-04-14 03:20:17

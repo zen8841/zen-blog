@@ -4,9 +4,9 @@ katex: false
 mathjax: false
 mermaid: false
 categories:
-  - 教程
+  - Tutorial
 tags:
-  - linux
+  - Linux
   - power
 excerpt: 記錄如何在 Linux 上進行電源管理來達成省電及延長電池續航
 date: 2025-01-26 00:18:11

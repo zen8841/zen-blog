@@ -8,12 +8,12 @@ date: 2024-07-09 22:05:43
 updated: 2024-07-09 22:05:43
 index_img:
 categories:
-- 教程
-- 疑難雜症
+  - Tutorial
+  - 疑難雜症
 tags:
-- network
-- server
-- linux
+  - Network
+  - server
+  - Linux
 ---
 
 # 前情提要

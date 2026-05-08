@@ -5,11 +5,11 @@ katex: false
 mathjax: false
 mermaid: false
 categories:
-  - 教程
+  - Tutorial
   - 疑難雜症
 tags:
   - Proxmox
-  - linux
+  - Linux
   - 3C硬體
 excerpt: '介紹這個長達一年 Debug 的故事: 關於我是如何從與實際錯誤毫無關係的記錄中推斷出真相'
 date: 2025-08-15 04:32:17

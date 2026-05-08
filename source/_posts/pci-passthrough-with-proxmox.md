@@ -11,9 +11,9 @@ categories:
   - Tutorial
 tags:
   - Linux
-- Proxmox
-- pci passthrough
-- virtual machine
+  - Proxmox
+  - pci passthrough
+  - virtual machine
 ---
 
 # 前言

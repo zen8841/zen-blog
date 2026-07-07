@@ -1,5 +1,5 @@
 ---
-title: onetab v2 資料遺失與遷移 NiceTab 記錄
+title: OneTab v2 資料遺失與遷移 NiceTab 記錄
 katex: false
 mathjax: false
 mermaid: false
@@ -8,7 +8,7 @@ categories:
 tags:
   - OneTab
   - NiceTab
-excerpt: 關於 onetab v2 的資料存放與如何搶救記錄並轉移到 NiceTab
+excerpt: 關於 OneTab v2 的資料存放與如何搶救記錄並轉移到 NiceTab
 date: 2026-06-30 23:13:56
 updated: 2026-06-30 23:13:56
 index_img:
@@ -18,7 +18,7 @@ banner_img:
 
 {% note danger%}
 
-如果你正在使用 onetab v2 最好將瀏覽器的`Default/IndexedDB/chrome-extension_chphlpgkkbolifaimnlloiipkdnihall_0.indexeddb.leveldb`定時備份， v2 不再使用`Default/Local Extension Settings/chphlpgkkbolifaimnlloiipkdnihall`儲存資料，只用這個目錄無法恢復或是 dump 出資料
+如果你正在使用 OneTab v2 最好將瀏覽器的`Default/IndexedDB/chrome-extension_chphlpgkkbolifaimnlloiipkdnihall_0.indexeddb.leveldb`定時備份， v2 不再使用`Default/Local Extension Settings/chphlpgkkbolifaimnlloiipkdnihall`儲存資料，只用這個目錄無法恢復或是 dump 出資料
 
 {% endnote %}
 

@@ -23,3 +23,7 @@ tags:
 # [Nginx server 和 location 優先順序](https://bigpxuan.blogspot.com/2018/07/nginx-server-location.html)
 
 一篇文章講清楚 nginx 內部導向的規則，當然，如果你只是把他當成反向代理，也許這篇文章幫助沒那麼大
+
+# [Debunking zswap and zram myths](https://chrisdown.name/2026/03/24/zswap-vs-zram-when-to-use-what.html)
+
+與《替 swap 辯護：常見的誤解》同作者，算是續篇

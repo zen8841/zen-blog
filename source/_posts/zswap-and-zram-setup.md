@@ -10,11 +10,14 @@ tags:
   - Arch
 excerpt: 介紹在 ArchLinux 上設定這兩者的方式
 date: 2026-08-30 20:32:27
-updated: 2026-08-30 20:32:27
+updated: 2026-09-07 22:47:21
 index_img:
 banner_img:
 ---
 
+{% note info %}
+2026/09/07: 更新使用幾天 zswap 後的實際體驗
+{% endnote %}
 
 # 前言
 
@@ -33,12 +36,16 @@ Arch 官方的核心都預設開啟了 zswap，只需要按自己需求調整參
 可以調整的參數有幾個：
 
 - shrinker_enabled: 預設開啟，當 zswap 中有大量冷數據時，會將這些冷數據寫入實體 swap，節省記憶體
-
 - max_pool_percent: 預設為20，代表 zswap 壓縮後的資料最多可以佔用記憶體的幾 %。我建議可以提高到 40～60。我本身使用 zram 的時候就比較激進，平均壓縮比我猜測應該2.5x，開40%與實體 RAM 為 1:1 的 zram 應該差不多(還在測試中)
-
 - compressor: 預設 zstd，壓縮算法，若要修改，建議在 lz4 與 zstd 之間二選一。建議不用改，要改還需要修改 initramfs 的設定(在 mkinitcpio 的 modules 中提早載入，或是其他的設定檔，看使用的 initramfs 生成器)，不然改這個參數會變成先用 zstd 開機，開機後才改
-
 - accept_threshold_percent: 預設為90，為了避免在記憶體高佔用的時候 zswap 收縮，把數據擠到 RAM 內讓壓力更大，當 zswap 達到容量上限後，必須等到使用量下降至設定的百分比，才會繼續接收寫入 zswap 的頁面。
+
+{% note success %}
+根據用了幾天實測，實際壓縮率大約在 3.2 ~ 3.8 倍之間，zstd 的壓縮率比 lz4 高了一點，預設的 20% 應該也夠用，激進一點應該 30~40%就好，要在高可能也用不到，除非換成 lz4 或其他壓縮算法
+
+壓縮率可以用`/sys/kernel/debug/zswap/`或`/proc/meminfo`內的資料計算，或是可以試試看我寫的一個小腳本: [zswapstat](https://github.com/zen8841/zswapstat)
+
+{% endnote %}
 
 ## 調整方式
 
